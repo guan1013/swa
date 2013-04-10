@@ -1,0 +1,385 @@
+package de.shop.kundenverwaltung.domain;
+
+import java.io.Serializable;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+//import javax.persistence.PrePersist;
+//import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.NamedQuery;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
+import de.shop.util.DateFormatter;
+import de.shop.util.IdGroup;
+import de.shop.util.XmlDateAdapter;
+
+/**
+ * Die Klasse Adresse repräsentiert eine Adresse eines Kunden. Jede Adresse hat
+ * eine ID, einen Ort, eine PLZ und eine Straße.
+ * 
+ * @see Kunde
+ * @author Yannick Gentner
+ * 
+ */
+
+//@formatter:off
+@Entity
+@XmlRootElement
+@Table(name = "Adresse")
+@NamedQueries({
+		@NamedQuery(
+				name = Adresse.ALL_ADRESSEN,
+				query = "SELECT DISTINCT a from Adresse a"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_KUNDEID,
+				query = "SELECT adresse from Adresse as adresse WHERE adresse.kunde.kundeID = :id"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_WOHNORT, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.ort=:ort"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_WOHNORT, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.ort = :ort"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_PLZ, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.plz=:plz"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_PLZ, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.plz = :plz"),	
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_STRASSE, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.strasse=:strasse"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_STRASSE, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.strasse = :strasse"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_ADRESSEID, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.adresseID=:adresseID"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_ADRESSEID, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.adresseID = :adresseID") })
+//@formatter:on
+public class Adresse implements Serializable {
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////
+	// Attribute
+
+	/**
+	 * ID zum Serialisieren/Deserialisieren
+	 */
+	private static final long serialVersionUID = 8172291051549706788L;
+
+	/**
+	 * Prefix der Klasse, welches den Namen der Queries vorangestellt wird
+	 */
+	private static final String PREFIX = "Adresse.";
+
+	/**
+	 * Name eines Querys: Finde alle Adressen
+	 */
+	public static final String ALL_ADRESSEN = PREFIX + "AllAdressen";
+
+	/**
+	 * Name eines Querys: Finde alle Adressen nach Kunde ID
+	 */
+	public static final String ADRESSE_BY_KUNDEID = PREFIX
+			+ "findeAdresseByKundeId";
+
+	/**
+	 * Name für eine Query, die nach einem bestimmten Wohnort sucht
+	 */
+	public static final String ADRESSE_BY_WOHNORT = PREFIX
+			+ "findeKundeByWohnort";
+
+	/**
+	 * Name für eine Query, die nach einer bestimmten PLZ sucht
+	 */
+	public static final String ADRESSE_BY_PLZ = PREFIX + "findeKundeByPLZ";
+
+	/**
+	 * Name für eine Query, die nach einer bestimmten Strasse sucht
+	 */
+	public static final String ADRESSE_BY_STRASSE = PREFIX
+			+ "findeKundeByStrasse";
+
+	/**
+	 * Name für eine Query, die nach einer bestimmten AdressenID sucht
+	 */
+	public static final String ADRESSE_BY_ADRESSEID = PREFIX
+			+ "findeKundeByAdresseID";
+
+	/**
+	 * Name für eine Query, die nur nach Kunden mit Adresse sucht
+	 */
+	public static final String ADRESSE_MIT_KUNDE = PREFIX
+			+ "findeKundeMitAdresse";
+
+	/**
+	 * Name für eine Query, die nach Kunden mit Wohnort sucht
+	 */
+	public static final String ADRESSE_MIT_KUNDE_BY_WOHNORT = PREFIX
+			+ "findeKundeMitAdresseNachWohnort";
+
+	/**
+	 * Name für eine Query, die nach Kunden mit PLZ sucht
+	 */
+	public static final String ADRESSE_MIT_KUNDE_BY_PLZ = PREFIX
+			+ "findeKundeMitAdresseNachPLZ";
+
+	/**
+	 * Name für eine Query, die nach Kunden mit STRASSE sucht
+	 */
+	public static final String ADRESSE_MIT_KUNDE_BY_STRASSE = PREFIX
+			+ "findeKundeMitAdresseNachStrasse";
+
+	/**
+	 * Name für eine Query, die nach Kunden mit STRASSE sucht
+	 */
+	public static final String ADRESSE_MIT_KUNDE_BY_ADRESSEID = PREFIX
+			+ "findeKundeMitAdresseNachAdresseID";
+
+	/**
+	 * Die ID der Adresse. Wird von Hibernate automatisch generiert
+	 */
+	@NotNull(groups = IdGroup.class, message = "{kundenverwaltung.adresseID.NotNull}")
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "adresse_id")
+	@XmlAttribute
+	private Integer adresseID;
+
+	/**
+	 * Erstelldatum der Adresse
+	 */
+	@Past(message = "{kundenverwaltung.erstellt.Past}")
+	@Column(name = "Erstellt", length = 32)
+	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	private Date erstellt;
+
+	/**
+	 * Datum der letzten Änderung der Adresse
+	 */
+	@Past(message = "{kundenverwaltung.geaendert.Past}")
+	@Column(name = "Geaendert", length = 32)
+	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	private Date geaendert;
+
+	/**
+	 * Ort der Adresse
+	 */
+	@NotEmpty(message = "{kundenverwaltung.ort.NotEmpty}")
+	@Column(name = "Ort", length = 32)
+	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöüß]+(-[A-ZÄÖÜ][a-zäöüß]+)?", message = "{kundenverwaltung.ort.pattern}")
+	@XmlElement(required = true)
+	private String ort;
+
+	// TODO kein Integer, sondern als String implementieren!t
+
+	/**
+	 * PLZ der Adresse
+	 */
+	@Min(value = 10000, message = "{kundenverwaltung.plz.min}")
+	@Column(name = "PLZ")
+	@XmlElement
+	private int plz;
+
+	/**
+	 * Strasse der Adresse
+	 */
+	@NotEmpty(message = "{kundenverwaltung.strasse.NotEmpty}")
+	@Column(name = "Strasse", length = 32)
+	@XmlElement
+	private String strasse;
+
+	/**
+	 * Referenz der Adresse zu Kunde
+	 */
+	@ManyToOne
+	@JoinColumn(name = "Kunde_FK")
+	@XmlElement
+	@Valid
+	private Kunde kunde;
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////
+	// Constructor
+
+	/**
+	 * Standardkonstruktor, der die Attribute initialisiert
+	 */
+	public Adresse() {
+
+		this.adresseID = null;
+		this.ort = "";
+		this.plz = 0;
+		this.strasse = "";
+		this.erstellt = DateFormatter.korrigiereDatum(new Date());
+		this.geaendert = DateFormatter.korrigiereDatum(new Date());
+	}
+
+	/**
+	 * Spezieller Konstruktor zum Erstellen einer Adresse
+	 * 
+	 * @param pAdresseID
+	 *            ID der Adresse
+	 * @param pOrt
+	 *            Ort der Adresse
+	 * @param pPlz
+	 *            PLZ der Adresse
+	 * @param pStrasse
+	 *            Strasse der Adresse
+	 */
+
+	public Adresse(Integer pAdresseID, String pOrt, Integer pPlz,
+			String pStrasse) {
+		this();
+		this.adresseID = pAdresseID;
+		this.ort = pOrt;
+		this.plz = pPlz;
+		this.strasse = pStrasse;
+	}
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////
+	// Methoden
+
+	@PrePersist
+	private void bereiteSpeichernVor() {
+		this.erstellt = new Date();
+		this.geaendert = new Date();
+
+		erstellt = DateFormatter.korrigiereDatum(erstellt);
+		geaendert = DateFormatter.korrigiereDatum(geaendert);
+	}
+
+	@PreUpdate
+	private void bereiteUpdateVor() {
+		this.geaendert = new Date();
+
+		DateFormatter.korrigiereDatum(geaendert);
+
+	}
+
+	public Adresse setValues(Adresse adresse) {
+
+		this.ort = adresse.getOrt();
+		this.plz = adresse.getPlz();
+		this.strasse = adresse.getStrasse();
+
+		return this;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((adresseID == null) ? 0 : adresseID.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Adresse other = (Adresse) obj;
+		if (adresseID == null) {
+			if (other.adresseID != null)
+				return false;
+		}
+		else if (!adresseID.equals(other.adresseID))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Adresse [adresseID=" + adresseID + ", erstellt=" + erstellt
+				+ ", geaendert=" + geaendert + ", ort=" + ort + ", plz=" + plz
+				+ ", strasse=" + strasse + "]";
+	}
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////
+	// Getter & Setter
+
+	public int getAdresseID() {
+		return this.adresseID;
+	}
+
+	public void setAdresseID(int adresseID) {
+		this.adresseID = adresseID;
+	}
+
+	public Date getErstellt() {
+		return erstellt == null ? null : (Date) erstellt.clone();
+	}
+
+	public void setErstellt(Date erstellt) {
+		this.erstellt = erstellt == null ? null : (Date) erstellt.clone();
+	}
+
+	public Date getGeaendert() {
+		return geaendert == null ? null : (Date) geaendert.clone();
+	}
+
+	public void setGeaendert(Date geaendert) {
+		this.geaendert = geaendert == null ? null : (Date) geaendert.clone();
+	}
+
+	public String getOrt() {
+		return this.ort;
+	}
+
+	public void setOrt(String ort) {
+		this.ort = ort;
+	}
+
+	public int getPlz() {
+		return this.plz;
+	}
+
+	public void setPlz(int plz) {
+		this.plz = plz;
+	}
+
+	public String getStrasse() {
+		return this.strasse;
+	}
+
+	public void setStrasse(String strasse) {
+		this.strasse = strasse;
+	}
+
+	public Kunde getKunde() {
+		return this.kunde;
+	}
+
+	public void setKunde(Kunde kunde) {
+		this.kunde = kunde;
+	}
+}
