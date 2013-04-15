@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.NamedQuery;
 import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.util.IdGroup;
-import de.shop.util.XmlDateAdapter;
-
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +19,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 
 
@@ -35,7 +29,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * @author Dennis Brull
  * 
  */
-@XmlRootElement
 @Entity
 @Table(name = "Bestellposten")
 @NamedQueries({
@@ -107,7 +100,6 @@ public class Bestellposten implements Serializable {
 	@Column(name = "Bestellposten_ID", updatable = false, nullable = false, unique = true)
 	@Min(value = 0, groups = IdGroup.class, message = "{bestellverwaltung.bestellposten.id.NotEmpty}")
 	@NotNull(groups = IdGroup.class, message = "{bestellverwaltung.bestellposten.id.NotEmpty}")
-	@XmlAttribute
 	private Integer bestellpostenID;
 	
 	/**
@@ -115,7 +107,6 @@ public class Bestellposten implements Serializable {
 	 */
 	@Column(name = "Anzahl")
 	@Min(value = 1, message = "{bestellverwaltung.bestellposten.anzahl.NotEmpty}")
-	@XmlElement(required = true)
 	private int anzahl;
 
 	/**
@@ -123,7 +114,6 @@ public class Bestellposten implements Serializable {
 	 */
 	@Column(name = "Erstellt", nullable = false, updatable = false)
 	@Past(message = "{bestellverwaltung.bestellposten.seit.past}")
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
 	private Date erstellt;
 
 	/**
@@ -131,7 +121,6 @@ public class Bestellposten implements Serializable {
 	 */
 	@Column(name = "Geaendert")
 	@Past
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
 	private Date geaendert;
 
 	/**
@@ -139,7 +128,6 @@ public class Bestellposten implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "Bestellung_FK")
-	@XmlElement(name = "bestellung", required = true)
 	private Bestellung bestellung;
 	
 	/**
@@ -147,7 +135,6 @@ public class Bestellposten implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "Produktdaten_FK")
-	@XmlElement(name = "produktdaten", required = true)
 	private Produktdaten produktdaten;
 
 	/**
