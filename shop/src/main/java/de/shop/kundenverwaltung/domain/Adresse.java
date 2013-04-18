@@ -1,7 +1,6 @@
 package de.shop.kundenverwaltung.domain;
 
 import java.io.Serializable;
-
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -23,16 +22,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
-import de.shop.util.XmlDateAdapter;
 
 /**
  * Die Klasse Adresse repräsentiert eine Adresse eines Kunden. Jede Adresse hat
@@ -43,45 +38,22 @@ import de.shop.util.XmlDateAdapter;
  * 
  */
 
-//@formatter:off
+// @formatter:off
 @Entity
-@XmlRootElement
 @Table(name = "Adresse")
 @NamedQueries({
-		@NamedQuery(
-				name = Adresse.ALL_ADRESSEN,
-				query = "SELECT DISTINCT a from Adresse a"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_MIT_KUNDE, 
-				query = "SELECT DISTINCT a from Adresse as a join a.kunde"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_BY_KUNDEID,
-				query = "SELECT adresse from Adresse as adresse WHERE adresse.kunde.kundeID = :id"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_MIT_KUNDE_BY_WOHNORT, 
-				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.ort=:ort"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_BY_WOHNORT, 
-				query = "SELECT DISTINCT a FROM Adresse a WHERE a.ort = :ort"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_MIT_KUNDE_BY_PLZ, 
-				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.plz=:plz"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_BY_PLZ, 
-				query = "SELECT DISTINCT a FROM Adresse a WHERE a.plz = :plz"),	
-		@NamedQuery(
-				name = Adresse.ADRESSE_MIT_KUNDE_BY_STRASSE, 
-				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.strasse=:strasse"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_BY_STRASSE, 
-				query = "SELECT DISTINCT a FROM Adresse a WHERE a.strasse = :strasse"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_MIT_KUNDE_BY_ADRESSEID, 
-				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.adresseID=:adresseID"),
-		@NamedQuery(
-				name = Adresse.ADRESSE_BY_ADRESSEID, 
-				query = "SELECT DISTINCT a FROM Adresse a WHERE a.adresseID = :adresseID") })
-//@formatter:on
+		@NamedQuery(name = Adresse.ALL_ADRESSEN, query = "SELECT DISTINCT a from Adresse a"),
+		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE, query = "SELECT DISTINCT a from Adresse as a join a.kunde"),
+		@NamedQuery(name = Adresse.ADRESSE_BY_KUNDEID, query = "SELECT adresse from Adresse as adresse WHERE adresse.kunde.kundeID = :id"),
+		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_WOHNORT, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.ort=:ort"),
+		@NamedQuery(name = Adresse.ADRESSE_BY_WOHNORT, query = "SELECT DISTINCT a FROM Adresse a WHERE a.ort = :ort"),
+		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_PLZ, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.plz=:plz"),
+		@NamedQuery(name = Adresse.ADRESSE_BY_PLZ, query = "SELECT DISTINCT a FROM Adresse a WHERE a.plz = :plz"),
+		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_STRASSE, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.strasse=:strasse"),
+		@NamedQuery(name = Adresse.ADRESSE_BY_STRASSE, query = "SELECT DISTINCT a FROM Adresse a WHERE a.strasse = :strasse"),
+		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_ADRESSEID, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.adresseID=:adresseID"),
+		@NamedQuery(name = Adresse.ADRESSE_BY_ADRESSEID, query = "SELECT DISTINCT a FROM Adresse a WHERE a.adresseID = :adresseID") })
+// @formatter:on
 public class Adresse implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +140,6 @@ public class Adresse implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "adresse_id")
-	@XmlAttribute
 	private Integer adresseID;
 
 	/**
@@ -176,7 +147,7 @@ public class Adresse implements Serializable {
 	 */
 	@Past(message = "{kundenverwaltung.erstellt.Past}")
 	@Column(name = "Erstellt", length = 32)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date erstellt;
 
 	/**
@@ -184,7 +155,7 @@ public class Adresse implements Serializable {
 	 */
 	@Past(message = "{kundenverwaltung.geaendert.Past}")
 	@Column(name = "Geaendert", length = 32)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date geaendert;
 
 	/**
@@ -193,7 +164,6 @@ public class Adresse implements Serializable {
 	@NotEmpty(message = "{kundenverwaltung.ort.NotEmpty}")
 	@Column(name = "Ort", length = 32)
 	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöüß]+(-[A-ZÄÖÜ][a-zäöüß]+)?", message = "{kundenverwaltung.ort.pattern}")
-	@XmlElement(required = true)
 	private String ort;
 
 	// TODO kein Integer, sondern als String implementieren!t
@@ -203,7 +173,6 @@ public class Adresse implements Serializable {
 	 */
 	@Min(value = 10000, message = "{kundenverwaltung.plz.min}")
 	@Column(name = "PLZ")
-	@XmlElement
 	private int plz;
 
 	/**
@@ -211,7 +180,6 @@ public class Adresse implements Serializable {
 	 */
 	@NotEmpty(message = "{kundenverwaltung.strasse.NotEmpty}")
 	@Column(name = "Strasse", length = 32)
-	@XmlElement
 	private String strasse;
 
 	/**
@@ -219,7 +187,6 @@ public class Adresse implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "Kunde_FK")
-	@XmlElement
 	@Valid
 	private Kunde kunde;
 
@@ -311,8 +278,7 @@ public class Adresse implements Serializable {
 		if (adresseID == null) {
 			if (other.adresseID != null)
 				return false;
-		}
-		else if (!adresseID.equals(other.adresseID))
+		} else if (!adresseID.equals(other.adresseID))
 			return false;
 		return true;
 	}

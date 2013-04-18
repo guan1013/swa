@@ -22,18 +22,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
-import de.shop.util.XmlDateAdapter;
 
 /**
  * Die Klasse Kunde beschreibt einen Kunden in der Datenbank. Ein Kunde kann
@@ -43,33 +37,20 @@ import de.shop.util.XmlDateAdapter;
  * @see Bestellung
  * @author Matthias Schnell
  */
-//@form:off
+// @form:off
 @Entity
-@XmlRootElement
 @Table(name = "Kunde")
 @NamedQueries({
-	@NamedQuery(
-		name = Kunde.ALL_KUNDEN,
-		query = "SELECT k FROM Kunde k"
-	),
-	@NamedQuery(
-		name = Kunde.KUNDE_BY_NACHNAME, 
-		query = "SELECT k FROM Kunde k " 
+		@NamedQuery(name = Kunde.ALL_KUNDEN, query = "SELECT k FROM Kunde k"),
+		@NamedQuery(name = Kunde.KUNDE_BY_NACHNAME, query = "SELECT k FROM Kunde k "
 				+ "WHERE k.nachname = :name"),
-	@NamedQuery(
-		name = Kunde.KUNDE_BY_NACHNAME_JOIN_BESTELLUNG,
-		query = "SELECT k FROM Kunde k JOIN k.bestellungen b " 
+		@NamedQuery(name = Kunde.KUNDE_BY_NACHNAME_JOIN_BESTELLUNG, query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
 				+ "WHERE k.nachname = :name"),
-	@NamedQuery(
-		name = Kunde.KUNDE_BY_EMAIL,
-		query = "SELECT k FROM Kunde k " 
+		@NamedQuery(name = Kunde.KUNDE_BY_EMAIL, query = "SELECT k FROM Kunde k "
 				+ "WHERE k.email = :mail"),
-	@NamedQuery(
-		name = Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG,
-		query = "SELECT k FROM Kunde k JOIN k.bestellungen b " 
-				+ "WHERE k.email = :mail")
-})
-//@form:on
+		@NamedQuery(name = Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG, query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
+				+ "WHERE k.email = :mail") })
+// @form:on
 public class Kunde implements Serializable {
 
 	// /////////////////////////////////////////////////////////////////////
@@ -132,7 +113,6 @@ public class Kunde implements Serializable {
 	@GeneratedValue
 	@Column(name = "kunde_id")
 	@Min(value = 1, groups = IdGroup.class, message = "{kundenverwaltung.kunde.id.min}")
-	@XmlAttribute
 	private Integer kundeID;
 
 	/**
@@ -140,7 +120,6 @@ public class Kunde implements Serializable {
 	 */
 	@Column(name = "Email")
 	@NotNull(message = "{kundenverwaltung.kunde.email.notNull}")
-	@XmlElement(required = true)
 	private String email;
 
 	/**
@@ -148,7 +127,7 @@ public class Kunde implements Serializable {
 	 */
 	@Column(name = "Erstellt")
 	@Past(message = "{kundenverwaltung.kunde.seit.past}")
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date erstellt;
 
 	/**
@@ -156,7 +135,7 @@ public class Kunde implements Serializable {
 	 */
 	@Column(name = "Geaendert")
 	@Past
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date geaendert;
 
 	/**
@@ -165,7 +144,6 @@ public class Kunde implements Serializable {
 	@Column(name = "Geburtsdatum")
 	@Temporal(TemporalType.DATE)
 	@Past
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
 	private Date geburtsdatum;
 
 	/**
@@ -175,7 +153,6 @@ public class Kunde implements Serializable {
 	@NotNull(message = "{kundenverwaltung.kunde.nachname.notNull}")
 	@Size(min = 2, max = 32, message = "{kundenverwaltung.kunde.length}")
 	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöüß]+(-[A-ZÄÖÜ][a-zäöüß]+)?", message = "{kundenverwaltung.kunde.nachname.pattern}")
-	@XmlElement(required = true)
 	private String nachname;
 
 	/**
@@ -191,30 +168,26 @@ public class Kunde implements Serializable {
 	 * Liste aller Bestellung des Kunden
 	 */
 	@OneToMany(mappedBy = "kunde")
-	@XmlTransient
 	@JsonIgnore
 	private List<Bestellung> bestellungen;
 
 	/**
-	 * URI für XML von Bestellungen
+	 * URI für JSon von Bestellungen
 	 */
 	@Transient
-	@XmlElement(name = "bestellungen")
 	private URI bestellungenUri;
 
 	/**
 	 * Liste aller eingetragenen Adressen des Kunden
 	 */
 	@OneToMany(mappedBy = "kunde")
-	@XmlTransient
 	@JsonIgnore
 	private List<Adresse> adressen;
 
 	/**
-	 * URI für XML von adressen
+	 * URI für Json von adressen
 	 */
 	@Transient
-	@XmlElement(name = "adressen")
 	private URI adressenUri;
 
 	// /////////////////////////////////////////////////////////////////////
@@ -402,8 +375,7 @@ public class Kunde implements Serializable {
 		if (kundeID == null) {
 			if (other.kundeID != null)
 				return false;
-		}
-		else if (!kundeID.equals(other.kundeID))
+		} else if (!kundeID.equals(other.kundeID))
 			return false;
 		return true;
 	}
