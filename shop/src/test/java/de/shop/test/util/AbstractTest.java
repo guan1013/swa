@@ -33,7 +33,7 @@ public abstract class AbstractTest {
 	 */
 	@Deployment
 	protected static Archive<?> deployment() {
-		return ArchiveService.getInstance().getArchive();
+		return ArchiveBuilder.getInstance().getArchive();
 	}
 	
 	@BeforeClass
