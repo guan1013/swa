@@ -1,20 +1,19 @@
-id : bestellungFk : ProduktFk : bestelldatum : erstelldatum : veränderungsdatum
-insert into Bestellposten Values (602,501,401,5,1,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (603,501,408,1,2,05.11.2012 10:01:00,05.11.2012 10:01:00),
-insert into Bestellposten Values (604,502,412,3,0,05.11.2012 10:01:00,05.11.2012 10:01:00),
-insert into Bestellposten Values (605,502,401,2,1,05.11.2012 10:01:00,05.11.2012 10:01:00),
-insert into Bestellposten Values (606,503,407,1,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (607,504,413,4,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (608,505,413,1,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (609,506,401,3,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (610,507,418,2,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (611,508,402,1,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (612,509,404,4,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (613,510,403,1,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (614,511,406,5,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (615,512,416,2,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (616,512,417,1,1,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (617,515,418,1,0,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (618,515,419,2,1,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (619,515,401,1,2,05.11.2012 10:01:00,05.11.2012 10:01:00);
-insert into Bestellposten Values (620,515,401,1,3,05.11.2012 10:01:00,05.11.2012 10:01:00);
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (602,501,401,5,1,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (603,501,408,1,2,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (604,502,412,3,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (605,502,401,2,1,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (606,503,407,1,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (607,504,413,4,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (608,505,413,1,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (609,506,401,3,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (610,507,418,2,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (611,508,402,1,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (612,509,404,4,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (613,510,403,1,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (614,511,406,5,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (615,512,416,2,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (616,512,417,1,1,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (617,515,418,1,0,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (618,515,419,2,1,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (619,515,401,1,2,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
+insert into Bestellposten (bestellposten_id, bestellung_fk, produktdaten_fk, anzahl, idx, erstellt, geaendert) Values (620,515,401,1,3,to_timestamp('05.11.2012 10:01:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('05.11.2012 10:01:01', 'DD.MM.YYYY HH24:MI:SS'));
