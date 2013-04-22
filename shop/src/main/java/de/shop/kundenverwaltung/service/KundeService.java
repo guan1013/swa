@@ -1,15 +1,14 @@
 package de.shop.kundenverwaltung.service;
 
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.FINEST;
-
 import java.io.Serializable;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.jboss.logging.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,8 +17,9 @@ import javax.validation.Validator;
 import javax.validation.groups.Default;
 
 import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.domain.PasswordGroup;
 import de.shop.util.IdGroup;
-import de.shop.util.ValidationService;
+import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.InvalidEmailException;
 import de.shop.util.exceptions.InvalidKundeIdException;
 import de.shop.util.exceptions.InvalidNachnameException;
@@ -32,22 +32,36 @@ import de.shop.util.exceptions.KundeValidationException;
  */
 public class KundeService implements Serializable {
 
+	// /////////////////////////////////////////////////////////////////////
+	// ATTRIBUTES
 	private static final long serialVersionUID = -3457208054417097021L;
 
 	public enum FetchType {
 		JUST_KUNDE, WITH_BESTELLUNGEN
 	}
 
-	// /////////////////////////////////////////////////////////////////////
-	// ATTRIBUTES
 	@PersistenceContext
 	private transient EntityManager em;
 
 	@Inject
-	private ValidationService validationService;
+	private ValidatorProvider validatorProvider;
 
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles
-			.lookup().lookupClass().getName());
+	@Inject
+	private transient Logger LOGGER;
+
+	@Inject
+	@NeuerKunde
+	private transient Event<Kunde> event;
+
+	@PostConstruct
+	private void postConstruct() {
+		LOGGER.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
+	}
+
+	@PreDestroy
+	private void preDestroy() {
+		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
+	}
 
 	// /////////////////////////////////////////////////////////////////////
 	// METHODS
@@ -61,21 +75,21 @@ public class KundeService implements Serializable {
 
 		if (pKD == null)
 			return pKD;
-		LOGGER.log(FINER, "BEGINN: createKunde with pKD= {0}", pKD);
 
 		/**
 		 * Prüfen ob Kundendaten korrekt sind
 		 */
-		validateKunde(pKD, pLocale, Default.class);
+		validateKunde(pKD, pLocale, Default.class, PasswordGroup.class);
 
 		/**
 		 * Wenn Kunde mit dieser E-Mail Adresse noch nicht existiert, lege ihn
-		 * an.
+		 * an und schicke eine Bestätigungsnachricht an diesen.
 		 */
 		List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
 				pLocale);
 		if (kd.isEmpty()) {
 			em.persist(pKD);
+			event.fire(pKD);
 		}
 
 		/**
@@ -83,7 +97,6 @@ public class KundeService implements Serializable {
 		 */
 		em.flush();
 
-		LOGGER.log(FINER, "END: createKunde with pKD= {0}", pKD);
 		return pKD;
 	}
 
@@ -92,14 +105,12 @@ public class KundeService implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Kunde> findAllKunden() {
-		LOGGER.log(FINER, "BEGINN: findAllKunden");
 
 		/**
 		 * Alle gefunden Kunden speichern.
 		 */
 		List<Kunde> kd = em.createNamedQuery(Kunde.ALL_KUNDEN).getResultList();
 
-		LOGGER.log(FINER, "END: finAllKunden");
 		return kd;
 	}
 
@@ -114,7 +125,6 @@ public class KundeService implements Serializable {
 		if (pID == null) {
 			return null;
 		}
-		LOGGER.log(FINER, "BEGINN: findKundeById with pID= {0}", pID);
 
 		/**
 		 * Prüfung ob ID Korrekt eingegeben ist
@@ -129,7 +139,6 @@ public class KundeService implements Serializable {
 
 		kd = em.find(Kunde.class, pID);
 
-		LOGGER.log(FINER, "END: findKundeById with pID= {0}", pID);
 		return kd;
 	}
 
@@ -145,8 +154,6 @@ public class KundeService implements Serializable {
 		if (pMail == null) {
 			return null;
 		}
-
-		LOGGER.log(FINER, "BEGINN: findKundeByMail with pMail= {0}", pMail);
 
 		/**
 		 * Prüfen ob Email richtig eingegeben ist.
@@ -188,8 +195,6 @@ public class KundeService implements Serializable {
 
 		}
 
-		LOGGER.log(FINER, "END: findKundeByMail with pMail= {0}", pMail);
-
 		return kd;
 	}
 
@@ -206,8 +211,6 @@ public class KundeService implements Serializable {
 			return null;
 		}
 
-		LOGGER.log(FINER, "BEGINN: findKundeByNachname with pNachname= {0}",
-				pName);
 		/**
 		 * Prüfe ob Nachname richtig eingegeben ist
 		 */
@@ -246,7 +249,6 @@ public class KundeService implements Serializable {
 
 		}
 
-		LOGGER.log(FINER, "END: findKundeByNachname with pName= {0}", pName);
 		return kd;
 	}
 
@@ -261,16 +263,13 @@ public class KundeService implements Serializable {
 			return pKD;
 		}
 
-		LOGGER.log(FINER, "BEGINN: updateKunde with pKD= {0}", pKD);
-
-		validateKunde(pKD, pLocale, Default.class);
+		validateKunde(pKD, pLocale, Default.class, PasswordGroup.class);
 
 		/**
 		 * Prüfen ob zu ändernde Kunde existiert
 		 */
 		Kunde existingKunde = findKundeById(pKD.getKundeID(), pLocale);
 		if (existingKunde == null) {
-			LOGGER.log(FINEST, "Zu ändernde Kunde exisitert nicht");
 			return null;
 		}
 
@@ -281,7 +280,6 @@ public class KundeService implements Serializable {
 			List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
 					pKD.getEmail(), pLocale);
 			if (!kd.isEmpty()) {
-				LOGGER.log(FINEST, "E-Mail bereits vorhanden.");
 				return null;
 			}
 		}
@@ -293,7 +291,6 @@ public class KundeService implements Serializable {
 		 */
 		em.flush();
 
-		LOGGER.log(FINER, "END: updateKunde with pKD= {0}", pKD);
 		return pKD;
 	}
 
@@ -301,7 +298,7 @@ public class KundeService implements Serializable {
 	// VALIDATES
 
 	private void validateKundeId(Integer pKID, Locale pLocale) {
-		final Validator validator = validationService.getValidator(pLocale);
+		final Validator validator = validatorProvider.getValidator(pLocale);
 		final Set<ConstraintViolation<Kunde>> violations = validator
 				.validateValue(Kunde.class, "kundeID", pKID, IdGroup.class);
 		if (!violations.isEmpty()) {
@@ -311,7 +308,7 @@ public class KundeService implements Serializable {
 	}
 
 	private void validateKundeNachname(String pName, Locale pLocale) {
-		final Validator validator = validationService.getValidator(pLocale);
+		final Validator validator = validatorProvider.getValidator(pLocale);
 		final Set<ConstraintViolation<Kunde>> violations = validator
 				.validateValue(Kunde.class, "nachname", pName, Default.class);
 		if (!violations.isEmpty()) {
@@ -329,7 +326,7 @@ public class KundeService implements Serializable {
 	}
 
 	private void validateKundeEmail(String pMail, Locale pLocale) {
-		final Validator validator = validationService.getValidator(pLocale);
+		final Validator validator = validatorProvider.getValidator(pLocale);
 		final Set<ConstraintViolation<Kunde>> violations = validator
 				.validateValue(Kunde.class, "email", pMail, Default.class);
 
@@ -340,7 +337,7 @@ public class KundeService implements Serializable {
 	}
 
 	private void validateKunde(Kunde pKD, Locale pLocale, Class<?>... pGroups) {
-		final Validator validator = validationService.getValidator(pLocale);
+		final Validator validator = validatorProvider.getValidator(pLocale);
 		final Set<ConstraintViolation<Kunde>> violations = validator.validate(
 				pKD, pGroups);
 

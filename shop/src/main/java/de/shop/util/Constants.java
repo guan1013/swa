@@ -2,7 +2,7 @@ package de.shop.util;
 
 public final class Constants {
 	// JPA
-	public static final Long KEINE_ID = null;
+	public static final Integer KEINE_ID = null;
 	public static final long MIN_ID = 1L;
 	public static final int ERSTE_VERSION = 0;
 	

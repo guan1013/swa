@@ -33,7 +33,7 @@ public class File implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(nullable = false, updatable = false)
-	private Long id = KEINE_ID;
+	private Integer id = KEINE_ID;
 	
 	@Version
 	@Basic(optional = false)
@@ -80,11 +80,11 @@ public class File implements Serializable {
 		aktualisiert = new Date();
 	}
 
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

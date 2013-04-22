@@ -10,22 +10,22 @@
   <env-entry>
     <env-entry-name>absenderMail</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>abcd0011@hs-karlsruhe.de</env-entry-value>
+    <env-entry-value>maze.schnell@gmail.com</env-entry-value>
   </env-entry>
   <env-entry>
     <env-entry-name>absenderName</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>Joe Doe</env-entry-value>
+    <env-entry-value>Gruppe10-Team</env-entry-value>
   </env-entry>
   <env-entry>
     <env-entry-name>empfaengerMail</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>abcd0011@hs-karlsruhe.de</env-entry-value>
+    <env-entry-value>guan1013@hs-karlsruhe.de</env-entry-value>
   </env-entry>
   <env-entry>
     <env-entry-name>empfaengerName</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>Joe Doe</env-entry-value>
+    <env-entry-value>Bester Kunde</env-entry-value>
   </env-entry>
   <env-entry>
     <env-entry-name>locales</env-entry-name>

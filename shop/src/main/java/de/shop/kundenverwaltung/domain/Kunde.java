@@ -1,23 +1,45 @@
 package de.shop.kundenverwaltung.domain;
 
+import static de.shop.util.Constants.ERSTE_VERSION;
+import static de.shop.util.Constants.KEINE_ID;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
+
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
+import javax.persistence.PostLoad;
+import javax.persistence.PostPersist;
+import javax.persistence.PostUpdate;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -25,9 +47,15 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.ScriptAssert;
+import org.jboss.logging.Logger;
 
+import de.shop.auth.service.jboss.AuthService.RolleType;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.DateFormatter;
+import de.shop.util.File;
 import de.shop.util.IdGroup;
 
 /**
@@ -41,6 +69,7 @@ import de.shop.util.IdGroup;
 // @form:off
 @Entity
 @Table(name = "Kunde")
+@Cacheable
 @NamedQueries({
 		@NamedQuery(name = Kunde.ALL_KUNDEN, query = "SELECT k FROM Kunde k"),
 		@NamedQuery(name = Kunde.KUNDE_BY_NACHNAME, query = "SELECT k FROM Kunde k "
@@ -52,14 +81,20 @@ import de.shop.util.IdGroup;
 		@NamedQuery(name = Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG, query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
 				+ "WHERE k.email = :mail") })
 // @form:on
+@ScriptAssert(lang = "javascript", script = "(_this.password == null && _this.passwordWdh == null)"
+		+ "|| (_this.password != null && _this.password.equals(_this.passwordWdh))", message = "{kundenverwaltung.kunde.password.notEqual}", groups = PasswordGroup.class)
 public class Kunde implements Serializable {
 
 	// /////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
+
 	/**
 	 * Serial
 	 */
 	private static final long serialVersionUID = 1090137837509194681L;
+
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass().getName());
 
 	/**
 	 * Prefix die einem Query vorangestellt wird.
@@ -114,14 +149,26 @@ public class Kunde implements Serializable {
 	@GeneratedValue
 	@Column(name = "kunde_id")
 	@Min(value = 1, groups = IdGroup.class, message = "{kundenverwaltung.kunde.id.min}")
-	private Integer kundeID;
+	private Integer kundeID = KEINE_ID;
+
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 
 	/**
 	 * E-Mail Adresse des Kunden
 	 */
+	@Email(message = "{kundenverwaltung.kunde.email}")
 	@Column(name = "Email")
-	@NotNull(message = "{kundenverwaltung.kunde.email.notNull}")
 	private String email;
+
+	@OneToOne(fetch = LAZY, cascade = { PERSIST, REMOVE })
+	@JoinColumn(name = "file_fk")
+	@JsonIgnore
+	private File pic;
+
+	@Transient
+	private URI picUri;
 
 	/**
 	 * Erstell Datum des Kunden
@@ -192,6 +239,21 @@ public class Kunde implements Serializable {
 	@Transient
 	private URI adressenUri;
 
+	@Column(length = 256)
+	@Size(max = 256, message = "{kundenverwaltung.kunde.password.length}")
+	private String password;
+
+	@Transient
+	@JsonIgnore
+	private String passwordWdh;
+	
+	@ElementCollection(fetch = EAGER)
+	@CollectionTable(name = "kunde_rolle",
+	                 joinColumns = @JoinColumn(name = "kunde_fk", nullable = false),
+	                 uniqueConstraints =  @UniqueConstraint(columnNames = { "kunde_fk", "rolle_fk" }))
+	@Column(table = "kunde_rolle", name = "rolle_fk", nullable = false)
+	private Set<RolleType> rollen;
+
 	// /////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR
 
@@ -226,6 +288,34 @@ public class Kunde implements Serializable {
 
 	// /////////////////////////////////////////////////////////////////////
 	// METHODS
+	@PrePersist
+	protected void prePersist() {
+		erstellt = new Date();
+		geaendert = new Date();
+	}
+
+	@PostPersist
+	protected void postPersist() {
+		LOGGER.debugf("Neuer Kunde mit ID=%d", kundeID);
+	}
+
+	@PreUpdate
+	protected void preUpdate() {
+		geaendert = new Date();
+	}
+
+	@PostUpdate
+	protected void postUpdate() {
+		LOGGER.debugf("Kunde mit ID=%d aktualisiert: version=%d", kundeID,
+				version);
+	}
+
+	@PostLoad
+	protected void postLoad() {
+		passwordWdh = password;
+
+	}
+
 	public Kunde addBestellung(Bestellung pBe) {
 
 		// Plausalitätstest
@@ -290,6 +380,7 @@ public class Kunde implements Serializable {
 		this.email = email;
 	}
 
+	@JsonProperty("erstellt")
 	public Date getErstellt() {
 		return this.erstellt == null ? null : (Date) erstellt.clone();
 	}
@@ -298,6 +389,7 @@ public class Kunde implements Serializable {
 		this.erstellt = erstellt == null ? null : (Date) erstellt.clone();
 	}
 
+	@JsonProperty("geaendert")
 	public Date getGeaendert() {
 		return this.geaendert == null ? null : (Date) geaendert.clone();
 	}
@@ -331,6 +423,30 @@ public class Kunde implements Serializable {
 		this.vorname = vorname;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getPasswordWdh() {
+		return passwordWdh;
+	}
+
+	public void setPasswordWdh(String passwordWdh) {
+		this.passwordWdh = passwordWdh;
+	}
+	
+	public Set<RolleType> getRollen() {
+		return rollen;
+	}
+
+	public void setRollen(Set<RolleType> rollen) {
+		this.rollen = rollen;
+	}
+
 	public List<Bestellung> getBestellungen() {
 		return this.bestellungen;
 	}
@@ -355,13 +471,29 @@ public class Kunde implements Serializable {
 		this.adressenUri = adressenUri;
 	}
 
+	public File getPic() {
+		return pic;
+	}
+
+	public void setPic(File pic) {
+		this.pic = pic;
+	}
+
+	public URI getPicUri() {
+		return picUri;
+	}
+
+	public void setPicUri(URI picUri) {
+		this.picUri = picUri;
+	}
+
 	// /////////////////////////////////////////////////////////////////////
 	// OVERRIDES
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + email.hashCode();
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -384,9 +516,27 @@ public class Kunde implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Kunde [kundeID=" + kundeID + ", email=" + email
-				+ ", geburtsdatum=" + geburtsdatum + ", nachname=" + nachname
-				+ ", vorname=" + vorname + "]";
+		return "Kunde [kundeID=" + kundeID + ", version=" + version
+				+ ", nachname=" + nachname + ", vorname=" + vorname
+				+ ", email=" + email + ", rollen=" + rollen + ", password=" + password
+				+ ", passwordWdh=" + passwordWdh + ", erstellt=" + erstellt
+				+ ", geaendert=" + geaendert + "]";
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		final Kunde neuesObjekt = (Kunde) super.clone();
+		neuesObjekt.kundeID = this.kundeID;
+		neuesObjekt.version = this.version;
+		neuesObjekt.nachname = this.nachname;
+		neuesObjekt.vorname = this.vorname;
+		neuesObjekt.email = this.email;
+		neuesObjekt.password = this.password;
+		neuesObjekt.passwordWdh = this.passwordWdh;
+		neuesObjekt.adressen = this.getAdressen();
+		neuesObjekt.erstellt = this.erstellt;
+		neuesObjekt.geaendert = this.geaendert;
+		return neuesObjekt;
 	}
 
 }

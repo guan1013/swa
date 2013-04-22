@@ -1,8 +1,13 @@
 package de.shop.kundenverwaltung.domain;
 
+import static de.shop.util.Constants.ERSTE_VERSION;
+import static de.shop.util.Constants.KEINE_ID;
+
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Basic;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,10 +18,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
-//import javax.persistence.PrePersist;
-//import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.NamedQuery;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -24,6 +28,7 @@ import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.DateFormatter;
@@ -34,13 +39,14 @@ import de.shop.util.IdGroup;
  * eine ID, einen Ort, eine PLZ und eine Straﬂe.
  * 
  * @see Kunde
- * @author Yannick Gentner
+ * @author Yannick Gentner & Matthias Schnell
  * 
  */
 
 // @formatter:off
 @Entity
 @Table(name = "Adresse")
+@Cacheable
 @NamedQueries({
 		@NamedQuery(name = Adresse.ALL_ADRESSEN, query = "SELECT DISTINCT a from Adresse a"),
 		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE, query = "SELECT DISTINCT a from Adresse as a join a.kunde"),
@@ -140,7 +146,12 @@ public class Adresse implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "adresse_id")
-	private Integer adresseID;
+	@Min(value = 1, groups = IdGroup.class, message = "{kundenverwaltung.adresse.id.min}")
+	private Integer adresseID = KEINE_ID;
+
+	@Version
+	@Basic(optional = false)
+	private int version = ERSTE_VERSION;
 
 	/**
 	 * Erstelldatum der Adresse
@@ -301,6 +312,7 @@ public class Adresse implements Serializable {
 		this.adresseID = adresseID;
 	}
 
+	@JsonProperty("erstellt")
 	public Date getErstellt() {
 		return erstellt == null ? null : (Date) erstellt.clone();
 	}
@@ -309,6 +321,7 @@ public class Adresse implements Serializable {
 		this.erstellt = erstellt == null ? null : (Date) erstellt.clone();
 	}
 
+	@JsonProperty("geaendert")
 	public Date getGeaendert() {
 		return geaendert == null ? null : (Date) geaendert.clone();
 	}

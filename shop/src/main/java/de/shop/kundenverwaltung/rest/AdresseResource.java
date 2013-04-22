@@ -8,7 +8,6 @@ import static javax.ws.rs.core.MediaType.TEXT_XML;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.util.Collection;
-import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -32,6 +31,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.service.AdresseService;
 import de.shop.kundenverwaltung.service.AdresseService.FetchType;
+import de.shop.util.LocaleHelper;
 import de.shop.util.NotFoundException;
 
 @Path("/adressen")
@@ -45,6 +45,11 @@ public class AdresseResource {
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
+	@Context
+	private HttpHeaders headers;
+
+	@Inject
+	private LocaleHelper localeHelper;
 
 	@Inject
 	private AdresseService as;
@@ -58,19 +63,16 @@ public class AdresseResource {
 	@POST
 	@Consumes({ APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response addAdresse(Adresse adresse, @Context UriInfo uriInfo,
-			@Context HttpHeaders headers) {
+	public Response addAdresse(Adresse adresse, @Context UriInfo uriInfo) {
 
 		// Log
 		LOGGER.log(FINER, "REST BEGINN: addAdresse", adresse);
 
 		// Locale
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
+		Locale LOCALE = localeHelper.getLocale(headers);
 
 		// Service aufrufen
-		adresse = as.addAdresse(adresse, locale);
+		adresse = as.addAdresse(adresse, LOCALE);
 
 		final URI adresseURI = uriHelperAdresse.getUriAdresse(adresse, uriInfo);
 
@@ -83,19 +85,16 @@ public class AdresseResource {
 
 	@GET
 	@Path("{id:[1-9][0-9]*}")
-	public Adresse findAdresseByID(@PathParam("id") Integer id,
-			@Context HttpHeaders headers) {
+	public Adresse findAdresseByID(@PathParam("id") Integer id) {
 
 		// Log
 		LOGGER.log(FINER, "REST BEGINN: findAdresse By ID={0}", id);
 
 		// Locale
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
+		Locale LOCALE = localeHelper.getLocale(headers);
 
 		// Service aufrufen und ggf. Exception
-		Adresse result = as.findAdresseByAdresseID(id, locale);
+		Adresse result = as.findAdresseByAdresseID(id, LOCALE);
 		if (result == null) {
 			final String msg = "Keine Adresse mit der ID " + id + " gefunden";
 
@@ -111,20 +110,17 @@ public class AdresseResource {
 	@GET
 	@Wrapped(element = "adressen")
 	@Path("/plz")
-	public Collection<Adresse> findAdresseByPLZ(@QueryParam("plz") int plz,
-			@Context HttpHeaders headers) {
+	public Collection<Adresse> findAdresseByPLZ(@QueryParam("plz") int plz) {
 
 		// Log
 		LOGGER.log(FINER, "REST BEGINN: findAdresse By PLZ={0}", plz);
 
 		// Locale
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
+		Locale LOCALE = localeHelper.getLocale(headers);
 
 		// Service aufrufen und ggf. Exception
 		Collection<Adresse> results = as.findAdresseByPLZ(FetchType.MIT_KUNDE,
-				plz, locale);
+				plz, LOCALE);
 
 		if (results.isEmpty()) {
 			final String msg = "Keine Adresse mit der PLZ " + plz + " gefunden";
@@ -141,15 +137,10 @@ public class AdresseResource {
 	@Wrapped(element = "adressen")
 	@Path("/strasse")
 	public Collection<Adresse> findAdresseByStrasse(
-			@QueryParam("strasse") String strasse, @Context HttpHeaders headers) {
+			@QueryParam("strasse") String strasse) {
 
 		// Log
 		LOGGER.log(FINER, "REST BEGINN: findAdresse By Strasse={0}", strasse);
-
-		// Locale
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
 
 		Collection<Adresse> results = null;
 
@@ -160,10 +151,12 @@ public class AdresseResource {
 				final String msg = "Keine Adresse vorhanden";
 				throw new NotFoundException(msg);
 			}
-		}
-		else {
+		} else {
+
+			// Locale
+			Locale LOCALE = localeHelper.getLocale(headers);
 			results = as.findAdresseByStrasse(FetchType.MIT_KUNDE, strasse,
-					locale);
+					LOCALE);
 			if (results.isEmpty()) {
 				final String msg = "Keine Adresse mit der Strasse " + strasse
 						+ " gefunden";
@@ -180,16 +173,10 @@ public class AdresseResource {
 	@GET
 	@Wrapped(element = "adressen")
 	@Path("/ort")
-	public Collection<Adresse> findAdresseByOrt(@QueryParam("ort") String ort,
-			@Context HttpHeaders headers) {
+	public Collection<Adresse> findAdresseByOrt(@QueryParam("ort") String ort) {
 
 		// Log
 		LOGGER.log(FINER, "REST BEGINN: findAdresse By Ort={0}", ort);
-
-		// Locale
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
 
 		Collection<Adresse> results = null;
 
@@ -200,9 +187,11 @@ public class AdresseResource {
 				final String msg = "Keine Adresse vorhanden";
 				throw new NotFoundException(msg);
 			}
-		}
-		else {
-			results = as.findAdresseByOrt(FetchType.MIT_KUNDE, ort, locale);
+		} else {
+			// Locale
+			Locale LOCALE = localeHelper.getLocale(headers);
+
+			results = as.findAdresseByOrt(FetchType.MIT_KUNDE, ort, LOCALE);
 			if (results.isEmpty()) {
 				final String msg = "Keine Adresse mit dem Ort " + ort
 						+ " gefunden";
@@ -219,16 +208,13 @@ public class AdresseResource {
 	@PUT
 	@Consumes({ APPLICATION_XML, TEXT_XML })
 	@Produces
-	public Response updateAdresse(Adresse adresse, @Context UriInfo uriInfo,
-			@Context HttpHeaders headers) {
+	public Response updateAdresse(Adresse adresse, @Context UriInfo uriInfo) {
 
 		// Log
 		LOGGER.log(FINER, "REST BEGINN: updateAdresse", adresse);
 
-		// Locales
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
+		// Locale
+		Locale LOCALE = localeHelper.getLocale(headers);
 
 		// GGf. Exception
 		if (adresse == null) {
@@ -237,7 +223,7 @@ public class AdresseResource {
 		}
 
 		// Service aufrufen
-		adresse = as.updateAdresse(adresse, locale);
+		adresse = as.updateAdresse(adresse, LOCALE);
 
 		final URI adresseUri = uriHelperAdresse.getUriAdresse(adresse, uriInfo);
 

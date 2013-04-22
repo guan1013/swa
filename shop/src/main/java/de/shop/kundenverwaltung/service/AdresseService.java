@@ -1,16 +1,14 @@
 package de.shop.kundenverwaltung.service;
 
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.SEVERE;
-
 import java.io.Serializable;
-import java.lang.invoke.MethodHandles;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.logging.Logger;
+import org.jboss.logging.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -21,7 +19,7 @@ import javax.validation.groups.Default;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Adresse_;
 import de.shop.util.IdGroup;
-import de.shop.util.ValidationService;
+import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.AdresseValidationException;
 
 /**
@@ -36,7 +34,7 @@ import de.shop.util.exceptions.AdresseValidationException;
  * - Adresse hinzufügen<br>
  * - Adresse aendern<br>
  * 
- * @author Yannick Gentner
+ * @author Yannick Gentner & Matthias Schnell
  * 
  */
 
@@ -54,10 +52,20 @@ public class AdresseService implements Serializable {
 	private transient EntityManager em;
 
 	@Inject
-	private ValidationService validationService;
+	private ValidatorProvider validatorProvider;
 
-	private static final Logger LOGGER = Logger.getLogger(MethodHandles
-			.lookup().lookupClass().getName());
+	@Inject
+	private transient Logger LOGGER;
+
+	@PostConstruct
+	private void postConstruct() {
+		LOGGER.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
+	}
+
+	@PreDestroy
+	private void preDestroy() {
+		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
+	}
 
 	public enum FetchType {
 		NUR_ADRESSE, MIT_KUNDE
@@ -70,14 +78,12 @@ public class AdresseService implements Serializable {
 	 * Validator wird implementiert
 	 */
 	private Validator getValidator(Locale l) {
-		return validationService.getValidator(l);
+		return validatorProvider.getValidator(l);
 	}
 
 	private void checkViolations(Set<ConstraintViolation<Adresse>> violations) {
 
 		if (!violations.isEmpty()) {
-			LOGGER.log(SEVERE, "{0} Fehler bei der Validierung",
-					violations.size());
 			StringBuffer buffer = new StringBuffer();
 			Iterator<ConstraintViolation<Adresse>> it = violations.iterator();
 			while (it.hasNext()) {
@@ -95,9 +101,6 @@ public class AdresseService implements Serializable {
 	 * @return
 	 */
 	public Adresse addAdresse(Adresse neueAdresse, Locale locale) {
-
-		// Log
-		LOGGER.log(FINER, "Add neue Adresse={0}", neueAdresse);
 
 		// Validierung Adresse
 		checkViolations(getValidator(locale).validate(neueAdresse,
@@ -117,9 +120,6 @@ public class AdresseService implements Serializable {
 	 */
 	public Adresse updateAdresse(Adresse adresse, Locale locale) {
 
-		// Log
-		LOGGER.log(FINER, "Update Adresse={0}", adresse);
-
 		// Validierung Adresse
 		checkViolations(getValidator(locale).validate(adresse));
 
@@ -137,22 +137,17 @@ public class AdresseService implements Serializable {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Adresse> findAllAdressen() {
-		LOGGER.log(FINER, "BEGINN: findAllAdressen");
 
 		/**
 		 * Alle gefundenen Adressen speichern.
 		 */
 		List<Adresse> ad = em.createNamedQuery(Adresse.ALL_ADRESSEN)
 				.getResultList();
-
-		LOGGER.log(FINER, "END: finAllAdressen");
 		return ad;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Adresse> findAdressenByKundeId(Integer id) {
-
-		LOGGER.log(FINER, "BEGINN: findAllAdressenByKundeId");
 
 		/**
 		 * Alle gefundenen Adressen speichern
@@ -160,7 +155,6 @@ public class AdresseService implements Serializable {
 		List<Adresse> ad = em.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
 				.setParameter("id", id).getResultList();
 
-		LOGGER.log(FINER, "END: findAllAdressenByKundeId");
 		return ad;
 	}
 
@@ -182,20 +176,12 @@ public class AdresseService implements Serializable {
 		switch (fetch) {
 		case NUR_ADRESSE:
 
-			// Log
-			LOGGER.log(FINER, "NUR_ADRESSE: findAdresseByOrt mit ort= {0}", ort);
-
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_BY_WOHNORT)
 					.setParameter("ort", ort).getResultList();
 			break;
 
 		case MIT_KUNDE:
-
-			// Log
-			LOGGER.log(FINER,
-					"MIT_KUNDE: findeKundeMitAdresseNachWohnort mit ort= {0}",
-					ort);
 
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_MIT_KUNDE_BY_WOHNORT)
@@ -204,9 +190,6 @@ public class AdresseService implements Serializable {
 			break;
 
 		default:
-
-			// Log
-			LOGGER.log(FINER, "DEFAULT: findAdresseByOrt mit ort= {0}", ort);
 
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_BY_WOHNORT)
@@ -235,11 +218,6 @@ public class AdresseService implements Serializable {
 		switch (fetch) {
 		case NUR_ADRESSE:
 
-			// Log
-			LOGGER.log(FINER,
-					"NUR_ADRESSE: findAdresseByStrasse mit strasse= {0}",
-					strasse);
-
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_BY_STRASSE)
 					.setParameter("strasse", strasse).getResultList();
@@ -248,23 +226,12 @@ public class AdresseService implements Serializable {
 
 		case MIT_KUNDE:
 
-			// Log
-			LOGGER.log(
-					FINER,
-					"MIT_KUNDE: findeKundeMitAdresseNachStrasse mit strasse= {0}",
-					strasse);
-
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_MIT_KUNDE_BY_STRASSE)
 					.setParameter("strasse", strasse).getResultList();
 			break;
 
 		default:
-			// Log
-			LOGGER.log(
-					FINER,
-					"DEFAULT: findeKundeMitAdresseNachStrasse mit strasse= {0}",
-					strasse);
 
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_MIT_KUNDE_BY_STRASSE)
@@ -292,10 +259,6 @@ public class AdresseService implements Serializable {
 		switch (fetch) {
 		case NUR_ADRESSE:
 
-			// Log
-			LOGGER.log(FINER, "NUR_ADRESSE: findAdresseByPLZ mit plz = {0}",
-					plz);
-
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_BY_PLZ)
 					.setParameter("plz", plz).getResultList();
@@ -304,10 +267,6 @@ public class AdresseService implements Serializable {
 
 		case MIT_KUNDE:
 
-			// Log
-			LOGGER.log(FINER,
-					"MIT_KUNDE: findeKundeMitAdresseNachPLZ mit plz = {0}", plz);
-
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_MIT_KUNDE_BY_PLZ)
 					.setParameter("plz", plz).getResultList();
@@ -315,10 +274,6 @@ public class AdresseService implements Serializable {
 			break;
 
 		default:
-
-			// Log
-			LOGGER.log(FINER,
-					"DEFAULT: findeKundeMitAdresseNachPLZ mit plz = {0}", plz);
 
 			// Named Query aufrufen
 			ad = em.createNamedQuery(Adresse.ADRESSE_MIT_KUNDE_BY_PLZ)
@@ -342,16 +297,8 @@ public class AdresseService implements Serializable {
 		checkViolations(getValidator(locale).validateValue(Adresse.class,
 				Adresse_.adresseID.getName(), adresseID, IdGroup.class));
 
-		// Log
-		LOGGER.log(FINER, "BEGINN: findAdresseByAdresseID mit adresseID = {0}",
-				adresseID);
-
 		// In DB suchen
 		Adresse ad = em.find(Adresse.class, adresseID);
-
-		// Log
-		LOGGER.log(FINER, "ENDE: findAdresseByAdresseID mit adresseID = {0}",
-				ad);
 
 		return ad;
 	}

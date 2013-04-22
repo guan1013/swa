@@ -20,6 +20,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -30,6 +31,7 @@ import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.AdresseService;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
+import de.shop.util.LocaleHelper;
 import de.shop.util.NotFoundException;
 
 /**
@@ -45,7 +47,12 @@ public class KundeResource {
 
 	// /////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
-	private static final Locale LOCALE_DEFAULT = Locale.getDefault();
+
+	@Context
+	private HttpHeaders headers;
+
+	@Inject
+	private LocaleHelper localeHelper;
 
 	@Inject
 	private KundeService ks;
@@ -64,7 +71,8 @@ public class KundeResource {
 	@Produces
 	public Response addKunde(Kunde pKD, @Context UriInfo uriInfo) {
 
-		ks.addKunde(pKD, LOCALE_DEFAULT);
+		Locale LOCALE = localeHelper.getLocale(headers);
+		ks.addKunde(pKD, LOCALE);
 
 		final URI kdUri = uriHelperKunde.getUriKunde(pKD, uriInfo);
 		return Response.created(kdUri).build();
@@ -74,7 +82,9 @@ public class KundeResource {
 	@Path("{kid:[1-9][0-9]*}")
 	public Kunde findKundeById(@PathParam("kid") Integer pID,
 			@Context UriInfo uriInfo) {
-		Kunde kd = ks.findKundeById(pID, LOCALE_DEFAULT);
+
+		Locale LOCALE = localeHelper.getLocale(headers);
+		Kunde kd = ks.findKundeById(pID, LOCALE);
 		if (kd == null) {
 			final String msg = "Kein Kunde gefunden mit der ID" + pID;
 
@@ -91,6 +101,7 @@ public class KundeResource {
 	@Wrapped(element = "kunden")
 	public List<Kunde> findKundenByNachname(@QueryParam("name") String pName,
 			@Context UriInfo uriInfo) {
+
 		List<Kunde> kd = null;
 		if ("".equals(pName)) {
 			kd = ks.findAllKunden();
@@ -98,10 +109,10 @@ public class KundeResource {
 				final String msg = "Kein Kunde vorhanden";
 				throw new NotFoundException(msg);
 			}
-		}
-		else {
-			kd = ks.findKundeByNachname(FetchType.JUST_KUNDE, pName,
-					LOCALE_DEFAULT);
+		} else {
+			Locale LOCALE = localeHelper.getLocale(headers);
+
+			kd = ks.findKundeByNachname(FetchType.JUST_KUNDE, pName, LOCALE);
 			if (kd.isEmpty()) {
 				final String msg = "Kein Kunde mit dem Nachnamen " + pName
 						+ " gefunden.";
@@ -135,8 +146,10 @@ public class KundeResource {
 
 		// URLs der gefundenen Bestellungen anpassen
 		Kunde kd;
+		Locale LOCALE = localeHelper.getLocale(headers);
 		for (Adresse a : ad) {
-			kd = ks.findKundeById(a.getKunde().getKundeID(), LOCALE_DEFAULT);
+
+			kd = ks.findKundeById(a.getKunde().getKundeID(), LOCALE);
 			uriHelperKunde.updateUriKunde(kd, uriInfo);
 		}
 
@@ -149,7 +162,8 @@ public class KundeResource {
 	public void updateKunde(Kunde pKD, @Context UriInfo uriInfo) {
 
 		// Vorhandenen Kunden suchen
-		Kunde kd = ks.findKundeById(pKD.getKundeID(), LOCALE_DEFAULT);
+		Locale LOCALE = localeHelper.getLocale(headers);
+		Kunde kd = ks.findKundeById(pKD.getKundeID(), LOCALE);
 		if (kd == null) {
 			final String msg = "Kein Kunde mit der ID " + pKD.getKundeID()
 					+ " gefunden";
@@ -159,7 +173,7 @@ public class KundeResource {
 		kd.setValues(pKD);
 
 		// Objekt an die Datenbank übergeben
-		pKD = ks.updateKunde(kd, LOCALE_DEFAULT);
+		pKD = ks.updateKunde(kd, LOCALE);
 		if (pKD == null) {
 			final String msg = "Kein Kunde mit der ID " + kd.getKundeID()
 					+ " gefunden.";
