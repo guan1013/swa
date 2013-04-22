@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -169,6 +170,7 @@ public class Kunde implements Serializable {
 	 */
 	@OneToMany(mappedBy = "kunde")
 	@JsonIgnore
+	@OrderColumn(name = "idx")
 	private List<Bestellung> bestellungen;
 
 	/**

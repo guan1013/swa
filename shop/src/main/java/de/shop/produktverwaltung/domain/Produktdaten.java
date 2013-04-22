@@ -79,7 +79,7 @@ public class Produktdaten implements Serializable {
 	private Integer produktdatenID;
 
 	@Column(name = "Anzahl_verfuegbar")
-	@Min(value = 1, message = "{produktverwaltung.anzahl.min}")
+	@Min(value = 0, message = "{produktverwaltung.anzahl.min}")
 	@XmlElement(required = true)
 	private int anzahlVerfuegbar;
 
