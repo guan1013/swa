@@ -28,18 +28,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
-import de.shop.util.XmlDateAdapter;
 
 /**
  * Die Klasse Produkt repräsentiert ein Produkt des Shops. Von jedem Produkt
@@ -51,7 +45,6 @@ import de.shop.util.XmlDateAdapter;
  * 
  */
 //@formatter:off
-@XmlRootElement
 @Entity
 @Table(name = "Produkt")
 @NamedQueries({
@@ -119,7 +112,6 @@ public class Produkt implements Serializable {
 	@Column(name = "Produkt_ID", updatable = false, nullable = false)
 	@Min(value = 1, groups = IdGroup.class, message = "{produktverwaltung.id.min}")
 	@NotNull(groups = IdGroup.class, message = "{produktverwaltung.id.notnull}")
-	@XmlAttribute
 	private Integer produktID;
 
 	// TODO Für Titel und Beschreibung eigene Attribute einführen
@@ -128,7 +120,6 @@ public class Produkt implements Serializable {
 	 */
 	@NotEmpty(message = "{produktverwaltung.beschreibung.notempty}")
 	@Column(name = "Beschreibung", length = 255)
-	@XmlElement(required = true)
 	private String beschreibung;
 
 	// TODO Eventuell Hersteller in eigene Klasse/Tabelle auslagern
@@ -137,7 +128,6 @@ public class Produkt implements Serializable {
 	 */
 	@NotEmpty(message = "{produktverwaltung.hersteller.notempty}")
 	@Column(name = "Hersteller", length = 32)
-	@XmlElement(required = true)
 	private String hersteller;
 
 	/**
@@ -147,12 +137,10 @@ public class Produkt implements Serializable {
 	@JoinColumn(name = "Produkt_FK")
 	@NotNull(message = "{produktverwaltung.produktdaten.notnull}")
 	@Valid
-	@XmlTransient
 	@JsonIgnore
 	private List<Produktdaten> produktdaten;
 
 	@Transient
-	@XmlElement(name = "Produktdaten")
 	private URI produktdatenURI;
 
 	/**
@@ -161,8 +149,7 @@ public class Produkt implements Serializable {
 	@Column(name = "Erstellt", nullable = false, updatable = false)
 	@Past(message = "{produktverwaltung.erstellt.past}")
 	@Temporal(DATE)
-	@XmlElement(required = true)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date erstellt;
 
 	/**
@@ -171,8 +158,7 @@ public class Produkt implements Serializable {
 	@Column(name = "Geaendert", nullable = false)
 	@Past(message = "{produktverwaltung.geaendert.past}")
 	@Temporal(DATE)
-	@XmlElement(required = true)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date geaendert;
 	
 	@Version

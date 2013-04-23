@@ -18,16 +18,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
-import de.shop.util.XmlDateAdapter;
 
 /**
  * Diese Klasse Produktdaten repräsentiert eine Variante eines bestimmten
@@ -52,7 +48,6 @@ import de.shop.util.XmlDateAdapter;
 			name = Produktdaten.PRODUKTDATEN_BY_PRODUKT_ID,
 			query = "select produktdaten from Produktdaten as produktdaten "
 					+ "WHERE produktdaten.produkt.produktID = :id") })
-@XmlRootElement
 //@formatter:on
 public class Produktdaten implements Serializable {
 
@@ -75,27 +70,22 @@ public class Produktdaten implements Serializable {
 	@GeneratedValue
 	@Column(name = "Produktdaten_ID", updatable = false)
 	@NotNull(groups = IdGroup.class)
-	@XmlAttribute
 	private Integer produktdatenID;
 
 	@Column(name = "Anzahl_verfuegbar")
 	@Min(value = 0, message = "{produktverwaltung.anzahl.min}")
-	@XmlElement(required = true)
 	private int anzahlVerfuegbar;
 
 	@Column(name = "Groesse")
 	@NotEmpty(message = "{produktverwaltung.groesse.notempty}")
-	@XmlElement(required = true)
 	private String groesse;
 
 	@Column(name = "Preis")
 	@Min(value = 1, message = "{produktverwaltung.preis.min}")
-	@XmlElement(required = true)
 	private double preis;
 
 	@Column(name = "Farbe")
 	@NotEmpty(message = "{produktverwaltung.farbe.notempty}")
-	@XmlElement(required = true)
 	private String farbe;
 
 	@ManyToOne
@@ -106,14 +96,12 @@ public class Produktdaten implements Serializable {
 
 	@Column(name = "Erstellt")
 	@Past
-	@XmlElement(required = true)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date erstellt;
 
 	@Column(name = "Geaendert")
 	@Past
-	@XmlElement(required = true)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date geaendert;
 
 	// /////////////////////////////////////////////////////////////////////
