@@ -21,7 +21,7 @@ import javax.validation.groups.Default;
 import de.shop.produktverwaltung.domain.Produkt;
 import de.shop.produktverwaltung.domain.Produkt_;
 import de.shop.util.IdGroup;
-import de.shop.util.ValidationService;
+import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.ProduktValidationException;
 
 /**
@@ -51,7 +51,7 @@ public class ProduktService implements Serializable {
 	private transient EntityManager entityManager;
 
 	@Inject
-	private ValidationService validationService;
+	private ValidatorProvider validatorProvider;
 
 	// /////////////////////////////////////////////////////////////////////
 	// METHODS
@@ -197,7 +197,7 @@ public class ProduktService implements Serializable {
 	}
 
 	private Validator getValidator(Locale l) {
-		return validationService.getValidator(l);
+		return validatorProvider.getValidator(l);
 	}
 
 	/*

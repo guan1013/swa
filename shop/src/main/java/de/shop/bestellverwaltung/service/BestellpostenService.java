@@ -1,6 +1,7 @@
 package de.shop.bestellverwaltung.service;
 
 import static java.util.logging.Level.FINER;
+
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -18,7 +19,7 @@ import javax.validation.groups.Default;
 import de.shop.bestellverwaltung.domain.Bestellposten;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.IdGroup;
-import de.shop.util.ValidationService;
+import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.BestellpostenValidationException;
 import de.shop.util.exceptions.InvalidBestellpostenIdException;
 import de.shop.util.exceptions.InvalidBestellungIdException;
@@ -56,7 +57,7 @@ public class BestellpostenService implements Serializable {
 	private transient EntityManager em;
 
 	@Inject
-	private ValidationService validationService;
+	private ValidatorProvider validatorProvider;
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
@@ -336,7 +337,7 @@ public class BestellpostenService implements Serializable {
 	// /////////////////////////////////////////////////////////////////////
 
 	private void validateBestellpostenId(Integer bpid, Locale locale) {
-		Validator validator = validationService.getValidator(locale);
+		Validator validator = validatorProvider.getValidator(locale);
 		Set<ConstraintViolation<Bestellposten>> violations = validator.validateValue(
 				Bestellposten.class, "bestellpostenID", bpid, IdGroup.class);
 		if (!violations.isEmpty())
@@ -345,7 +346,7 @@ public class BestellpostenService implements Serializable {
 	}
 
 	private void validateBestellposten(Bestellposten iD, Locale locale, Class<?>... groups) {
-		final Validator validator = validationService.getValidator(locale);
+		final Validator validator = validatorProvider.getValidator(locale);
 		final Set<ConstraintViolation<Bestellposten>> violations = validator.validate(
 				iD, groups);
 
@@ -356,7 +357,7 @@ public class BestellpostenService implements Serializable {
 	}
 
 	private void validateBestellungId(Integer iD, Locale locale) {
-		final Validator validator = validationService.getValidator(locale);
+		final Validator validator = validatorProvider.getValidator(locale);
 		final Set<ConstraintViolation<Bestellung>> violations = validator
 				.validateValue(Bestellung.class, "bestellungID", iD, IdGroup.class);
 		if (!violations.isEmpty()) {

@@ -30,7 +30,7 @@ import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.domain.Produktdaten_;
 import de.shop.produktverwaltung.service.util.SuchFilter;
 import de.shop.util.IdGroup;
-import de.shop.util.ValidationService;
+import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.ProduktdatenValidationException;
 
 /**
@@ -63,7 +63,7 @@ public class ProduktdatenService implements Serializable {
 	private transient EntityManager entityManager;
 
 	@Inject
-	private ValidationService validationService;
+	private ValidatorProvider validatorProvider;
 
 	// /////////////////////////////////////////////////////////////////////
 	// METHODS
@@ -281,7 +281,7 @@ public class ProduktdatenService implements Serializable {
 	 * Liefert den entsprechenden Validator
 	 */
 	private Validator getValidator(Locale l) {
-		return validationService.getValidator(l);
+		return validatorProvider.getValidator(l);
 	}
 
 	/*

@@ -19,7 +19,7 @@ import javax.validation.groups.Default;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.IdGroup;
-import de.shop.util.ValidationService;
+import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.BestellungValidationException;
 import de.shop.util.exceptions.InvalidBestellungIdException;
 import de.shop.util.exceptions.InvalidGesamtpreisException;
@@ -43,7 +43,7 @@ public class BestellungService implements Serializable {
 	private transient EntityManager em;
 
 	@Inject
-	private ValidationService validationService;
+	private ValidatorProvider validatorProvider;
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
@@ -303,7 +303,7 @@ public class BestellungService implements Serializable {
 	// VALIDATES
 
 	private void validateBestellungId(Integer pBID, Locale pLocale) {
-		final Validator validator = validationService.getValidator(pLocale);
+		final Validator validator = validatorProvider.getValidator(pLocale);
 		final Set<ConstraintViolation<Bestellung>> violations = validator
 				.validateValue(Bestellung.class, "bestellungID", pBID,
 						IdGroup.class);
@@ -314,7 +314,7 @@ public class BestellungService implements Serializable {
 	}
 
 	private void validateBestellungGesamtpreis(Double pPreis, Locale pLocale) {
-		final Validator validator = validationService.getValidator(pLocale);
+		final Validator validator = validatorProvider.getValidator(pLocale);
 		final Set<ConstraintViolation<Bestellung>> violations = validator
 				.validateValue(Bestellung.class, "gesamtpreis", pPreis,
 						Default.class);
@@ -327,7 +327,7 @@ public class BestellungService implements Serializable {
 
 	private void validateBestellung(Bestellung pBD, Locale pLocale,
 			Class<?>... pGroups) {
-		final Validator validator = validationService.getValidator(pLocale);
+		final Validator validator = validatorProvider.getValidator(pLocale);
 		final Set<ConstraintViolation<Bestellung>> violations = validator
 				.validate(pBD, pGroups);
 
