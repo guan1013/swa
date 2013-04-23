@@ -3,6 +3,7 @@ package de.shop.produktverwaltung.domain;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -103,6 +105,10 @@ public class Produktdaten implements Serializable {
 	@Past
 	@JsonIgnore
 	private Date geaendert;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = 0;
 
 	// /////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR

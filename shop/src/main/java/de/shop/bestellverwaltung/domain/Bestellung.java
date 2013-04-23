@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -179,6 +181,10 @@ public class Bestellung implements Serializable {
 	@Column(name = "Geaendert", nullable = false)
 	@XmlJavaTypeAdapter(XmlDateAdapter.class)
 	private Date geaendert;
+	
+	@Version
+	@Basic(optional = false)
+	private int version = 0;
 
 	// /////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR
