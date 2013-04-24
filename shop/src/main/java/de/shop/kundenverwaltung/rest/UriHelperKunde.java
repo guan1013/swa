@@ -48,15 +48,15 @@ public class UriHelperKunde {
 
 	public URI getUriAdresse(Adresse adresse, UriInfo uriInfo) {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
-				.path(AdresseResource.class)
-				.path(AdresseResource.class, "findAdresseID");
+				.path(KundeResource.class)
+				.path(KundeResource.class, "findAdresseById");
 		final URI uri = ub.build(adresse.getAdresseID());
 		return uri;
 	}
 
 	public URI getUriDownload(Integer kundeId, UriInfo uriInfo) {
 		final URI uri = uriInfo.getBaseUriBuilder().path(KundeResource.class)
-				.path(KundeResource.class, "download").build(kundeId);
+				.path(KundeResource.class, "downloadKundePic").build(kundeId);
 		return uri;
 	}
 }

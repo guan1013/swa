@@ -1,6 +1,7 @@
 package de.shop.kundenverwaltung.service;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -18,6 +19,8 @@ import javax.validation.Validator;
 import javax.validation.groups.Default;
 
 import de.shop.auth.service.jboss.AuthService;
+import de.shop.kundenverwaltung.domain.Adresse;
+import de.shop.kundenverwaltung.domain.Adresse_;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.PasswordGroup;
 import de.shop.util.File;
@@ -25,6 +28,7 @@ import de.shop.util.FileHelper;
 import de.shop.util.FileHelper.MimeType;
 import de.shop.util.IdGroup;
 import de.shop.util.ValidatorProvider;
+import de.shop.util.exceptions.AdresseValidationException;
 import de.shop.util.exceptions.ConcurrentDeletedException;
 import de.shop.util.exceptions.InvalidEmailException;
 import de.shop.util.exceptions.InvalidKundeIdException;
@@ -60,8 +64,8 @@ public class KundeService implements Serializable {
 	private transient Logger LOGGER;
 
 	@Inject
-	private AuthService authService;	
-	
+	private AuthService authService;
+
 	@Inject
 	private FileHelper fileHelper;
 
@@ -94,15 +98,13 @@ public class KundeService implements Serializable {
 		if (pKD == null)
 			return pKD;
 
-		/**
-		 * Prüfen ob Kundendaten korrekt sind
-		 */
+		// Prüfen ob Kundendaten korrekt sind
+
 		validateKunde(pKD, pLocale, Default.class, PasswordGroup.class);
 
-		/**
-		 * Wenn Kunde mit dieser E-Mail Adresse noch nicht existiert, lege ihn
-		 * an und schicke eine Bestätigungsnachricht an diesen.
-		 */
+		// Wenn Kunde mit dieser E-Mail Adresse noch nicht existiert, lege ihn
+		// an und schicke eine Bestätigungsnachricht an diesen.
+
 		List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
 				pLocale);
 		if (kd.isEmpty()) {
@@ -117,14 +119,34 @@ public class KundeService implements Serializable {
 			throw new EmailExistsException(pKD.getEmail());
 		}
 
-		/**
-		 * Datenbank synchronisieren
-		 */
+		// Datenbank synchronisieren
+
 		em.flush();
 
 		return pKD;
 	}
-	
+
+	/**
+	 * Fuegt eine neue Adresse hinzu
+	 * 
+	 * @param adresse
+	 * @return
+	 */
+	public Adresse addAdresse(Adresse pAD, Locale pLocale) {
+
+		// Validierung Adresse
+		validateAdresse(validatorProvider.getValidator(pLocale).validate(pAD,
+				Default.class));
+
+		// Neue Adresse speichern
+		em.persist(pAD);
+
+		// Datenbank synchronisieren
+		em.flush();
+
+		return pAD;
+	}
+
 	/**
 	 * Ohne MIME Type fuer Upload bei RESTful WS
 	 */
@@ -136,7 +158,7 @@ public class KundeService implements Serializable {
 		final MimeType mimeType = fileHelper.getMimeType(pBs);
 		setKundePic(kd, pBs, mimeType);
 	}
-	
+
 	/**
 	 * Mit MIME-Type fuer Upload bei Webseiten
 	 */
@@ -144,23 +166,22 @@ public class KundeService implements Serializable {
 		final MimeType mimeType = MimeType.get(pMTStr);
 		setKundePic(pKD, pBs, mimeType);
 	}
-	
-	
+
 	private void setKundePic(Kunde pKD, byte[] pBs, MimeType pMT) {
 		if (pMT == null) {
 			throw new NoMimeTypeException();
 		}
-		
-		final String filename = fileHelper.getFilename(pKD.getClass(), pKD.getKundeID(), pMT);
-		
+
+		final String filename = fileHelper.getFilename(pKD.getClass(),
+				pKD.getKundeID(), pMT);
+
 		// Gibt es noch kein (Multimedia-) File
 		File pic = pKD.getPic();
 		if (pic == null) {
 			pic = new File(pBs, filename, pMT);
 			pKD.setPic(pic);
 			em.persist(pic);
-		}
-		else {
+		} else {
 			pic.set(pBs, filename, pMT);
 			em.merge(pic);
 		}
@@ -206,6 +227,26 @@ public class KundeService implements Serializable {
 		kd = em.find(Kunde.class, pID);
 
 		return kd;
+	}
+
+	/**
+	 * Finde eine Adresse anhand ihrer AdressenID
+	 * 
+	 * @param adresseID
+	 * @return gefundene Adresse
+	 */
+
+	public Adresse findAdresseById(Integer pAID, Locale pLocale) {
+
+		// / Validierung ID
+		validateAdresse(validatorProvider.getValidator(pLocale).validateValue(
+				Adresse.class, Adresse_.adresseID.getName(), pAID,
+				IdGroup.class));
+
+		// In DB suchen
+		Adresse ad = em.find(Adresse.class, pAID);
+
+		return ad;
 	}
 
 	/**
@@ -318,6 +359,18 @@ public class KundeService implements Serializable {
 		return kd;
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<Adresse> findAdressenByKundeId(Integer id) {
+
+		/**
+		 * Alle gefundenen Adressen speichern
+		 */
+		List<Adresse> ad = em.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
+				.setParameter("id", id).getResultList();
+
+		return ad;
+	}
+
 	/**
 	 * Update einen Kunden
 	 * 
@@ -329,28 +382,21 @@ public class KundeService implements Serializable {
 			return pKD;
 		}
 
-		/**
-		 * Prüfen ob übergebenes Kundenobjekt korrekt ist
-		 */
-		validateKunde(pKD, pLocale, Default.class,IdGroup.class, PasswordGroup.class);
+		// Prüfen ob übergebenes Kundenobjekt korrekt ist
+		validateKunde(pKD, pLocale, Default.class, IdGroup.class,
+				PasswordGroup.class);
 
-		/**
-		 * Kunde vom Entitiy Manager trennen
-		 */
+		// Kunde vom Entitiy Manager trennen
 		em.detach(pKD);
-		
-		/**
-		 * Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
-		 */
+
+		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
 		Kunde existingKunde = findKundeById(pKD.getKundeID(), pLocale);
 		if (existingKunde == null) {
 			throw new ConcurrentDeletedException(pKD.getKundeID());
 		}
 		em.detach(existingKunde);
 
-		/**
-		 * Prüfen ob zu ändernde E-Mail Adresse schon vorhanden ist
-		 */
+		// Prüfen ob zu ändernde E-Mail Adresse schon vorhanden ist
 		if (!pKD.getEmail().equals(existingKunde.getEmail())) {
 			List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
 					pKD.getEmail(), pLocale);
@@ -358,35 +404,59 @@ public class KundeService implements Serializable {
 				throw new EmailExistsException(pKD.getEmail());
 			}
 		}
-		
-		/**
-		 * Prüfen ob Passwort geändert wurde
-		 */
-		if(pDifPass) { 
+
+		// Prüfen ob Passwort geändert wurde
+		if (pDifPass) {
 			salting(pKD);
 		}
-		
-		pKD =em.merge(pKD);
-		
+
+		pKD = em.merge(pKD);
+
 		pKD.setPasswordWdh(pKD.getPassword());
 
-		/**
-		 * Datenbank synchronisieren
-		 */
+		// Datenbank synchronisieren
 		em.flush();
 
 		return pKD;
 	}
-	
+
+	/**
+	 * Aendert eine vorhandene Adresse
+	 * 
+	 * @param adresse
+	 * @return
+	 */
+	public Adresse updateAdresse(Adresse pAD, Locale pLocale) {
+
+		// Validierung Adresse
+		validateAdresse(validatorProvider.getValidator(pLocale).validate(pAD));
+
+		// Adresse vom Entitiy Manager trennen
+		em.detach(pAD);
+
+		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
+		Adresse existingAdresse = findAdresseById(pAD.getAdresseID(), pLocale);
+		if (existingAdresse == null) {
+			throw new ConcurrentDeletedException(pAD.getAdresseID());
+		}
+
+		// Neue Adresse speichern
+		em.merge(pAD);
+
+		// Datenbank synchronisieren
+		em.flush();
+
+		return pAD;
+	}
+
 	/**
 	 * Kunde löschen
 	 */
-	public void deleteKundeById(int pKID,Locale pLocale) {
+	public void deleteKundeById(int pKID, Locale pLocale) {
 		Kunde kd;
 		try {
 			kd = findKundeById(pKID, pLocale);
-		}
-		catch (InvalidKundeIdException e) {
+		} catch (InvalidKundeIdException e) {
 			return;
 		}
 		if (kd == null) {
@@ -417,20 +487,21 @@ public class KundeService implements Serializable {
 
 		LOGGER.debugf("salting ENDE: %s", verschluesselt);
 	}
-	
+
 	/**
 	 */
 	private boolean hasBestellungen(Kunde pKD) {
 		LOGGER.debugf("hasBestellungen BEGINN: %s", pKD);
-		
+
 		boolean result = false;
-		
+
 		// Gibt es den Kunden und hat er mehr als eine Bestellung?
 		// Bestellungen nachladen wegen Hibernate-Caching
-		if (pKD != null && pKD.getBestellungen() != null && !pKD.getBestellungen().isEmpty()) {
+		if (pKD != null && pKD.getBestellungen() != null
+				&& !pKD.getBestellungen().isEmpty()) {
 			result = true;
 		}
-		
+
 		LOGGER.debugf("hasBestellungen ENDE: %s", result);
 		return result;
 	}
@@ -486,6 +557,19 @@ public class KundeService implements Serializable {
 			throw new KundeValidationException(pKD, violations);
 		}
 
+	}
+
+	private void validateAdresse(Set<ConstraintViolation<Adresse>> violations) {
+
+		if (!violations.isEmpty()) {
+			StringBuffer buffer = new StringBuffer();
+			Iterator<ConstraintViolation<Adresse>> it = violations.iterator();
+			while (it.hasNext()) {
+				buffer.append(it.next().getMessage());
+				buffer.append('\n');
+			}
+			throw new AdresseValidationException(buffer.toString());
+		}
 	}
 
 }

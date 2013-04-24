@@ -32,7 +32,6 @@ import org.jboss.logging.Logger;
 
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Kunde;
-import de.shop.kundenverwaltung.service.AdresseService;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.JsonFile;
@@ -70,9 +69,6 @@ public class KundeResource {
 
 	@Inject
 	private KundeService ks;
-
-	@Inject
-	private AdresseService as;
 
 	@Inject
 	private UriHelperKunde uriHelperKunde;
@@ -121,7 +117,7 @@ public class KundeResource {
 	@Path("{id:[1-9][0-9]*}/pic")
 	@POST
 	@Consumes(APPLICATION_JSON)
-	public Response uploadPicKunde(@PathParam("kid") Integer pKID, JsonFile pPic) {
+	public Response uploadKundePic(@PathParam("kid") Integer pKID, JsonFile pPic) {
 		final Locale locale = localeHelper.getLocale(headers);
 
 		ks.setKundePic(pKID, pPic.getBytes(), locale);
@@ -133,7 +129,7 @@ public class KundeResource {
 
 	@Path("{id:[1-9][0-9]*}/file")
 	@GET
-	public JsonFile downloadPicKunde(@PathParam("kid") Integer pKID)
+	public JsonFile downloadKundePic(@PathParam("kid") Integer pKID)
 			throws IOException {
 		final Locale locale = localeHelper.getLocale(headers);
 		final Kunde kd = ks.findKundeById(pKID, locale);
@@ -148,8 +144,8 @@ public class KundeResource {
 	@Path("{kid:[1-9][0-9]*}")
 	public Kunde findKundeById(@PathParam("kid") Integer pID) {
 
-		Locale LOCALE = localeHelper.getLocale(headers);
-		Kunde kd = ks.findKundeById(pID, LOCALE);
+		Locale locale = localeHelper.getLocale(headers);
+		Kunde kd = ks.findKundeById(pID, locale);
 		if (kd == null) {
 			final String msg = "Kein Kunde gefunden mit der ID" + pID;
 
@@ -201,9 +197,27 @@ public class KundeResource {
 	}
 
 	@GET
+	@Path("{id:[1-9][0-9]*}")
+	public Adresse findAdresseById(@PathParam("id") Integer id) {
+
+		// Locale
+		Locale locale = localeHelper.getLocale(headers);
+
+		// Service aufrufen und ggf. Exception
+		Adresse result = ks.findAdresseById(id, locale);
+		if (result == null) {
+			final String msg = "Keine Adresse mit der ID " + id + " gefunden";
+
+			throw new NotFoundException(msg);
+		}
+
+		return result;
+	}
+
+	@GET
 	@Path("{kid:[1-9][0-9]*}/adressen")
 	public List<Adresse> findAdressenByKundeId(@PathParam("kid") Integer pKID) {
-		final List<Adresse> ad = as.findAdressenByKundeId(pKID);
+		final List<Adresse> ad = ks.findAdressenByKundeId(pKID);
 		if (ad.isEmpty()) {
 			final String msg = "Keine Adresse zum Kunde mit der ID " + pKID
 					+ " gefunden";
