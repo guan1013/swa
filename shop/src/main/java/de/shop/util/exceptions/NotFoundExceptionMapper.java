@@ -1,4 +1,4 @@
-package de.shop.util;
+package de.shop.util.exceptions;
 
 import static javax.ws.rs.core.MediaType.TEXT_PLAIN;
 import static javax.ws.rs.core.Response.Status.NOT_FOUND;

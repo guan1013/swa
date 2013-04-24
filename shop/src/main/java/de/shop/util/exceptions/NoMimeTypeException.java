@@ -1,6 +1,8 @@
-package de.shop.util;
+package de.shop.util.exceptions;
 
 import javax.ejb.ApplicationException;
+
+import de.shop.util.AbstractShopException;
 
 @ApplicationException(rollback = true)
 public class NoMimeTypeException extends AbstractShopException {

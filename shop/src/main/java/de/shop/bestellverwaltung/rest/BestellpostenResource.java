@@ -27,7 +27,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 import de.shop.bestellverwaltung.domain.Bestellposten;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellpostenService.FetchType;
-import de.shop.util.NotFoundException;
+import de.shop.util.exceptions.NotFoundException;
 
 @Path("/bestellposten")
 @Produces({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })

@@ -33,7 +33,7 @@ import de.shop.produktverwaltung.domain.Produkt;
 import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.ProduktdatenService;
-import de.shop.util.NotFoundException;
+import de.shop.util.exceptions.NotFoundException;
 
 //@formatter:off
 @Path("/produkte")

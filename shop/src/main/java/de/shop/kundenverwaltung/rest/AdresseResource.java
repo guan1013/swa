@@ -32,7 +32,7 @@ import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.service.AdresseService;
 import de.shop.kundenverwaltung.service.AdresseService.FetchType;
 import de.shop.util.LocaleHelper;
-import de.shop.util.NotFoundException;
+import de.shop.util.exceptions.NotFoundException;
 
 @Path("/adressen")
 @Produces({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })

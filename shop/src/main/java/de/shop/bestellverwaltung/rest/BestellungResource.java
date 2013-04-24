@@ -31,7 +31,7 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.bestellverwaltung.service.BestellungService.FetchType;
-import de.shop.util.NotFoundException;
+import de.shop.util.exceptions.NotFoundException;
 
 /**
  * Resource Klasse für Bestellung für die RestfullWebservices

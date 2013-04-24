@@ -32,7 +32,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.produktverwaltung.service.util.SuchFilter;
-import de.shop.util.NotFoundException;
+import de.shop.util.exceptions.NotFoundException;
 
 //@formatter:off
 @Path("/produktdaten")

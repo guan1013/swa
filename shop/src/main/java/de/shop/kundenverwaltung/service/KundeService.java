@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+
 import org.jboss.logging.Logger;
 
 import javax.annotation.PostConstruct;
@@ -16,14 +17,22 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 
+import de.shop.auth.service.jboss.AuthService;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.PasswordGroup;
+import de.shop.util.File;
+import de.shop.util.FileHelper;
+import de.shop.util.FileHelper.MimeType;
 import de.shop.util.IdGroup;
 import de.shop.util.ValidatorProvider;
+import de.shop.util.exceptions.ConcurrentDeletedException;
 import de.shop.util.exceptions.InvalidEmailException;
 import de.shop.util.exceptions.InvalidKundeIdException;
 import de.shop.util.exceptions.InvalidNachnameException;
 import de.shop.util.exceptions.KundeValidationException;
+import de.shop.util.exceptions.EmailExistsException;
+import de.shop.util.exceptions.KundeDeleteBestellungException;
+import de.shop.util.exceptions.NoMimeTypeException;
 
 /**
  * Anwendungslogik fuer die Kunden Services
@@ -43,6 +52,7 @@ public class KundeService implements Serializable {
 	@PersistenceContext
 	private transient EntityManager em;
 
+	// INJECTS
 	@Inject
 	private ValidatorProvider validatorProvider;
 
@@ -50,8 +60,16 @@ public class KundeService implements Serializable {
 	private transient Logger LOGGER;
 
 	@Inject
+	private AuthService authService;	
+	
+	@Inject
+	private FileHelper fileHelper;
+
+	@Inject
 	@NeuerKunde
 	private transient Event<Kunde> event;
+
+	// LOGGER
 
 	@PostConstruct
 	private void postConstruct() {
@@ -88,8 +106,15 @@ public class KundeService implements Serializable {
 		List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
 				pLocale);
 		if (kd.isEmpty()) {
+
+			salting(pKD);
 			em.persist(pKD);
 			event.fire(pKD);
+		}
+
+		else {
+
+			throw new EmailExistsException(pKD.getEmail());
 		}
 
 		/**
@@ -98,6 +123,47 @@ public class KundeService implements Serializable {
 		em.flush();
 
 		return pKD;
+	}
+	
+	/**
+	 * Ohne MIME Type fuer Upload bei RESTful WS
+	 */
+	public void setKundePic(Integer pKID, byte[] pBs, Locale pLocale) {
+		final Kunde kd = findKundeById(pKID, pLocale);
+		if (kd == null) {
+			return;
+		}
+		final MimeType mimeType = fileHelper.getMimeType(pBs);
+		setKundePic(kd, pBs, mimeType);
+	}
+	
+	/**
+	 * Mit MIME-Type fuer Upload bei Webseiten
+	 */
+	public void setKundePic(Kunde pKD, byte[] pBs, String pMTStr) {
+		final MimeType mimeType = MimeType.get(pMTStr);
+		setKundePic(pKD, pBs, mimeType);
+	}
+	
+	
+	private void setKundePic(Kunde pKD, byte[] pBs, MimeType pMT) {
+		if (pMT == null) {
+			throw new NoMimeTypeException();
+		}
+		
+		final String filename = fileHelper.getFilename(pKD.getClass(), pKD.getKundeID(), pMT);
+		
+		// Gibt es noch kein (Multimedia-) File
+		File pic = pKD.getPic();
+		if (pic == null) {
+			pic = new File(pBs, filename, pMT);
+			pKD.setPic(pic);
+			em.persist(pic);
+		}
+		else {
+			pic.set(pBs, filename, pMT);
+			em.merge(pic);
+		}
 	}
 
 	/**
@@ -258,20 +324,29 @@ public class KundeService implements Serializable {
 	 * @param pKD
 	 * @return
 	 */
-	public Kunde updateKunde(Kunde pKD, Locale pLocale) {
+	public Kunde updateKunde(Kunde pKD, Locale pLocale, boolean pDifPass) {
 		if (pKD == null) {
 			return pKD;
 		}
 
-		validateKunde(pKD, pLocale, Default.class, PasswordGroup.class);
+		/**
+		 * Prüfen ob übergebenes Kundenobjekt korrekt ist
+		 */
+		validateKunde(pKD, pLocale, Default.class,IdGroup.class, PasswordGroup.class);
 
 		/**
-		 * Prüfen ob zu ändernde Kunde existiert
+		 * Kunde vom Entitiy Manager trennen
+		 */
+		em.detach(pKD);
+		
+		/**
+		 * Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
 		 */
 		Kunde existingKunde = findKundeById(pKD.getKundeID(), pLocale);
 		if (existingKunde == null) {
-			return null;
+			throw new ConcurrentDeletedException(pKD.getKundeID());
 		}
+		em.detach(existingKunde);
 
 		/**
 		 * Prüfen ob zu ändernde E-Mail Adresse schon vorhanden ist
@@ -280,11 +355,20 @@ public class KundeService implements Serializable {
 			List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
 					pKD.getEmail(), pLocale);
 			if (!kd.isEmpty()) {
-				return null;
+				throw new EmailExistsException(pKD.getEmail());
 			}
 		}
-
-		em.merge(pKD);
+		
+		/**
+		 * Prüfen ob Passwort geändert wurde
+		 */
+		if(pDifPass) { 
+			salting(pKD);
+		}
+		
+		pKD =em.merge(pKD);
+		
+		pKD.setPasswordWdh(pKD.getPassword());
 
 		/**
 		 * Datenbank synchronisieren
@@ -292,6 +376,63 @@ public class KundeService implements Serializable {
 		em.flush();
 
 		return pKD;
+	}
+	
+	/**
+	 * Kunde löschen
+	 */
+	public void deleteKundeById(int pKID,Locale pLocale) {
+		Kunde kd;
+		try {
+			kd = findKundeById(pKID, pLocale);
+		}
+		catch (InvalidKundeIdException e) {
+			return;
+		}
+		if (kd == null) {
+			// Der Kunde existiert nicht oder ist bereits geloescht
+			return;
+		}
+
+		final boolean hasBestellungen = hasBestellungen(kd);
+		if (hasBestellungen) {
+			throw new KundeDeleteBestellungException(kd);
+		}
+
+		// Kundendaten loeschen
+		em.remove(kd);
+	}
+
+	// /////////////////////////////////////////////////////////////////////
+	// OTHERS
+
+	private void salting(Kunde pKD) {
+		LOGGER.debugf("salting BEGINN: %s", pKD);
+
+		final String unverschluesselt = pKD.getPassword();
+		final String verschluesselt = authService
+				.verschluesseln(unverschluesselt);
+		pKD.setPassword(verschluesselt);
+		pKD.setPasswordWdh(verschluesselt);
+
+		LOGGER.debugf("salting ENDE: %s", verschluesselt);
+	}
+	
+	/**
+	 */
+	private boolean hasBestellungen(Kunde pKD) {
+		LOGGER.debugf("hasBestellungen BEGINN: %s", pKD);
+		
+		boolean result = false;
+		
+		// Gibt es den Kunden und hat er mehr als eine Bestellung?
+		// Bestellungen nachladen wegen Hibernate-Caching
+		if (pKD != null && pKD.getBestellungen() != null && !pKD.getBestellungen().isEmpty()) {
+			result = true;
+		}
+		
+		LOGGER.debugf("hasBestellungen ENDE: %s", result);
+		return result;
 	}
 
 	// /////////////////////////////////////////////////////////////////////
