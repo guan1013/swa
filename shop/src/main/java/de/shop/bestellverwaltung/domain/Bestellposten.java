@@ -2,10 +2,15 @@
 
 package de.shop.bestellverwaltung.domain;
 import java.io.Serializable;
+
 import javax.persistence.NamedQuery;
+
 import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.util.IdGroup;
+
 import java.util.Date;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +21,12 @@ import javax.persistence.NamedQueries;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 
 
@@ -31,6 +39,7 @@ import javax.validation.constraints.Past;
  */
 @Entity
 @Table(name = "Bestellposten")
+@Cacheable
 @NamedQueries({
 	@NamedQuery(
 			name = Bestellposten.ALL_BESTELLPOSTEN,
@@ -114,6 +123,7 @@ public class Bestellposten implements Serializable {
 	 */
 	@Column(name = "Erstellt", nullable = false, updatable = false)
 	@Past(message = "{bestellverwaltung.bestellposten.seit.past}")
+	@JsonIgnore
 	private Date erstellt;
 
 	/**
@@ -121,6 +131,7 @@ public class Bestellposten implements Serializable {
 	 */
 	@Column(name = "Geaendert")
 	@Past
+	@JsonIgnore
 	private Date geaendert;
 
 	/**
@@ -128,6 +139,7 @@ public class Bestellposten implements Serializable {
 	 */
 	@ManyToOne
 	@JoinColumn(name = "Bestellung_FK")
+	@Valid
 	private Bestellung bestellung;
 	
 	/**
