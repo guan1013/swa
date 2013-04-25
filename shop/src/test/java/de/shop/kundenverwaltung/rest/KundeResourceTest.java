@@ -94,6 +94,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	private static final String CREATE_STRASSE = "Trialroad";
 
+	@Ignore
 	@Test
 	public void testeAddKunde() {
 
@@ -136,6 +137,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeAddKundeInvalidPassword() {
 		LOGGER.finer("BEGINN");
@@ -160,6 +162,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeUploadKundePic() throws IOException {
 
@@ -234,6 +237,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeUploadInvalidKundePic() throws IOException {
 
@@ -274,6 +278,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeFindExistingKundeById() {
 		LOGGER.finer("BEGINN");
@@ -299,6 +304,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeFindNonExistingKundeById() {
 		LOGGER.finer("BEGINN");
@@ -328,6 +334,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeUpdateKunde() {
 
@@ -379,6 +386,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeDeleteKunde() {
 		LOGGER.finer("BEGINN");
@@ -400,6 +408,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeDeleteKundeWithBestellung() {
 
