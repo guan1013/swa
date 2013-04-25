@@ -31,13 +31,17 @@ import de.shop.produktverwaltung.domain.Produkt;
 import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.ProduktdatenService;
+import de.shop.util.Log;
+import de.shop.util.Transactional;
 import de.shop.util.exceptions.NotFoundException;
 
 //@formatter:off
 @Path("/produkte")
-@Produces({ APPLICATION_JSON })
+@Produces(APPLICATION_JSON)
 @Consumes
 @RequestScoped
+@Transactional
+@Log
 //@formatter:on
 public class ProduktResource {
 

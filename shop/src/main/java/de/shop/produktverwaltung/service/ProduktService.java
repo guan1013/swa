@@ -22,6 +22,7 @@ import de.shop.produktverwaltung.domain.Produkt;
 import de.shop.produktverwaltung.domain.Produkt_;
 import de.shop.util.IdGroup;
 import de.shop.util.ValidatorProvider;
+import de.shop.util.exceptions.ConcurrentDeletedException;
 import de.shop.util.exceptions.ProduktValidationException;
 
 /**
@@ -186,6 +187,17 @@ public class ProduktService implements Serializable {
 		// Validierung Produkt
 		checkViolations(getValidator(locale).validate(produkt, Default.class,
 				IdGroup.class));
+		
+		entityManager.detach(produkt);
+		
+		Produkt tmp = findProduktByID(produkt.getProduktID(), FetchType.NUR_PRODUKTE, locale);
+		if(tmp == null)
+		{
+			throw new ConcurrentDeletedException(produkt.getProduktID());
+		} else
+		{
+			entityManager.detach(tmp);
+		}
 
 		// Neues Produkt speichern
 		entityManager.merge(produkt);

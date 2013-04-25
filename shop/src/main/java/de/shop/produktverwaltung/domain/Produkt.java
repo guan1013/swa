@@ -30,6 +30,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.DateFormatter;
@@ -163,6 +164,7 @@ public class Produkt implements Serializable {
 	
 	@Version
 	@Basic(optional = false)
+	@JsonProperty
 	private int version = 0;
 	
 
