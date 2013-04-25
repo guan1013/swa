@@ -2,8 +2,6 @@ package de.shop.produktverwaltung.rest;
 
 import static java.util.logging.Level.FINER;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
@@ -36,7 +34,7 @@ import de.shop.util.exceptions.NotFoundException;
 
 //@formatter:off
 @Path("/produktdaten")
-@Produces({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })
+@Produces({ APPLICATION_JSON  })
 @Consumes
 @RequestScoped
 //@formatter:on
@@ -53,7 +51,7 @@ public class ProduktdatenResource {
 
 	//formatter:off
 	@POST
-	@Consumes({ APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON })
 	@Produces
 	//formatter:on
 	public Response addProduktdaten(Produktdaten produktdaten,
@@ -161,7 +159,7 @@ public class ProduktdatenResource {
 
 	//formatter:off
 	@PUT
-	@Consumes({ APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_JSON })
 	@Produces
 	//formatter:on
 	public void updateProduktdaten(Produktdaten produktdaten,
