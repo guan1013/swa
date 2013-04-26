@@ -153,6 +153,7 @@ public class Kunde implements Serializable {
 
 	@Version
 	@Basic(optional = false)
+	@JsonProperty
 	private int version = ERSTE_VERSION;
 
 	/**

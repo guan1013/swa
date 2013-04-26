@@ -37,6 +37,7 @@ import de.shop.kundenverwaltung.service.KundeService.FetchType;
 import de.shop.util.JsonFile;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
+import de.shop.util.Transactional;
 import de.shop.util.exceptions.NotFoundException;
 
 /**
@@ -48,6 +49,7 @@ import de.shop.util.exceptions.NotFoundException;
 @Produces({ APPLICATION_JSON })
 @Consumes
 @RequestScoped
+@Transactional
 @Log
 public class KundeResource {
 
@@ -114,7 +116,7 @@ public class KundeResource {
 		return Response.created(kdUri).build();
 	}
 
-	@Path("{id:[1-9][0-9]*}/pic")
+	@Path("{kid:[1-9][0-9]*}/pic")
 	@POST
 	@Consumes(APPLICATION_JSON)
 	public Response uploadKundePic(@PathParam("kid") Integer pKID, JsonFile pPic) {
@@ -127,7 +129,7 @@ public class KundeResource {
 		return Response.created(location).build();
 	}
 
-	@Path("{id:[1-9][0-9]*}/file")
+	@Path("{kid:[1-9][0-9]*}/pic")
 	@GET
 	public JsonFile downloadKundePic(@PathParam("kid") Integer pKID)
 			throws IOException {
@@ -197,16 +199,16 @@ public class KundeResource {
 	}
 
 	@GET
-	@Path("{id:[1-9][0-9]*}")
-	public Adresse findAdresseById(@PathParam("id") Integer id) {
+	@Path("{aid:[1-9][0-9]*}/adresse")
+	public Adresse findAdresseById(@PathParam("aid") Integer aID) {
 
 		// Locale
 		Locale locale = localeHelper.getLocale(headers);
 
 		// Service aufrufen und ggf. Exception
-		Adresse result = ks.findAdresseById(id, locale);
+		Adresse result = ks.findAdresseById(aID, locale);
 		if (result == null) {
-			final String msg = "Keine Adresse mit der ID " + id + " gefunden";
+			final String msg = "Keine Adresse mit der ID " + aID + " gefunden";
 
 			throw new NotFoundException(msg);
 		}
@@ -269,7 +271,7 @@ public class KundeResource {
 		}
 	}
 
-	@Path("{id:[1-9][0-9]*}")
+	@Path("{kid:[1-9][0-9]*}")
 	@DELETE
 	@Produces
 	public void deleteKunde(@PathParam("kid") Integer pKID) {

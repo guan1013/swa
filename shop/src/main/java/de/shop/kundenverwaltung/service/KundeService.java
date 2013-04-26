@@ -141,9 +141,6 @@ public class KundeService implements Serializable {
 		// Neue Adresse speichern
 		em.persist(pAD);
 
-		// Datenbank synchronisieren
-		em.flush();
-
 		return pAD;
 	}
 
@@ -209,16 +206,13 @@ public class KundeService implements Serializable {
 	 */
 
 	public Kunde findKundeById(Integer pID, Locale pLocale) {
-		if (pID == null) {
-			return null;
-		}
 
 		/**
 		 * Prüfung ob ID Korrekt eingegeben ist
 		 */
 
 		validateKundeId(pID, pLocale);
-		Kunde kd;
+		Kunde kd = null;
 
 		/**
 		 * Gefundenen Kunde speichern

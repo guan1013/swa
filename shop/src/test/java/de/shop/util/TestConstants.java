@@ -15,18 +15,18 @@ public final class TestConstants {
 	static {
 		BASEURI = System.getProperty("baseuri", "http://localhost");
 		PORT = Integer.parseInt(System.getProperty("port", "8080"));
-		BASEPATH = System.getProperty("basepath", "/shop2/rest");
+		BASEPATH = System.getProperty("basepath", "/shop/rest");
 	}
 	
 	public static final String KUNDEN_PATH = "/kunden";
 	public static final String KUNDEN_URI = BASEURI + ":" + PORT + BASEPATH + KUNDEN_PATH;
-	public static final String KUNDEN_ID_PATH_PARAM = "kundeId";
+	public static final String KUNDEN_ID_PATH_PARAM = "kid";
 	public static final String KUNDEN_ID_PATH = KUNDEN_PATH + "/{" + KUNDEN_ID_PATH_PARAM + "}";
-	public static final String KUNDEN_NACHNAME_QUERY_PARAM = "nachname";
-	public static final String KUNDEN_ID_FILE_PATH = KUNDEN_ID_PATH + "/file";
+	public static final String KUNDEN_NACHNAME_QUERY_PARAM = "name";
+	public static final String KUNDEN_ID_FILE_PATH = KUNDEN_ID_PATH + "/pic";
 	
-	public static final String BESTELLUNGEN_PATH = "/bestellungen";
-	public static final String BESTELLUNGEN_ID_PATH_PARAM = "bestellungId";
+	public static final String BESTELLUNGEN_PATH = "/bestellung";
+	public static final String BESTELLUNGEN_ID_PATH_PARAM = "id";
 	public static final String BESTELLUNGEN_ID_PATH = BESTELLUNGEN_PATH + "/{" + BESTELLUNGEN_ID_PATH_PARAM + "}";
 	public static final String BESTELLUNGEN_ID_KUNDE_PATH = BESTELLUNGEN_ID_PATH + "/kunde";
 	

@@ -18,7 +18,6 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
 import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -61,8 +60,16 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
 
+	private static final String JSON_KEY_NACHNAME = "nachname";
+	private static final String JSON_KEY_VORNAME = "vorname";
+	private static final String JSON_KEY_EMAIL = "email";
 	private static final Integer ID_EXIST = Integer.valueOf(101);
+	private static final String VORNAME_CORRECT = "My";
+	private static final String NACHNAME_CORRECT = "Tester";
+	private static final String EMAIL_CORRECT = "maze.schnell@gmail.com";
+
 	private static final Integer ID_NOT_EXIST = Integer.valueOf(9999);
+	private static final String JSON_KEY_ID = "kundeID";
 
 	private static final String MAIL_UPDATE = "mia.mueller@gmail.com";
 	private static final Integer ID_UPDATE_EXIST = Integer.valueOf(102);
@@ -73,26 +80,16 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final Integer ID_DELETE_WITH_BESTELLUNGEN_EXIST = Integer
 			.valueOf(103);
 
+	private static final String JSON_KEY_BYTES = "bytes";
+
 	private static final String PIC = "pic.jpg";
 	private static final String PIC_UPLOAD = "src/test/resources/rest/" + PIC;
 	private static final String PIC_DOWNLOAD = "target/" + PIC;
 	private static final CopyOption[] COPY_OPTIONS = { REPLACE_EXISTING };
 
-	private static final String PIC_INVALID_MIMETYPE = "image.bmp";
+	private static final String PIC_INVALID_MIMETYPE = "pic.bmp";
 	private static final String PIC_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/"
 			+ PIC_INVALID_MIMETYPE;
-
-	private static final String CREATE_NACHNAME = "Tester";
-
-	private static final String CREATE_VORNAME = "My";
-
-	private static final String CREATE_EMAIL = CREATE_NACHNAME + "@object.to";
-
-	private static final int CREATE_PLZ = 12345;
-
-	private static final String CREATE_ORT = "Testhausen";
-
-	private static final String CREATE_STRASSE = "Trialroad";
 
 	@Ignore
 	@Test
@@ -101,37 +98,26 @@ public class KundeResourceTest extends AbstractResourceTest {
 		LOGGER.finer("BEGINN");
 
 		// Given
-		final String nachname = CREATE_NACHNAME;
-		final String vorname = CREATE_VORNAME;
-		final String email = CREATE_EMAIL;
-		final int plz = CREATE_PLZ;
-		final String ort = CREATE_ORT;
-		final String strasse = CREATE_STRASSE;
 		final String username = USERNAME;
 		final String password = PASSWORD;
 
-		final JsonObject jsonObject = getJsonBuilderFactory()
-				.createObjectBuilder()
-				.add("nachname", nachname)
-				.add("vorname", vorname)
-				.add("email", email)
-				.add("adresse",
-						getJsonBuilderFactory().createObjectBuilder()
-								.add("plz", plz).add("ort", ort)
-								.add("strasse", strasse).build()).build();
-
 		// When
+		final JsonObject jsonObject = getJsonBuilderFactory()
+				.createObjectBuilder().add(JSON_KEY_NACHNAME, NACHNAME_CORRECT)
+				.add(JSON_KEY_VORNAME, VORNAME_CORRECT)
+				.add(JSON_KEY_EMAIL, EMAIL_CORRECT).build();
+
 		final Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).auth().basic(username, password)
-				.post(KUNDEN_PATH);
+				.body(jsonObject.toString()).post(KUNDEN_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_CREATED));
-		final String location = response.getHeader(LOCATION);
-		final int startPos = location.lastIndexOf('/');
-		final String idStr = location.substring(startPos + 1);
-		final Long id = Long.valueOf(idStr);
-		assertThat(id.longValue() > 0, is(true));
+		/*
+		 * final String location = response.getHeader(LOCATION); final int
+		 * startPos = location.lastIndexOf('/'); final String idStr =
+		 * location.substring(startPos + 1); final Integer id =
+		 * Integer.valueOf(idStr); assertThat(id.intValue() > 0, is(true));
+		 */
 
 		LOGGER.finer("ENDE");
 
@@ -145,15 +131,14 @@ public class KundeResourceTest extends AbstractResourceTest {
 		// Given
 		final String username = USERNAME;
 		final String password = PASSWORD_FALSCH;
-		final String nachname = CREATE_NACHNAME;
 
 		final JsonObject jsonObject = getJsonBuilderFactory()
-				.createObjectBuilder().add("nachname", nachname).build();
+				.createObjectBuilder().add(JSON_KEY_NACHNAME, NACHNAME_CORRECT)
+				.build();
 
 		// When
 		final Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).auth().basic(username, password)
-				.post(KUNDEN_PATH);
+				.body(jsonObject.toString()).post(KUNDEN_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_UNAUTHORIZED));
@@ -162,34 +147,32 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testeUploadKundePic() throws IOException {
 
 		LOGGER.finer("BEGINN");
 
 		// Given
-		final Integer kID = ID_EXIST;
-		final String picName = PIC_UPLOAD;
 		final String username = USERNAME;
 		final String password = PASSWORD;
 
 		// Datei als byte[] einlesen
 		byte[] bytes;
 		try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-			Files.copy(Paths.get(picName), stream);
+			Files.copy(Paths.get(PIC_UPLOAD), stream);
 			bytes = stream.toByteArray();
 		}
 
 		// byte[] als Inhalt eines JSON-Datensatzes mit Base64-Codierung
-		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
-				.add("bytes", DatatypeConverter.printBase64Binary(bytes))
+		JsonObject jsonObject = getJsonBuilderFactory()
+				.createObjectBuilder()
+				.add(JSON_KEY_BYTES, DatatypeConverter.printBase64Binary(bytes))
 				.build();
 
 		// When
 		Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).auth().basic(username, password)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kID)
+				.body(jsonObject.toString())
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
 				.post(KUNDEN_ID_FILE_PATH);
 
 		// Then
@@ -198,21 +181,20 @@ public class KundeResourceTest extends AbstractResourceTest {
 		final String idStr = response
 				.getHeader(LOCATION)
 				.replace(BASEURI + ":" + PORT + BASEPATH + KUNDEN_PATH + '/',
-						"").replace("/file", "");
-		assertThat(idStr, is(kID.toString()));
+						"").replace("/pic", "");
+		assertThat(idStr, is(ID_EXIST.toString()));
 
 		// When (2)
 		// Download der zuvor hochgeladenen Datei
-		response = given().header(ACCEPT, APPLICATION_JSON).auth()
-				.basic(username, password)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kID)
+		response = given().header(ACCEPT, APPLICATION_JSON)
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
 				.get(KUNDEN_ID_FILE_PATH);
 
 		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
 			jsonObject = jsonReader.readObject();
 		}
-		final String base64String = jsonObject.getString("bytes");
+		final String base64String = jsonObject.getString(JSON_KEY_BYTES);
 		final byte[] downloaded = DatatypeConverter
 				.parseBase64Binary(base64String);
 
@@ -220,7 +202,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 		// Dateigroesse vergleichen: hochgeladene Datei als byte[] einlesen
 		byte[] uploaded;
 		try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-			Files.copy(Paths.get(picName), stream);
+			Files.copy(Paths.get(PIC_UPLOAD), stream);
 			uploaded = stream.toByteArray();
 		}
 		assertThat(uploaded.length, is(downloaded.length));
@@ -237,35 +219,32 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testeUploadInvalidKundePic() throws IOException {
 
 		LOGGER.finer("BEGINN");
 
 		// Given
-		final Integer kundeId = ID_EXIST;
-		final String fileName = PIC_UPLOAD_INVALID_MIMETYPE;
 		final String username = USERNAME;
 		final String password = PASSWORD;
 
 		// Datei als byte[] einlesen
 		byte[] bytes;
 		try (ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-			Files.copy(Paths.get(fileName), stream);
+			Files.copy(Paths.get(PIC_UPLOAD_INVALID_MIMETYPE), stream);
 			bytes = stream.toByteArray();
 		}
 
 		// byte[] als Inhalt eines JSON-Datensatzes mit Base64-Codierung
 		final JsonObject jsonObject = getJsonBuilderFactory()
 				.createObjectBuilder()
-				.add("bytes", DatatypeConverter.printBase64Binary(bytes))
+				.add(JSON_KEY_BYTES, DatatypeConverter.printBase64Binary(bytes))
 				.build();
 
 		// When
 		final Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).auth().basic(username, password)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kundeId)
+				.body(jsonObject.toString())
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
 				.post(KUNDEN_ID_FILE_PATH);
 
 		assertThat(response.getStatusCode(), is(HTTP_CONFLICT));
@@ -278,17 +257,14 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testeFindExistingKundeById() {
 		LOGGER.finer("BEGINN");
 
-		// Given
-		final Integer kID = ID_EXIST;
-
 		// When
 		final Response response = given().header(ACCEPT, APPLICATION_JSON)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kID).get(KUNDEN_ID_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
+				.get(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_OK));
@@ -296,25 +272,22 @@ public class KundeResourceTest extends AbstractResourceTest {
 		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
 			final JsonObject jsonObject = jsonReader.readObject();
-			assertThat(jsonObject.getJsonNumber("kid").intValue(),
-					is(kID.intValue()));
+			assertThat(jsonObject.getJsonNumber("kundeID").intValue(),
+					is(ID_EXIST.intValue()));
 		}
 
 		LOGGER.finer("ENDE");
 
 	}
 
-	@Ignore
 	@Test
 	public void testeFindNonExistingKundeById() {
 		LOGGER.finer("BEGINN");
 
-		// Given
-		final Integer kID = ID_NOT_EXIST;
-
 		// When
 		final Response response = given().header(ACCEPT, APPLICATION_JSON)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kID).get(KUNDEN_ID_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_NOT_EXIST)
+				.get(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));
@@ -334,29 +307,27 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testeUpdateKunde() {
 
 		LOGGER.finer("BEGINN");
 
 		// Given
-		final Integer kID = ID_UPDATE_EXIST;
-		final String newMail = MAIL_UPDATE;
 		final String username = USERNAME;
 		final String password = PASSWORD;
 
 		// When
 		Response response = given().header(ACCEPT, APPLICATION_JSON)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kID).get(KUNDEN_ID_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_UPDATE_EXIST)
+				.get(KUNDEN_ID_PATH);
 
 		JsonObject jsonObject;
 		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
 			jsonObject = jsonReader.readObject();
 		}
-		assertThat(jsonObject.getJsonNumber("kid").intValue(),
-				is(kID.intValue()));
+		assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
+				is(ID_UPDATE_EXIST.intValue()));
 
 		// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuem
 		// Nachnamen bauen
@@ -364,8 +335,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 				.createObjectBuilder();
 		final Set<String> keys = jsonObject.keySet();
 		for (String k : keys) {
-			if ("email".equals(k)) {
-				job.add("email", newMail);
+			if (JSON_KEY_EMAIL.equals(k)) {
+				job.add(JSON_KEY_EMAIL, MAIL_UPDATE);
 			} else {
 				job.add(k, jsonObject.get(k));
 			}
@@ -373,8 +344,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 		jsonObject = job.build();
 
 		response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).auth().basic(username, password)
-				.put(KUNDEN_PATH);
+				.body(jsonObject.toString()).put(KUNDEN_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
@@ -386,20 +356,20 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	// TODO 500 Fehler bei Kunde ohne Bestellung, aber kein (bzw richtiger)
+	// Fehler bei Kunde mit Bestellung. Wieso?
 	@Ignore
 	@Test
 	public void testeDeleteKunde() {
 		LOGGER.finer("BEGINN");
 
 		// Given
-		final Integer kundeId = ID_DELETE_WITHOUT_BESTELLUNGEN_EXIST;
 		final String username = USERNAME_ADMIN;
 		final String password = PASSWORD_ADMIN;
 
 		// When
-		final Response response = given().auth().basic(username, password)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kundeId)
-				.delete(KUNDEN_ID_PATH);
+		final Response response = given().pathParameter(KUNDEN_ID_PATH_PARAM,
+				ID_DELETE_WITHOUT_BESTELLUNGEN_EXIST).delete(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
@@ -408,26 +378,24 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testeDeleteKundeWithBestellung() {
 
 		LOGGER.finer("BEGINN");
 
 		// Given
-		final Integer kundeId = ID_DELETE_WITH_BESTELLUNGEN_EXIST;
 		final String username = USERNAME_ADMIN;
 		final String password = PASSWORD_ADMIN;
 
 		// When
-		final Response response = given().auth().basic(username, password)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, kundeId)
-				.delete(KUNDEN_ID_PATH);
+		final Response response = given().pathParameter(KUNDEN_ID_PATH_PARAM,
+				ID_DELETE_WITH_BESTELLUNGEN_EXIST).delete(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_CONFLICT));
 		final String errorMsg = response.asString();
-		assertThat(errorMsg, startsWith("Kunde mit ID=" + kundeId
+		assertThat(errorMsg, startsWith("Kunde mit ID="
+				+ ID_DELETE_WITH_BESTELLUNGEN_EXIST
 				+ " kann nicht geloescht werden:"));
 		assertThat(errorMsg, endsWith("Bestellung(en)"));
 

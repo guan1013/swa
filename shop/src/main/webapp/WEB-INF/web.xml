@@ -36,18 +36,18 @@
   <auth-method>BASIC</auth-method>
   <realm-name>Webshop</realm-name>
  </login-config>
- <security-constraint>
-  <web-resource-collection>
+  <!--<security-constraint>
+   <web-resource-collection>
    <web-resource-name>Kunden erzeugen und modifizieren</web-resource-name>
    <url-pattern>/rest/kunden</url-pattern>
    <http-method>POST</http-method>
    <http-method>PUT</http-method>
   </web-resource-collection>
-  <auth-constraint>
+<auth-constraint>
    <role-name>admin</role-name>
    <role-name>mitarbeiter</role-name>
   </auth-constraint>
- </security-constraint>
+ </security-constraint>-->
  <security-constraint>
   <web-resource-collection>
    <web-resource-name>Privatkunden durch ein "Formular" erzeugen</web-resource-name>
@@ -59,16 +59,16 @@
    <role-name>mitarbeiter</role-name>
   </auth-constraint>
  </security-constraint>
- <security-constraint>
+ <!-- <security-constraint>
   <web-resource-collection>
    <web-resource-name>Kunden loeschen</web-resource-name>
    <url-pattern>/rest/kunden/*</url-pattern>
    <http-method>DELETE</http-method>
   </web-resource-collection>
-  <auth-constraint>
+ <auth-constraint>
    <role-name>admin</role-name>
   </auth-constraint>
- </security-constraint>
+ </security-constraint>-->
  <security-constraint>
   <web-resource-collection>
    <web-resource-name>Bestellungen erzeugen</web-resource-name>
