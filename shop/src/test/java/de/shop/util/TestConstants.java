@@ -31,7 +31,7 @@ public final class TestConstants {
 	public static final String BESTELLUNGEN_ID_KUNDE_PATH = BESTELLUNGEN_ID_PATH + "/kunde";
 	
 	public static final String BESTELLPOSTEN_PATH = "/bestellposten";
-	public static final String BESTELLPOSTEN_ID_PATH_PARAM = "bestellungFk";
+	public static final String BESTELLPOSTEN_ID_PATH_PARAM = "bpid";
 	public static final String BESTELLPOSTEN_ID_PATH = BESTELLPOSTEN_PATH + "/{" + BESTELLPOSTEN_ID_PATH_PARAM + "}";
 	public static final String BESTELLPOSTEN_ID_BESTELLUNG_PATH = BESTELLPOSTEN_ID_PATH + "/bestellung";
 	

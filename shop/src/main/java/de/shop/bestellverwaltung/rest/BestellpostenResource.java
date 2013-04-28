@@ -76,7 +76,7 @@ public class BestellpostenResource {
 	@Path("{id:[1-9][0-9]*}")
 	@DELETE
 	@Produces
-	public void deleteKunde(@PathParam("pid") Integer bID) {
+	public void deleteBestellposten(@PathParam("bpid") Integer bID) {
 
 		Locale LOCALE = localeHelper.getLocale(headers);
 		bps.deleteBestellpostenById(bID, LOCALE);
