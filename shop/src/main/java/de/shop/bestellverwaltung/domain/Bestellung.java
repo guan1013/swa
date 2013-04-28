@@ -180,6 +180,7 @@ public class Bestellung implements Serializable {
 	@Past
 	@Column(name = "Erstellt", nullable = false, updatable = false)
 	//@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date erstellt;
 
 	/**
@@ -188,6 +189,7 @@ public class Bestellung implements Serializable {
 	@Past
 	@Column(name = "Geaendert", nullable = false)
 	//@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	@JsonIgnore
 	private Date geaendert;
 	
 
@@ -293,6 +295,8 @@ public class Bestellung implements Serializable {
 		return this;
 	}
 
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
