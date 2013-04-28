@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -34,6 +35,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
@@ -51,7 +55,6 @@ import de.shop.util.XmlDateAdapter;
  */
 // @form:off
 @Entity
-@XmlRootElement
 @Table(name = "Bestellung")
 @NamedQueries({
 		@NamedQuery(name = Bestellung.ALL_BESTELLUNGEN, query = "from Bestellung b"),
@@ -127,9 +130,12 @@ public class Bestellung implements Serializable {
 	@GeneratedValue
 	@Column(name = "Bestellung_ID", nullable = false, updatable = false)
 	@Min(value = 1, groups = IdGroup.class, message = "{bestellverwaltung.bestellung.id.min}")
-	@XmlAttribute
 	private Integer bestellungID;
-
+	
+	@Version
+	@Basic(optional = false)
+	private int version = 0;
+	
 	/**
 	 * Kunde, der diese Bestellung aufgegeben hat
 	 */
@@ -137,24 +143,27 @@ public class Bestellung implements Serializable {
 	@JoinColumn(name = "Kunde_FK")
 	@Valid
 	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}")
-	@XmlElement(name = "kunden", required = true)
+	@JsonProperty ("kunden")
+	@JsonIgnore
 	private Kunde kunde;
+	
+	@Transient
+	private URI kundeUri;
 
 	/**
 	 * Liste aller Bestellposten dieser Bestellung
 	 */
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "Bestellung_FK")
 	@NotNull(message = "{bestellverwaltung.bestellung.bestellpositionen.notNull}")
 	@OrderColumn(name = "idx")
-	@XmlTransient
+	@JsonIgnore
 	private List<Bestellposten> bestellposten;
 
 	/**
 	 * URI für XML von Bestellposten
 	 */
 	@Transient
-	@XmlElement
 	private URI bestellpostenUri;
 
 	/**
@@ -162,7 +171,6 @@ public class Bestellung implements Serializable {
 	 */
 	@Min(1)
 	@Column(name = "Gesamtpreis", nullable = false)
-	@XmlElement
 	private double gesamtpreis;
 
 	/**
@@ -171,7 +179,7 @@ public class Bestellung implements Serializable {
 	@NotNull(message = "{bestellverwaltung.bestellung.bestellpositionen.notNull}")
 	@Past
 	@Column(name = "Erstellt", nullable = false, updatable = false)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	//@XmlJavaTypeAdapter(XmlDateAdapter.class)
 	private Date erstellt;
 
 	/**
@@ -179,12 +187,10 @@ public class Bestellung implements Serializable {
 	 */
 	@Past
 	@Column(name = "Geaendert", nullable = false)
-	@XmlJavaTypeAdapter(XmlDateAdapter.class)
+	//@XmlJavaTypeAdapter(XmlDateAdapter.class)
 	private Date geaendert;
 	
-	@Version
-	@Basic(optional = false)
-	private int version = 0;
+
 
 	// /////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR
@@ -378,6 +384,14 @@ public class Bestellung implements Serializable {
 
 	public void setKunde(Kunde kunde) {
 		this.kunde = kunde;
+	}
+
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
 	}
 
 }
