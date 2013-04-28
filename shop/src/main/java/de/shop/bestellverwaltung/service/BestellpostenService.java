@@ -23,6 +23,7 @@ import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.BestellpostenValidationException;
 import de.shop.util.exceptions.InvalidBestellpostenIdException;
 import de.shop.util.exceptions.InvalidBestellungIdException;
+import de.shop.util.exceptions.KundeDeleteBestellungException;
 
 public class BestellpostenService implements Serializable {
 
@@ -330,6 +331,22 @@ public class BestellpostenService implements Serializable {
 
 		LOGGER.log(FINER, "END: Update Bestellpoosten " + bP);
 		return bP;
+	}
+	/**
+	 * Löschen eines Bestellpostens
+	 */
+	public void deleteBestellpostenById(Integer iD, Locale locale) {
+		Bestellposten bp;
+		
+		//nach BP suchen
+			bp = findBestellpostenByIdObjekt(iD, locale);
+		
+		if (bp == null) {
+			return;
+		}
+		// Löschen
+		em.remove(bp);
+		
 	}
 	
 	// /////////////////////////////////////////////////////////////////////
