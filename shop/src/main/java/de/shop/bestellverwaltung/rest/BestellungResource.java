@@ -21,6 +21,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -31,7 +32,9 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.bestellverwaltung.service.BestellungService.FetchType;
+import de.shop.util.LocaleHelper;
 import de.shop.util.exceptions.NotFoundException;
+import de.shop.util.Transactional;
 
 /**
  * Resource Klasse für Bestellung für die RestfullWebservices
@@ -42,11 +45,18 @@ import de.shop.util.exceptions.NotFoundException;
 @Produces({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })
 @Consumes
 @RequestScoped
+@Transactional
 public class BestellungResource {
 	// /////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
-	private static final Locale LOCALE_DEFAULT = Locale.getDefault();
-
+	@Context
+	private HttpHeaders headers;
+	
+	@Inject
+	private LocaleHelper localeHelper;
+	
+	Locale LOCALE_DEFAULT = localeHelper.getLocale(headers);
+	
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
 
@@ -63,10 +73,9 @@ public class BestellungResource {
 	// METHODS
 
 	@POST
-	@Consumes({ APPLICATION_XML, TEXT_XML })
+	@Consumes({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })
 	@Produces
 	public Response addBestellung(Bestellung pBE, @Context UriInfo uriInfo) {
-
 		bs.addBestellung(pBE, LOCALE_DEFAULT);
 
 		final URI beUri = uriHelperBestellung.getUriBestellung(pBE, uriInfo);
