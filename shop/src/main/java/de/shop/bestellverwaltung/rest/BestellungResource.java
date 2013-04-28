@@ -33,6 +33,7 @@ import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.bestellverwaltung.service.BestellungService.FetchType;
 import de.shop.util.LocaleHelper;
+import de.shop.util.Log;
 import de.shop.util.exceptions.NotFoundException;
 import de.shop.util.Transactional;
 
@@ -42,10 +43,11 @@ import de.shop.util.Transactional;
  * @author Matthias Schnell
  */
 @Path("/bestellung")
-@Produces({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })
+@Produces({ APPLICATION_JSON })
 @Consumes
 @RequestScoped
 @Transactional
+@Log
 public class BestellungResource {
 	// /////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
@@ -146,7 +148,7 @@ public class BestellungResource {
 	}
 
 	@GET
-	@Path("{kid:[1-9][0-9]*}/kunde")
+	@Path("{id:[1-9][0-9]*}/kunde")
 	public List<Bestellung> findBestellungenByKundeId(
 			@PathParam("kid") Integer pKID, @Context UriInfo uriInfo) {
 

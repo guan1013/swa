@@ -143,7 +143,6 @@ public class Bestellung implements Serializable {
 	@JoinColumn(name = "Kunde_FK")
 	@Valid
 	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}")
-	@JsonProperty ("kunden")
 	@JsonIgnore
 	private Kunde kunde;
 	
@@ -155,7 +154,7 @@ public class Bestellung implements Serializable {
 	 */
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "Bestellung_FK")
-	@NotNull(message = "{bestellverwaltung.bestellung.bestellpositionen.notNull}")
+	//@NotNull(message = "{bestellverwaltung.bestellung.bestellpositionen.notNull}")
 	@OrderColumn(name = "idx")
 	@JsonIgnore
 	private List<Bestellposten> bestellposten;
@@ -188,7 +187,6 @@ public class Bestellung implements Serializable {
 	 */
 	@Past
 	@Column(name = "Geaendert", nullable = false)
-	//@XmlJavaTypeAdapter(XmlDateAdapter.class)
 	@JsonIgnore
 	private Date geaendert;
 	
@@ -326,7 +324,8 @@ public class Bestellung implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Bestellung [bestellungID=" + bestellungID + ", gesamtpreis="
+		return "Bestellung [bestellungID=" + bestellungID + ", version=" + version
+				+ ", gesamtpreis="
 				+ gesamtpreis + ", erstellt=" + erstellt + ", geaendert="
 				+ geaendert + "]";
 	}
@@ -342,6 +341,7 @@ public class Bestellung implements Serializable {
 		this.bestellungID = bestellungID;
 	}
 
+	@JsonProperty("erstellt")
 	public Date getErstellt() {
 		return erstellt == null ? null : (Date) erstellt.clone();
 	}
@@ -350,6 +350,7 @@ public class Bestellung implements Serializable {
 		this.erstellt = erstellt == null ? null : (Date) erstellt.clone();
 	}
 
+	@JsonProperty("geaendert")
 	public Date getGeaendert() {
 		return geaendert == null ? null : (Date) geaendert.clone();
 	}
