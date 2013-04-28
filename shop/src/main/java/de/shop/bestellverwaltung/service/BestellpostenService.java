@@ -335,17 +335,16 @@ public class BestellpostenService implements Serializable {
 	/**
 	 * Löschen eines Bestellpostens
 	 */
-	public void deleteBestellpostenById(int iD, Locale locale) {
+	public void deleteBestellpostenById(Integer iD, Locale locale) {
 		Bestellposten bp;
-		try {
+		
+		//nach BP suchen
 			bp = findBestellpostenByIdObjekt(iD, locale);
-		} catch(InvalidBestellpostenIdException e){
-			return;
-		}
+		
 		if (bp == null) {
 			return;
 		}
-		// in der DB loeschen
+		// Löschen
 		em.remove(bp);
 		
 	}

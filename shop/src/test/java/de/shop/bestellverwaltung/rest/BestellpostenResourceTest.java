@@ -4,8 +4,6 @@ package de.shop.bestellverwaltung.rest;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_PATH;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_ID_PATH_PARAM;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_ID_PATH;
-import static de.shop.util.TestConstants.BESTELLPOSTEN_ID_BESTELLUNG_PATH;
-
 import java.lang.invoke.MethodHandles;
 import java.util.logging.Logger;
 
@@ -21,7 +19,6 @@ import com.jayway.restassured.response.Response;
 
 import de.shop.util.AbstractResourceTest;
 import static com.jayway.restassured.RestAssured.given;
-import static de.shop.util.TestConstants.KUNDEN_PATH;
 import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -33,9 +30,6 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 @FixMethodOrder(NAME_ASCENDING)
 public class BestellpostenResourceTest extends AbstractResourceTest{
 	
-	private static final Integer EXISTING_ID = Integer.valueOf(602);
-	private static final Integer EXISTING_BESTELLUNG_FK = Integer.valueOf(501);
-	private static final Integer EXISTING_PRODUKTDATEN_FK = Integer.valueOf(401);
 	private static final Integer ID_FOR_DELETE = Integer.valueOf(602);
 	// ///////////////////////////////////////////////////////////////////
 		// ATTRIBUTES
@@ -58,8 +52,8 @@ public void testeAddBestellposten() {
 
 	// When
 	final JsonObject jsonObject = getJsonBuilderFactory()
-			.createObjectBuilder().add("bestellung", 501)
-			.add("produktdaten", 408)
+			.createObjectBuilder().add("bestellungFk", 501)
+			.add("produktdatenFk", 408)
 			.add("anzahl", 11).build();
 
 	final Response response = given().contentType(APPLICATION_JSON)
