@@ -79,7 +79,7 @@ import de.shop.util.IdGroup;
 		@NamedQuery(name = Kunde.KUNDE_BY_EMAIL, query = "SELECT k FROM Kunde k "
 				+ "WHERE k.email = :mail"),
 		@NamedQuery(name = Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG, query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
-				+ "WHERE k.email = :mail")})
+				+ "WHERE k.email = :mail") })
 // @form:on
 @ScriptAssert(lang = "javascript", script = "(_this.password == null && _this.passwordWdh == null)"
 		+ "|| (_this.password != null && _this.password.equals(_this.passwordWdh))", message = "{kundenverwaltung.kunde.password.notEqual}", groups = PasswordGroup.class)
@@ -175,7 +175,6 @@ public class Kunde implements Serializable {
 	 * Erstell Datum des Kunden
 	 */
 	@Column(name = "Erstellt")
-	@Past(message = "{kundenverwaltung.kunde.seit.past}")
 	@JsonIgnore
 	private Date erstellt;
 
@@ -183,7 +182,6 @@ public class Kunde implements Serializable {
 	 * Datum, wann die letzte Änderung an einem Kunden vorgenommen wurde
 	 */
 	@Column(name = "Geaendert")
-	@Past
 	@JsonIgnore
 	private Date geaendert;
 
