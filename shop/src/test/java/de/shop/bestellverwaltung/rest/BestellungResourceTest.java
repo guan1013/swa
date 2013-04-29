@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import com.jayway.restassured.response.Response;
+
 import static de.shop.util.TestConstants.*;
 import de.shop.util.AbstractResourceTest;
 import static com.jayway.restassured.RestAssured.given;
@@ -28,7 +29,21 @@ import org.junit.FixMethodOrder;
 @RunWith(Arquillian.class)
 @FixMethodOrder(NAME_ASCENDING)
 public class BestellungResourceTest extends AbstractResourceTest {
-
+	private static final String JSON_KEY_ID = "produktID";
+	private static final String JSON_KEY_HERSTELLER = "hersteller";
+	private static final String JSON_KEY_BESCHREIBUNG = "beschreibung";
+	private static final String HERSTELLER_CREATE = "JUnit Hersteller Create";
+	private static final String HERSTELLER_CREATE_INVALID = "";
+	private static final String HERSTELLER_UPDATE = "JUnit Hersteller Update";
+	private static final String BESCHREIBUNG_UPDATE = "JUnit Beschreibung Update";
+	private static final String BESCHREIBUNG_CREATE = "JUnit Beschreibung Create";
+	private static final String BESCHREIBUNG_CREATE_INVALID = "";
+	private static final int NON_EXISTING_ID = 1818;
+	private static final int EXISTING_ID = 303;
+	private static final String PATH_PARAM_PRODUKT_ID = "produktId";
+	private static final String PATH = "/produkte";
+	private static final String PATH_WITH_PARAM_ID = PATH + "/{"
+			+ PATH_PARAM_PRODUKT_ID + "}";
 	//@Ignore
 	@Test
 	public void findBestellungById() {
@@ -53,27 +68,22 @@ public class BestellungResourceTest extends AbstractResourceTest {
 		final int kundeId = 100;
 		final int produktdaten1ID = 401;
 		final int produktdaten2ID = 402;
-		final String username = USERNAME;
-		final String password = PASSWORD;
-
+		final String username = USERNAME_ADMIN;
+		final String password = PASSWORD_ADMIN;
+		
+		
 		final JsonObject jsonObject = getJsonBuilderFactory()
 				.createObjectBuilder()
 				.add("kundeUri", KUNDEN_URI + "/" + kundeId)
+				.add("gesamtpreis", 123)
 //				.add("bestellposten",
 //						getJsonBuilderFactory()
 //								.createArrayBuilder()
+//								.add()d
 //								.add(getJsonBuilderFactory()
-//										.createObjectBuilder()
-//										.add("anzahl", 1)
-//										.add("produktdaten",
-//												PRODUKTDATEN + "/"
-//														+ produktdaten1ID))
-//								.add(getJsonBuilderFactory()
-//										.createObjectBuilder()
-//										.add("anzahl", 2)
-//										.add("produktdaten",
-//												PRODUKTDATEN + "/"
-//														+ produktdaten2ID)))
+//										.createObjectBuilder()//.add("bestellungID", 501)
+//										.add("produktID", 407)
+//										.add("anzahl", 8)))
 				.build();
 
 		final Response response = given().auth()
@@ -111,12 +121,13 @@ public class BestellungResourceTest extends AbstractResourceTest {
 	// public void updateBestellung() {
 	//
 	// }
-	@Ignore
+	//@Ignore
 	@Test
 	public void deleteBestellung() {
 		int bId = 502;
 
-		Response response = given().pathParameter("id", bId).delete(
+		Response response = given().auth()
+				.basic(USERNAME_ADMIN, PASSWORD_ADMIN).pathParameter("id", bId).delete(
 				"/bestellung/{id}");
 
 		assertThat(response.getStatusCode(),
