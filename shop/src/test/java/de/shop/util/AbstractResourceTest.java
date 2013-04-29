@@ -29,10 +29,10 @@ import com.jayway.restassured.RestAssured;
 
 public abstract class AbstractResourceTest {
 	protected static final String USERNAME = "102";
-	protected static final String PASSWORD = "102";
-	protected static final String USERNAME_ADMIN = "101";
-	protected static final String PASSWORD_ADMIN = "101";
-	protected static final String PASSWORD_FALSCH = "falsch";
+	protected static final String USERNAME_MITARBEITER = "scma1078";
+	protected static final String PASSWORD = "abc";
+	protected static final String USERNAME_ADMIN = "admin";
+	protected static final String PASSWORD_ADMIN = "admin";
 	
 	// Sprache und Zeichensatz
 	private static final String CLIENT_LANGUAGE = Locale.GERMAN.getLanguage();

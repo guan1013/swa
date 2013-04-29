@@ -15,7 +15,6 @@ import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
-import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.hamcrest.CoreMatchers.endsWith;
@@ -64,9 +63,9 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final String JSON_KEY_VORNAME = "vorname";
 	private static final String JSON_KEY_EMAIL = "email";
 	private static final Integer ID_EXIST = Integer.valueOf(101);
-	private static final String VORNAME_CORRECT = "My";
-	private static final String NACHNAME_CORRECT = "Tester";
-	private static final String EMAIL_CORRECT = "maze.schnell@gmail.com";
+	private static final String VORNAME_CORRECT = "Matthias";
+	private static final String NACHNAME_CORRECT = "Schnell";
+	private static final String EMAIL_CORRECT = "scma1078@hs-karlsruhe.de";
 
 	private static final Integer ID_NOT_EXIST = Integer.valueOf(9999);
 	private static final String JSON_KEY_ID = "kundeID";
@@ -91,15 +90,10 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final String PIC_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/"
 			+ PIC_INVALID_MIMETYPE;
 
-	@Ignore
 	@Test
 	public void testeAddKunde() {
 
 		LOGGER.finer("BEGINN");
-
-		// Given
-		final String username = USERNAME;
-		final String password = PASSWORD;
 
 		// When
 		final JsonObject jsonObject = getJsonBuilderFactory()
@@ -112,36 +106,12 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_CREATED));
-		/*
-		 * final String location = response.getHeader(LOCATION); final int
-		 * startPos = location.lastIndexOf('/'); final String idStr =
-		 * location.substring(startPos + 1); final Integer id =
-		 * Integer.valueOf(idStr); assertThat(id.intValue() > 0, is(true));
-		 */
 
-		LOGGER.finer("ENDE");
-
-	}
-
-	@Ignore
-	@Test
-	public void testeAddKundeInvalidPassword() {
-		LOGGER.finer("BEGINN");
-
-		// Given
-		final String username = USERNAME;
-		final String password = PASSWORD_FALSCH;
-
-		final JsonObject jsonObject = getJsonBuilderFactory()
-				.createObjectBuilder().add(JSON_KEY_NACHNAME, NACHNAME_CORRECT)
-				.build();
-
-		// When
-		final Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).post(KUNDEN_PATH);
-
-		// Then
-		assertThat(response.getStatusCode(), is(HTTP_UNAUTHORIZED));
+		final String location = response.getHeader(LOCATION);
+		final int startPos = location.lastIndexOf('/');
+		final String idStr = location.substring(startPos + 1);
+		final Integer id = Integer.valueOf(idStr);
+		assertThat(id.intValue() > 0, is(true));
 
 		LOGGER.finer("ENDE");
 
@@ -172,8 +142,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 		// When
 		Response response = given().contentType(APPLICATION_JSON)
 				.body(jsonObject.toString())
-				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
-				.post(KUNDEN_ID_FILE_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST).auth()
+				.basic(username, password).post(KUNDEN_ID_FILE_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_CREATED));
@@ -187,8 +157,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 		// When (2)
 		// Download der zuvor hochgeladenen Datei
 		response = given().header(ACCEPT, APPLICATION_JSON)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
-				.get(KUNDEN_ID_FILE_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST).auth()
+				.basic(username, password).get(KUNDEN_ID_FILE_PATH);
 
 		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
@@ -244,8 +214,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 		// When
 		final Response response = given().contentType(APPLICATION_JSON)
 				.body(jsonObject.toString())
-				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
-				.post(KUNDEN_ID_FILE_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST).auth()
+				.basic(username, password).post(KUNDEN_ID_FILE_PATH);
 
 		assertThat(response.getStatusCode(), is(HTTP_CONFLICT));
 		assertThat(response.asString(), is(NoMimeTypeException.MESSAGE));
@@ -260,11 +230,12 @@ public class KundeResourceTest extends AbstractResourceTest {
 	@Test
 	public void testeFindExistingKundeById() {
 		LOGGER.finer("BEGINN");
-
 		// When
+		final String username = USERNAME;
+		final String password = PASSWORD;
 		final Response response = given().header(ACCEPT, APPLICATION_JSON)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
-				.get(KUNDEN_ID_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST).auth()
+				.basic(username, password).get(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_OK));
@@ -285,9 +256,11 @@ public class KundeResourceTest extends AbstractResourceTest {
 		LOGGER.finer("BEGINN");
 
 		// When
+		final String username = USERNAME;
+		final String password = PASSWORD;
 		final Response response = given().header(ACCEPT, APPLICATION_JSON)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_NOT_EXIST)
-				.get(KUNDEN_ID_PATH);
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_NOT_EXIST).auth()
+				.basic(username, password).get(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));
@@ -307,13 +280,14 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeUpdateKunde() {
 
 		LOGGER.finer("BEGINN");
 
 		// Given
-		final String username = USERNAME;
+		final String username = USERNAME_MITARBEITER;
 		final String password = PASSWORD;
 
 		// When
@@ -344,7 +318,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 		jsonObject = job.build();
 
 		response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).put(KUNDEN_PATH);
+				.body(jsonObject.toString()).auth().basic(username, password)
+				.put(KUNDEN_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
@@ -368,8 +343,10 @@ public class KundeResourceTest extends AbstractResourceTest {
 		final String password = PASSWORD_ADMIN;
 
 		// When
-		final Response response = given().pathParameter(KUNDEN_ID_PATH_PARAM,
-				ID_DELETE_WITHOUT_BESTELLUNGEN_EXIST).delete(KUNDEN_ID_PATH);
+		final Response response = given()
+				.pathParameter(KUNDEN_ID_PATH_PARAM,
+						ID_DELETE_WITHOUT_BESTELLUNGEN_EXIST).auth()
+				.basic(username, password).delete(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
@@ -378,6 +355,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	
 	@Test
 	public void testeDeleteKundeWithBestellung() {
 
@@ -388,8 +366,10 @@ public class KundeResourceTest extends AbstractResourceTest {
 		final String password = PASSWORD_ADMIN;
 
 		// When
-		final Response response = given().pathParameter(KUNDEN_ID_PATH_PARAM,
-				ID_DELETE_WITH_BESTELLUNGEN_EXIST).delete(KUNDEN_ID_PATH);
+		final Response response = given()
+				.pathParameter(KUNDEN_ID_PATH_PARAM,
+						ID_DELETE_WITH_BESTELLUNGEN_EXIST).auth()
+				.basic(username, password).delete(KUNDEN_ID_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_CONFLICT));
