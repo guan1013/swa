@@ -23,7 +23,6 @@ import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.BestellpostenValidationException;
 import de.shop.util.exceptions.InvalidBestellpostenIdException;
 import de.shop.util.exceptions.InvalidBestellungIdException;
-import de.shop.util.exceptions.KundeDeleteBestellungException;
 
 public class BestellpostenService implements Serializable {
 
