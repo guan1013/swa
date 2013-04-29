@@ -25,16 +25,22 @@ import javax.ws.rs.core.UriInfo;
 import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 
 import de.shop.bestellverwaltung.domain.Bestellposten;
+import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellpostenService.FetchType;
+import de.shop.bestellverwaltung.service.BestellungService;
+import de.shop.produktverwaltung.domain.Produktdaten;
+import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
+import de.shop.util.Transactional;
 import de.shop.util.exceptions.NotFoundException;
 
 @Path("/bestellposten")
 @Produces({ APPLICATION_JSON })
 @Consumes
 @RequestScoped
+@Transactional
 @Log
 public class BestellpostenResource {
 
@@ -46,8 +52,16 @@ public class BestellpostenResource {
 	@Context
 	private HttpHeaders headers;
 	
+	// INJECTS
+	
 	@Inject
 	private BestellpostenService bps;
+	
+	@Inject
+	private ProduktdatenService pds;
+	
+	@Inject
+	private BestellungService bs;
 	
 	@Inject
 	private LocaleHelper localeHelper;
@@ -64,6 +78,14 @@ public class BestellpostenResource {
 	public void addBestellposten(Bestellposten bestellposten, @Context UriInfo uriInfo) {
 	
 		LOGGER.log(FINER, "BEGINN: Bestellposten Anlegen");
+		
+		final Locale locale = localeHelper.getLocale(headers);
+		
+		Produktdaten pd = pds.findProduktdatenByID(bestellposten.getProduktdaten().getProduktdatenID(), locale);
+		bestellposten.setProduktdaten(pd);
+		
+		Bestellung be = bs.findBestellungById(bestellposten.getBestellung().getBestellungID(), locale);
+		bestellposten.setBestellung(be);
 		
 		bps.addBestellposten(bestellposten, LOCALE_DEFAULT);
 		
@@ -176,32 +198,6 @@ public class BestellpostenResource {
 		return bestellposten;
 	}
 	
-	@PUT
-	@Consumes({ APPLICATION_JSON })
-	@Produces
-	public void updateBestellposten(Bestellposten bP) {
-
-		Locale LOCALE = localeHelper.getLocale(headers);
-
-		// Vorhandenen Bestellposten suchen
-		Bestellposten bp = bps.findBestellpostenByIdObjekt(bP.getBestellpostenID(), LOCALE);
-		if (bp == null) {
-			final String msg = "Kein Bestellpsoten mit der ID " + bP.getBestellpostenID()
-					+ " gefunden";
-			throw new NotFoundException(msg);
-		}
-		LOGGER.log(FINER,"Bestellposten vorher = {0}", bp);
-		// Daten des vorhandenen Objekts überschreiben
-		bp.setValues(bP);
-		LOGGER.log(FINER,"Bestellposten nachher = {0}", bp);
-
-		// Objekt an die Datenbank übergeben
-		bP = bps.updateBestellposten(bp, LOCALE);
-		if (bP == null) {
-			final String msg = "Kein Bestellposten mit der ID " + bp.getBestellpostenID()
-					+ " gefunden.";
-			throw new NotFoundException(msg);
-		}
-	}
+	
 
 }
