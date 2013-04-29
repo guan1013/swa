@@ -27,6 +27,7 @@ import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 import de.shop.bestellverwaltung.domain.Bestellposten;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellpostenService.FetchType;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.exceptions.NotFoundException;
@@ -176,6 +177,32 @@ public class BestellpostenResource {
 		return bestellposten;
 	}
 	
-	
+	@PUT
+	@Consumes({ APPLICATION_JSON })
+	@Produces
+	public void updateBestellposten(Bestellposten bP) {
+
+		Locale LOCALE = localeHelper.getLocale(headers);
+
+		// Vorhandenen Kunden suchen
+		Bestellposten bp = bps.findBestellpostenByIdObjekt(bP.getBestellpostenID(), LOCALE);
+		if (bp == null) {
+			final String msg = "Kein Bestellpsoten mit der ID " + bP.getBestellpostenID()
+					+ " gefunden";
+			throw new NotFoundException(msg);
+		}
+		LOGGER.log(FINER,"Bestellposten vorher = {0}", bp);
+		// Daten des vorhandenen Objekts überschreiben
+		bp.setValues(bP);
+		LOGGER.log(FINER,"Bestellposten nachher = {0}", bp);
+
+		// Objekt an die Datenbank übergeben
+		bP = bps.updateBestellposten(bp, LOCALE);
+		if (bP == null) {
+			final String msg = "Kein Bestellposten mit der ID " + bp.getBestellpostenID()
+					+ " gefunden.";
+			throw new NotFoundException(msg);
+		}
+	}
 
 }
