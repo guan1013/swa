@@ -280,7 +280,6 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testeUpdateKunde() {
 
@@ -355,7 +354,6 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	
 	@Test
 	public void testeDeleteKundeWithBestellung() {
 
