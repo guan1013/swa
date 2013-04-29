@@ -19,13 +19,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-
-import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 
 import de.shop.produktverwaltung.domain.Produkt;
 import de.shop.produktverwaltung.domain.Produktdaten;
@@ -117,6 +114,7 @@ public class ProduktResource {
 
 	}
 
+	/*
 	@GET
 	@Wrapped(element = "produkte")
 	@Path("/hersteller")
@@ -164,7 +162,9 @@ public class ProduktResource {
 
 		return results;
 	}
+	*/
 
+	/*
 	@GET
 	@Wrapped(element = "produkte")
 	public Collection<Produkt> findProduktByBeschreibung(
@@ -202,6 +202,8 @@ public class ProduktResource {
 
 		return results;
 	}
+	
+	*/
 
 	//formatter:off
 	@PUT
