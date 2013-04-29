@@ -52,8 +52,8 @@ public void testeAddBestellposten() {
 
 	// When
 	final JsonObject jsonObject = getJsonBuilderFactory()
-			.createObjectBuilder().add("bestellungFk", 501)
-			.add("produktdatenFk", 408)
+			.createObjectBuilder().add("bestellungID", 501)
+			.add("produktID", 408)
 			.add("anzahl", 11).build();
 
 	final Response response = given().contentType(APPLICATION_JSON)
