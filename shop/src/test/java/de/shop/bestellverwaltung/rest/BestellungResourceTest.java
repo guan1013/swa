@@ -75,6 +75,7 @@ public class BestellungResourceTest extends AbstractResourceTest {
 		final JsonObject jsonObject = getJsonBuilderFactory()
 				.createObjectBuilder()
 				.add("kundeUri", KUNDEN_URI + "/" + kundeId)
+				.add("gesamtpreis", 123)
 //				.add("bestellposten",
 //						getJsonBuilderFactory()
 //								.createArrayBuilder()
