@@ -134,7 +134,32 @@
 			<role-name>kunde</role-name>
 		</auth-constraint>
 	</security-constraint>
-
+	<!--Bestellposten Constraints -->
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Bestellposten post,put</web-resource-name>
+			<url-pattern>/rest/bestellposten</url-pattern>
+			<http-method>POST</http-method>
+			<http-method>PUT</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+			<role-name>mitarbeiter</role-name>
+			<role-name>kunde</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Bestellposten get</web-resource-name>
+			<url-pattern>/rest/bestellposten/*</url-pattern>
+			<http-method>GET</http-method>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>admin</role-name>
+			<role-name>mitarbeiter</role-name>
+			<role-name>kunde</role-name>
+		</auth-constraint>
+	</security-constraint>
 	<security-role>
 		<role-name>admin</role-name>
 	</security-role>
