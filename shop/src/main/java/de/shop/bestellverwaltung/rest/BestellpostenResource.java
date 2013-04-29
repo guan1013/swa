@@ -27,7 +27,6 @@ import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 import de.shop.bestellverwaltung.domain.Bestellposten;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellpostenService.FetchType;
-import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.exceptions.NotFoundException;
@@ -184,7 +183,7 @@ public class BestellpostenResource {
 
 		Locale LOCALE = localeHelper.getLocale(headers);
 
-		// Vorhandenen Kunden suchen
+		// Vorhandenen Bestellposten suchen
 		Bestellposten bp = bps.findBestellpostenByIdObjekt(bP.getBestellpostenID(), LOCALE);
 		if (bp == null) {
 			final String msg = "Kein Bestellpsoten mit der ID " + bP.getBestellpostenID()
