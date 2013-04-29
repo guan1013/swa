@@ -49,7 +49,7 @@
 			
 			<!-- im Produktivbetrieb auskommentieren -->
 			<property name="hibernate.hbm2ddl.auto" value="create"/>
-			<property name="hibernate.hbm2ddl.import_files" value="sql/01_Kunden.sql,sql/02_Adressen.sql,sql/03_Produkte.sql,sql/04_Produktdaten.sql,sql/05_Bestellungen.sql,sql/06_Bestellposten.sql"/>
+			<property name="hibernate.hbm2ddl.import_files" value="sql/01_Enums.sql,sql/10_Kunden.sql,sql/11_Kunden_Rollen.sql,sql/20_Adressen.sql,sql/30_Produkte.sql,sql/40_Produktdaten.sql,sql/50_Bestellungen.sql,sql/60_Bestellposten.sql"/>
 		</properties>
 	</persistence-unit>
 </persistence>

@@ -1,16 +1,20 @@
 package de.shop.produktverwaltung.rest;
 
 import static com.jayway.restassured.RestAssured.given;
-import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
+import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 import java.io.StringReader;
+import java.util.Set;
 
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 
 import org.jboss.arquillian.junit.Arquillian;
@@ -26,6 +30,22 @@ import de.shop.util.AbstractResourceTest;
 @FixMethodOrder(NAME_ASCENDING)
 public class ProduktdatenResourceTest extends AbstractResourceTest {
 
+	private static final String PATH = "/produktdaten";
+	private static final String PATH_PARAM_PRODUKTDATEN_ID = "produktdatenId";
+	private static final String PATH_WITH_PARAM_ID = PATH + "/{"
+			+ PATH_PARAM_PRODUKTDATEN_ID + "}";
+	private static final String ACCEPT = "Accept";
+	private static final String BASIC_PASSWORD = "abc";
+	private static final String BASIC_USER = "guan1013";
+	private static final int EXISTING_ID = 404;
+	private static final String JSON_KEY_ID = "produktdatenID";
+	private static final String JSON_KEY_FARBE = "farbe";
+	private static final String JSON_KEY_GROESSE = "groesse";
+	private static final String JSON_KEY_PREIS = "preis";
+
+	/**
+	 * GET Request
+	 */
 	@Test
 	public void findProduktdatenById() {
 
@@ -49,6 +69,9 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 		}
 	}
 
+	/**
+	 * GET Request fehlerhaft (ID existiert nicht)
+	 */
 	@Test
 	public void findNonExistingProduktdatenById() {
 
@@ -62,6 +85,147 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));
-		
+
+	}
+
+	/**
+	 * POST Request
+	 */
+	@Test
+	public void createProduktdaten() {
+
+		// Given
+		JsonObject produktJson = getJsonBuilderFactory().createObjectBuilder()
+				.add("produktID", 301).build();
+
+		// When
+		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
+				.add("anzahlVerfuegbar", 3).add("groesse", "XL TEST")
+				.add("preis", 99.99).add("farbe", "TEST/rot/gold")
+				.add("produkt", produktJson).build();
+		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.post(PATH);
+
+		// Then TODO: GGf. Location überprüfen
+		assertThat(response.statusCode(), is(HTTP_CREATED));
+	}
+
+	/**
+	 * POST Request fehlerhaft (Preis fehlt)
+	 */
+	@Test
+	public void createProduktdatenInvalid() {
+
+		// Given
+		JsonObject produktJson = getJsonBuilderFactory().createObjectBuilder()
+				.add("produktID", 301).build();
+
+		// When
+		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
+				.add("anzahlVerfuegbar", 3).add("groesse", "XL TEST")
+				.add("farbe", "TEST/rot/gold").add("produkt", produktJson)
+				.build();
+		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.post(PATH);
+
+		assertThat(response.statusCode(), is(HTTP_NOT_FOUND));
+	}
+
+	/**
+	 * PUT Request
+	 */
+	@Test
+	public void updateProduktdaten() {
+
+		// When
+
+		// Vorhandene Produktdaten abfragen
+		Response response = given().header(ACCEPT, APPLICATION_JSON)
+				.pathParameter(PATH_PARAM_PRODUKTDATEN_ID, EXISTING_ID)
+				.get(PATH_WITH_PARAM_ID);
+		JsonObject jsonObject;
+		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
+				new StringReader(response.asString()))) {
+			jsonObject = jsonReader.readObject();
+		}
+
+		assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
+				is(EXISTING_ID));
+
+		final JsonObjectBuilder job = getJsonBuilderFactory()
+				.createObjectBuilder();
+		final Set<String> keys = jsonObject.keySet();
+		for (String key : keys) {
+
+			if (key.equals(JSON_KEY_FARBE)) {
+				job.add(JSON_KEY_FARBE, "NEUE FARBE");
+			} else if (key.equals(JSON_KEY_GROESSE)) {
+				job.add(JSON_KEY_GROESSE, "NEUE GROESSE");
+			} else if (key.equals(JSON_KEY_PREIS)) {
+				job.add(JSON_KEY_PREIS, 9999.99);
+			} else {
+				job.add(key, jsonObject.get(key));
+			}
+
+		}
+
+		jsonObject = job.build();
+
+		response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.put(PATH);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
+
+	}
+
+	/**
+	 * PUT Request fehlerhaft (Farbe/Preis/Groesse empty)
+	 */
+	@Test
+	public void updateProduktdatenInvalid() {
+		// When
+
+		// Vorhandene Produktdaten abfragen
+		Response response = given().header(ACCEPT, APPLICATION_JSON)
+				.pathParameter(PATH_PARAM_PRODUKTDATEN_ID, EXISTING_ID)
+				.get(PATH_WITH_PARAM_ID);
+		JsonObject jsonObject;
+		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
+				new StringReader(response.asString()))) {
+			jsonObject = jsonReader.readObject();
+		}
+
+		assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
+				is(EXISTING_ID));
+
+		final JsonObjectBuilder job = getJsonBuilderFactory()
+				.createObjectBuilder();
+		final Set<String> keys = jsonObject.keySet();
+		for (String key : keys) {
+
+			if (key.equals(JSON_KEY_FARBE)) {
+				job.add(JSON_KEY_FARBE, "");
+			} else if (key.equals(JSON_KEY_GROESSE)) {
+				job.add(JSON_KEY_GROESSE, "");
+			} else if (key.equals(JSON_KEY_PREIS)) {
+				job.add(JSON_KEY_PREIS, 0);
+			} else {
+				job.add(key, jsonObject.get(key));
+			}
+
+		}
+
+		jsonObject = job.build();
+
+		response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.put(PATH);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));
 	}
 }

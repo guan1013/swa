@@ -18,3 +18,26 @@ insert into kunde (Kunde_id, nachname, vorname, email, geburtsdatum, erstellt, g
 insert into kunde (Kunde_id, nachname, vorname, email, geburtsdatum, erstellt, geaendert, version) values(117,'Koch','Mika','mika.koch@windows.de',to_date('31.01.1986', 'DD.MM.YYYY'),to_timestamp('11.12.2013 11:54:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('25.06.2013 18:27:00', 'DD.MM.YYYY HH24:MI:SS'),1);
 insert into kunde (Kunde_id, nachname, vorname, email, geburtsdatum, erstellt, geaendert, version) values(118,'Bauer','Isabella','bauer.isa@write.me',to_date('31.01.1942', 'DD.MM.YYYY'),to_timestamp('09.01.2014 12:03:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('25.07.2013 19:28:00', 'DD.MM.YYYY HH24:MI:SS'),1);
 insert into kunde (Kunde_id, nachname, vorname, email, geburtsdatum, erstellt, geaendert, version) values(119,'Schaefer','Tobias','tobias@helloworld.com',to_date('31.01.1966', 'DD.MM.YYYY'),to_timestamp('07.02.2014 12:13:00', 'DD.MM.YYYY HH24:MI:SS'),to_timestamp('24.08.2013 20:29:00', 'DD.MM.YYYY HH24:MI:SS'),1);
+
+-- Alle Kunden haben dasselbe Passwort: abc
+
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 100;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 101;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 102;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 103;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 104;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 105;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 106;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 107;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 108;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 109;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 110;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 111;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 112;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 113;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 114;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 115;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 116;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 117;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 118;
+update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 119;
