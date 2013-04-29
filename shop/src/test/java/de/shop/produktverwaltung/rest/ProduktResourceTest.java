@@ -19,6 +19,7 @@ import javax.json.JsonReader;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,6 +31,8 @@ import de.shop.util.AbstractResourceTest;
 @FixMethodOrder(NAME_ASCENDING)
 public class ProduktResourceTest extends AbstractResourceTest {
 
+	private static final String BASIC_PASSWORD = "abc";
+	private static final String BASIC_USER = "guan1013";
 	private static final String JSON_KEY_ID = "produktID";
 	private static final String JSON_KEY_HERSTELLER = "hersteller";
 	private static final String JSON_KEY_BESCHREIBUNG = "beschreibung";
@@ -96,15 +99,21 @@ public class ProduktResourceTest extends AbstractResourceTest {
 	 * GET Request für alle Produktdaten eines Produktes
 	 */
 	@Test
+	@Ignore
 	public void findAlleProduktdatenByProduktId() {
 
+		// TODO: Test implementieren
 	}
-	
+
 	/**
-	 * GET Request für alle Produktdaten eines Produktes, fehlerhaft (ID exis. nicht)
+	 * GET Request für alle Produktdaten eines Produktes, fehlerhaft (ID exis.
+	 * nicht)
 	 */
 	@Test
+	@Ignore
 	public void findAlleProduktdatenByNonExistingProduktId() {
+
+		// TODO: Test implementieren
 
 	}
 
@@ -119,8 +128,9 @@ public class ProduktResourceTest extends AbstractResourceTest {
 		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
 				.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_CREATE)
 				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE).build();
-		Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).post(PATH);
+		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.post(PATH);
 
 		// Then TODO: GGf. Location überprüfen
 		assertThat(response.statusCode(), is(HTTP_CREATED));
@@ -137,10 +147,10 @@ public class ProduktResourceTest extends AbstractResourceTest {
 		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
 				.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_CREATE_INVALID)
 				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE_INVALID).build();
-		Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).post(PATH);
+		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.post(PATH);
 
-		// Then TODO: GGf. Location überprüfen
 		assertThat(response.statusCode(), is(HTTP_NOT_FOUND));
 	}
 
@@ -184,8 +194,9 @@ public class ProduktResourceTest extends AbstractResourceTest {
 
 		jsonObject = job.build();
 
-		response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).put(PATH);
+		response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.put(PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
@@ -227,7 +238,7 @@ public class ProduktResourceTest extends AbstractResourceTest {
 
 		jsonObject = job.build();
 
-		response = given().contentType(APPLICATION_JSON)
+		response = given().auth().basic(BASIC_USER, BASIC_PASSWORD).contentType(APPLICATION_JSON)
 				.body(jsonObject.toString()).put(PATH);
 
 		// Then

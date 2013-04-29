@@ -27,17 +27,24 @@ import javax.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 
+import de.shop.produktverwaltung.domain.Produkt;
 import de.shop.produktverwaltung.domain.Produktdaten;
+import de.shop.produktverwaltung.service.ProduktService;
+import de.shop.produktverwaltung.service.ProduktService.FetchType;
 import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.produktverwaltung.service.util.SuchFilter;
+import de.shop.util.Log;
+import de.shop.util.Transactional;
 import de.shop.util.exceptions.NotFoundException;
 
 //@formatter:off
 @Path("/produktdaten")
-@Produces({ APPLICATION_JSON  })
+@Produces(APPLICATION_JSON)
 @Consumes
 @RequestScoped
-//@formatter:on
+@Transactional
+@Log
+// @formatter:on
 public class ProduktdatenResource {
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
@@ -47,13 +54,16 @@ public class ProduktdatenResource {
 	private ProduktdatenService produktdatenService;
 
 	@Inject
+	private ProduktService produktService;
+
+	@Inject
 	private UriHelperProduktdaten uriHelperProduktdaten;
 
-	//formatter:off
+	// formatter:off
 	@POST
 	@Consumes({ APPLICATION_JSON })
 	@Produces
-	//formatter:on
+	// formatter:on
 	public Response addProduktdaten(Produktdaten produktdaten,
 			@Context UriInfo uriInfo, @Context HttpHeaders headers) {
 
@@ -64,6 +74,11 @@ public class ProduktdatenResource {
 		final List<Locale> locales = headers.getAcceptableLanguages();
 		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
 				.get(0);
+
+		// Produkt nachladen
+		Produkt currProdukt = produktService.findProduktByID(produktdaten
+				.getProdukt().getProduktID(), FetchType.NUR_PRODUKTE, locale);
+		produktdaten.setProdukt(currProdukt);
 
 		produktdaten = produktdatenService
 				.addProduktdaten(produktdaten, locale);
@@ -101,8 +116,8 @@ public class ProduktdatenResource {
 		}
 
 		// Log
-		LOGGER.log(FINER, "REST ENDE: Finde Produktdaten by Id. Ergebnis = {0}",
-				result);
+		LOGGER.log(FINER,
+				"REST ENDE: Finde Produktdaten by Id. Ergebnis = {0}", result);
 
 		return result;
 	}
@@ -129,7 +144,8 @@ public class ProduktdatenResource {
 		filter.setPreisUnten(preisUnten == 0 ? null : preisUnten);
 
 		// Log
-		LOGGER.log(FINER,
+		LOGGER.log(
+				FINER,
 				"REST BEGINN: Finde Produktdaten by Detail Suche (Filter = {0})",
 				filter);
 
@@ -157,16 +173,17 @@ public class ProduktdatenResource {
 		return results;
 	}
 
-	//formatter:off
+	// formatter:off
 	@PUT
 	@Consumes({ APPLICATION_JSON })
 	@Produces
-	//formatter:on
+	// formatter:on
 	public void updateProduktdaten(Produktdaten produktdaten,
 			@Context UriInfo uriInfo, @Context HttpHeaders headers) {
 
 		// Log
-		LOGGER.log(FINER, "REST BEGINN: Update Produktdaten = {0}", produktdaten);
+		LOGGER.log(FINER, "REST BEGINN: Update Produktdaten = {0}",
+				produktdaten);
 
 		// Ggf. Exception
 		if (produktdaten == null) {
