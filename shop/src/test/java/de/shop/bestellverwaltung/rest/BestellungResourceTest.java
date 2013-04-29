@@ -29,12 +29,13 @@ import org.junit.FixMethodOrder;
 @FixMethodOrder(NAME_ASCENDING)
 public class BestellungResourceTest extends AbstractResourceTest {
 
-	@Ignore
+	//@Ignore
 	@Test
 	public void findBestellungById() {
 		int bId = 501;
 
-		Response response = given().header("Accept", APPLICATION_JSON)
+		Response response = given().auth()
+				.basic(USERNAME, PASSWORD).header(ACCEPT, APPLICATION_JSON)
 				.pathParameter("id", bId).get("/bestellung/{id}");
 
 		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_OK));
@@ -46,7 +47,7 @@ public class BestellungResourceTest extends AbstractResourceTest {
 					is(bId));
 		}
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void createBestellung() {
 		final int kundeId = 100;
@@ -58,24 +59,25 @@ public class BestellungResourceTest extends AbstractResourceTest {
 		final JsonObject jsonObject = getJsonBuilderFactory()
 				.createObjectBuilder()
 				.add("kundeUri", KUNDEN_URI + "/" + kundeId)
-				.add("bestellposten",
-						getJsonBuilderFactory()
-								.createArrayBuilder()
-								.add(getJsonBuilderFactory()
-										.createObjectBuilder()
-										.add("anzahl", 1)
-										.add("produktdaten",
-												PRODUKTDATEN + "/"
-														+ produktdaten1ID))
-								.add(getJsonBuilderFactory()
-										.createObjectBuilder()
-										.add("anzahl", 2)
-										.add("produktdaten",
-												PRODUKTDATEN + "/"
-														+ produktdaten2ID)))
+//				.add("bestellposten",
+//						getJsonBuilderFactory()
+//								.createArrayBuilder()
+//								.add(getJsonBuilderFactory()
+//										.createObjectBuilder()
+//										.add("anzahl", 1)
+//										.add("produktdaten",
+//												PRODUKTDATEN + "/"
+//														+ produktdaten1ID))
+//								.add(getJsonBuilderFactory()
+//										.createObjectBuilder()
+//										.add("anzahl", 2)
+//										.add("produktdaten",
+//												PRODUKTDATEN + "/"
+//														+ produktdaten2ID)))
 				.build();
 
-		final Response response = given().contentType(APPLICATION_JSON)
+		final Response response = given().auth()
+				.basic(username, password).contentType(APPLICATION_JSON)
 				.body(jsonObject.toString())
 				.post(BESTELLUNGEN_PATH);
 
@@ -86,14 +88,15 @@ public class BestellungResourceTest extends AbstractResourceTest {
 		final int id = Integer.valueOf(idStr);
 		assertThat(id > 0, is(true));
 	}
-	@Ignore
+	//@Ignore
 	@Test
 	public void findBestellpostenByBestellungId() {
 		int bId = 501;
 
-		Response response = given().header("Accept", APPLICATION_JSON)
+		Response response = given().auth()
+				.basic(USERNAME, PASSWORD).header("Accept", APPLICATION_JSON)
 				.pathParameter("bestellungFk", bId)
-				.get("/bestellung/{id}/bestellposten");
+				.get("/bestellung/{bestellungFk}/bestellposten");
 
 		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_OK));
 

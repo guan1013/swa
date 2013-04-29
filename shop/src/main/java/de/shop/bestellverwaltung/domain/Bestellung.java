@@ -382,6 +382,14 @@ public class Bestellung implements Serializable {
 	public void setBestellpostenUri(URI bestellpostenUri) {
 		this.bestellpostenUri = bestellpostenUri;
 	}
+	
+	public URI getKundeUri() {
+		return kundeUri;
+	}
+
+	public void setKundeUri(URI bestellpostenUri) {
+		this.kundeUri = bestellpostenUri;
+	}
 
 	public Kunde getKunde() {
 		return this.kunde;
