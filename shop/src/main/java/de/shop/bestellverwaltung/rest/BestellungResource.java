@@ -35,6 +35,8 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.bestellverwaltung.service.BestellungService.FetchType;
+import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
 import de.shop.util.exceptions.NotFoundException;
@@ -74,6 +76,9 @@ public class BestellungResource {
 
 	@Inject
 	private BestellpostenService bps;
+	
+	@Inject
+	private KundeService ks;
 
 	@Inject
 	private UriHelperBestellung uriHelperBestellung;
@@ -97,13 +102,21 @@ public class BestellungResource {
 		final String kundeUriStr = bestellung.getKundeUri().toString();
 		int startPos = kundeUriStr.lastIndexOf('/') + 1;
 		final String kundeIdStr = kundeUriStr.substring(startPos);
-		Long kundeId = null;
+		Integer kundeId = null;
 		try {
-			kundeId = Long.valueOf(kundeIdStr);
+			kundeId = Integer.valueOf(kundeIdStr);
 		}
 		catch (NumberFormatException e) {
 			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr, e);
 		}
+		Locale LOCALE_DEFAULT = localeHelper.getLocale(headers);
+		Kunde k = ks.findKundeById(kundeId, LOCALE_DEFAULT);
+		
+		if(k == null)
+		{
+			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr);
+		}
+		bestellung.setKunde(k);
 		
 //		// persistente Artikel ermitteln
 //		final Collection<Bestellposten> bestellpositionen = bestellung.getBestellposten();

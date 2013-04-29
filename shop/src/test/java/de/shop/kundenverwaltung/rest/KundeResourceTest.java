@@ -280,7 +280,6 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	@Ignore
 	@Test
 	public void testeUpdateKunde() {
 
@@ -291,8 +290,11 @@ public class KundeResourceTest extends AbstractResourceTest {
 		final String password = PASSWORD;
 
 		// When
-		Response response = given().header(ACCEPT, APPLICATION_JSON)
-				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_UPDATE_EXIST)
+		Response response = given()
+				.header(ACCEPT, APPLICATION_JSON)
+				.auth()
+				.basic("scma1078", "abc")
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_UPDATE_EXIST.intValue())
 				.get(KUNDEN_ID_PATH);
 
 		JsonObject jsonObject;
@@ -355,7 +357,6 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
-	
 	@Test
 	public void testeDeleteKundeWithBestellung() {
 
