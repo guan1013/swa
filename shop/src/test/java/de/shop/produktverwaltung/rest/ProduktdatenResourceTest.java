@@ -1,6 +1,7 @@
 package de.shop.produktverwaltung.rest;
 
 import static com.jayway.restassured.RestAssured.given;
+import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -25,7 +26,16 @@ import de.shop.util.AbstractResourceTest;
 @RunWith(Arquillian.class)
 @FixMethodOrder(NAME_ASCENDING)
 public class ProduktdatenResourceTest extends AbstractResourceTest {
+	
+	private static final String PATH = "/produktdaten";
+	private static final String PATH_PARAM_PRODUKTDATEN_ID = "produktdatenId";
+	private static final String PATH_WITH_PARAM_ID = PATH + "/{"
+			+ PATH_PARAM_PRODUKTDATEN_ID + "}";
+	private static final String ACCEPT = "Accept";
 
+	/**
+	 * GET Request
+	 */
 	@Test
 	public void findProduktdatenById() {
 
@@ -49,6 +59,9 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 		}
 	}
 
+	/**
+	 * GET Request fehlerhaft (ID existiert nicht)
+	 */
 	@Test
 	public void findNonExistingProduktdatenById() {
 
@@ -64,4 +77,27 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 		assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));
 		
 	}
+
+	/**
+	 * POST Request
+	 */
+	@Test
+	public void createProduktdaten() {
+		
+		// Given
+
+		// When
+		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
+				.add("anzahlVerfuegbar", 3)
+				.add("groesse", "XL")
+				.add("preis", 99.99)
+				.add("farbe", "schwarz/rot/gold")
+				.build();
+		Response response = given().contentType(APPLICATION_JSON)
+				.body(jsonObject.toString()).post(PATH);
+
+		// Then TODO: GGf. Location überprüfen
+		assertThat(response.statusCode(), is(HTTP_CREATED));
+	}
+	
 }

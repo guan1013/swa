@@ -67,8 +67,8 @@ public class ProduktResourceTest extends AbstractResourceTest {
 				new StringReader(response.asString()))) {
 
 			JsonObject jsonObject = jsonReader.readObject();
-			assertThat(jsonObject.getJsonNumber(JSON_KEY_ID)
-					.intValue(), is(produktId.intValue()));
+			assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
+					is(produktId.intValue()));
 
 		}
 	}
@@ -91,45 +91,55 @@ public class ProduktResourceTest extends AbstractResourceTest {
 		assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));
 
 	}
+
+	/**
+	 * GET Request für alle Produktdaten eines Produktes
+	 */
+	@Test
+	public void findAlleProduktdatenByProduktId() {
+
+	}
 	
+	/**
+	 * GET Request für alle Produktdaten eines Produktes, fehlerhaft (ID exis. nicht)
+	 */
+	@Test
+	public void findAlleProduktdatenByNonExistingProduktId() {
+
+	}
+
 	/**
 	 * POST Request
 	 */
 	@Test
-	public void createProdukt()
-	{
+	public void createProdukt() {
 		// Given
-		
+
 		// When
 		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
 				.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_CREATE)
-				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE)
-				.build();
+				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE).build();
 		Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString())
-				.post(PATH);
-		
+				.body(jsonObject.toString()).post(PATH);
+
 		// Then TODO: GGf. Location überprüfen
 		assertThat(response.statusCode(), is(HTTP_CREATED));
 	}
-	
+
 	/**
 	 * POST Request fehlerhaft (ungültige Beschreibung + Hersteller)
 	 */
 	@Test
-	public void createProduktInvalid()
-	{
+	public void createProduktInvalid() {
 		// Given
-		
+
 		// When
 		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
 				.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_CREATE_INVALID)
-				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE_INVALID)
-				.build();
+				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE_INVALID).build();
 		Response response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString())
-				.post(PATH);
-		
+				.body(jsonObject.toString()).post(PATH);
+
 		// Then TODO: GGf. Location überprüfen
 		assertThat(response.statusCode(), is(HTTP_NOT_FOUND));
 	}
