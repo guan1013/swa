@@ -37,7 +37,7 @@ import de.shop.util.Transactional;
 import de.shop.util.exceptions.NotFoundException;
 
 @Path("/bestellposten")
-@Produces({ APPLICATION_JSON })
+@Produces(APPLICATION_JSON)
 @Consumes
 @RequestScoped
 @Transactional
@@ -81,10 +81,10 @@ public class BestellpostenResource {
 		
 		final Locale locale = localeHelper.getLocale(headers);
 		
-		Produktdaten pd = pds.findProduktdatenByID(bestellposten.getProduktdaten().getProduktdatenID(), locale);
+		final Produktdaten pd = pds.findProduktdatenByID(bestellposten.getProduktdaten().getProduktdatenID(), locale);
 		bestellposten.setProduktdaten(pd);
 		
-		Bestellung be = bs.findBestellungById(bestellposten.getBestellung().getBestellungID(), locale);
+		final Bestellung be = bs.findBestellungById(bestellposten.getBestellung().getBestellungID(), locale);
 		bestellposten.setBestellung(be);
 		
 		bps.addBestellposten(bestellposten, LOCALE_DEFAULT);
@@ -101,8 +101,8 @@ public class BestellpostenResource {
 	@Produces
 	public void deleteBestellposten(@PathParam("id") Integer id) {
 
-		Locale LOCALE = localeHelper.getLocale(headers);
-		bps.deleteBestellpostenById(id, LOCALE);
+		final Locale locale = localeHelper.getLocale(headers);
+		bps.deleteBestellpostenById(id, locale);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public class BestellpostenResource {
 		
 		LOGGER.log(FINER, "BEGIN: Update Bestellposten mit ID {0}", bestellposten.getBestellpostenID());
 		// Bestellposten nach id suchen
-		Bestellposten updBestellposten = bps.findBestellpostenByIdObjekt(bestellposten.
+		final Bestellposten updBestellposten = bps.findBestellpostenByIdObjekt(bestellposten.
 				getBestellpostenID(), LOCALE_DEFAULT);
 		
 		// Wenn nicht gefunden - Fehlermeldung
@@ -145,7 +145,7 @@ public class BestellpostenResource {
 
 		LOGGER.log(FINER, "Alle Bestellposten Anzeigen");
 		
-		Collection<Bestellposten> results = bps.findAllBestellposten();
+		final Collection<Bestellposten> results = bps.findAllBestellposten();
 		return results;
 	}
 	
@@ -159,7 +159,7 @@ public class BestellpostenResource {
 		
 		LOGGER.log(FINER, "BEGINN: Suche nach Bestellposten mit ID {0}", id);
 		
-		Bestellposten bestellposten = bps.findBestellpostenByIdObjekt(id,
+		final Bestellposten bestellposten = bps.findBestellpostenByIdObjekt(id,
 				LOCALE_DEFAULT);
 		if (bestellposten == null) {
 			
@@ -177,10 +177,10 @@ public class BestellpostenResource {
 	*/
 	@GET
 	@Path("{bestellungFk:[1-9][0-9]*}/bestellung")
-	public Collection <Bestellposten> findBestellpostenByBestellungId(
+	public Collection<Bestellposten> findBestellpostenByBestellungId(
 			@PathParam("bestellungFk") Integer bestellungFk) {
 
-		Collection <Bestellposten> bestellposten = null;
+		Collection<Bestellposten> bestellposten = null;
 		
 		LOGGER.log(FINER, "BEGINN: Suche nach Bestellposten der Bestellung mit ID {0}", bestellungFk);
 		

@@ -287,7 +287,7 @@ public class Bestellposten implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Bestellposten other = (Bestellposten) obj;
+		final Bestellposten other = (Bestellposten) obj;
 		if (anzahl != other.anzahl)
 			return false;
 		if (!bestellpostenID.equals(other.bestellpostenID))
@@ -308,3 +308,4 @@ public class Bestellposten implements Serializable {
 	}
 
 }
+
