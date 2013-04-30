@@ -1,5 +1,8 @@
 package de.shop.kundenverwaltung.rest;
 
+import static de.shop.util.TestConstants.KUNDEN_ID_PATH_PARAM;
+import static de.shop.util.TestConstants.KUNDEN_ID_PATH;
+import static de.shop.util.TestConstants.KUNDEN_PATH;
 import static com.jayway.restassured.RestAssured.given;
 import static de.shop.util.TestConstants.ACCEPT;
 import static java.net.HttpURLConnection.HTTP_CONFLICT;
@@ -34,15 +37,25 @@ import de.shop.util.ConcurrentUpdate;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 
+	// ///////////////////////////////////////////////////////////////////
+	// ATTRIBUTES
+	private static final Integer ID_EXIST = Integer.valueOf(101);
+	private static final String JSON_KEY_NACHNAME = "nachname";
+	private static final String JSON_KEY_VERSION = "version";
+	private static final String ConcurrentNachname1 = "Concurrencyeins";
+	private static final String ConcurrentNachname2 = ConcurrentNachname1 + "2";
+
 	@Test
 	public void updateKunde() throws InterruptedException, ExecutionException {
 
-		int kundeId = 101;
+		final String username = USERNAME_MITARBEITER;
+		final String password = PASSWORD;
 
 		// When
 		Response response = given().header(ACCEPT, APPLICATION_JSON).auth()
-				.basic("scma1078", "abc").pathParameter("kid", kundeId)
-				.get("/kunden/{kid}");
+				.basic(username, password)
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
+				.get(KUNDEN_ID_PATH);
 		JsonObject jsonObject;
 		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
@@ -55,16 +68,16 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 		JsonObjectBuilder job = getJsonBuilderFactory().createObjectBuilder();
 		Set<String> keys = jsonObject.keySet();
 		for (String k : keys) {
-			if ("nachname".equals(k)) {
-				job.add("nachname", "Concurrencyeins");
-			} else if ("version".equals(k)) {
+			if (JSON_KEY_NACHNAME.equals(k)) {
+				job.add(JSON_KEY_NACHNAME, ConcurrentNachname1);
+			} else if (JSON_KEY_VERSION.equals(k)) {
 			} else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
 		final JsonObject jsonObject2 = job.build();
 		final ConcurrentUpdate concurrentUpdate = new ConcurrentUpdate(
-				jsonObject2, "kunden/", "scma1078", "abc");
+				jsonObject2, KUNDEN_PATH, USERNAME_MITARBEITER, PASSWORD);
 		final ExecutorService executorService = Executors
 				.newSingleThreadExecutor();
 		final Future<Response> future = executorService
@@ -78,9 +91,9 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 		job = getJsonBuilderFactory().createObjectBuilder();
 		keys = jsonObject.keySet();
 		for (String k : keys) {
-			if ("nachname".equals(k)) {
-				job.add("nachname", "Concurrencyzwei");
-			} else if ("version".equals(k)) {
+			if (JSON_KEY_NACHNAME.equals(k)) {
+				job.add(JSON_KEY_NACHNAME, ConcurrentNachname2);
+			} else if (JSON_KEY_VERSION.equals(k)) {
 
 			} else {
 				job.add(k, jsonObject.get(k));
@@ -88,8 +101,8 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 		}
 		jsonObject = job.build();
 		response = given().contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).auth().basic("scma1078", "abc")
-				.put("kunden/");
+				.body(jsonObject.toString()).auth()
+				.basic(USERNAME_MITARBEITER, PASSWORD).put(KUNDEN_PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_CONFLICT));

@@ -117,6 +117,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeUploadKundePic() throws IOException {
 
@@ -243,7 +244,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
 			final JsonObject jsonObject = jsonReader.readObject();
-			assertThat(jsonObject.getJsonNumber("kundeID").intValue(),
+			assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
 					is(ID_EXIST.intValue()));
 		}
 
@@ -305,8 +306,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 		assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
 				is(ID_UPDATE_EXIST.intValue()));
 
-		// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuem
-		// Nachnamen bauen
+		// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuer EMAIL
+		// bauen
 		final JsonObjectBuilder job = getJsonBuilderFactory()
 				.createObjectBuilder();
 		final Set<String> keys = jsonObject.keySet();
