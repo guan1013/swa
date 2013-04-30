@@ -42,8 +42,9 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 	private static final Integer ID_EXIST = Integer.valueOf(101);
 	private static final String JSON_KEY_NACHNAME = "nachname";
 	private static final String JSON_KEY_VERSION = "version";
-	private static final String ConcurrentNachname1 = "Concurrencyeins";
-	private static final String ConcurrentNachname2 = ConcurrentNachname1 + "2";
+	private static final String CONCURRENT_NACHNAME_1 = "Concurrencyeins";
+	private static final String CONCURRENT_NACHNAME_2 = CONCURRENT_NACHNAME_1
+			+ "2";
 
 	@Test
 	public void updateKunde() throws InterruptedException, ExecutionException {
@@ -69,9 +70,11 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 		Set<String> keys = jsonObject.keySet();
 		for (String k : keys) {
 			if (JSON_KEY_NACHNAME.equals(k)) {
-				job.add(JSON_KEY_NACHNAME, ConcurrentNachname1);
-			} else if (JSON_KEY_VERSION.equals(k)) {
-			} else {
+				job.add(JSON_KEY_NACHNAME, CONCURRENT_NACHNAME_1);
+			}
+			else if (JSON_KEY_VERSION.equals(k)) {
+			}
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
@@ -92,10 +95,12 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 		keys = jsonObject.keySet();
 		for (String k : keys) {
 			if (JSON_KEY_NACHNAME.equals(k)) {
-				job.add(JSON_KEY_NACHNAME, ConcurrentNachname2);
-			} else if (JSON_KEY_VERSION.equals(k)) {
+				job.add(JSON_KEY_NACHNAME, CONCURRENT_NACHNAME_2);
+			}
+			else if (JSON_KEY_VERSION.equals(k)) {
 
-			} else {
+			}
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}

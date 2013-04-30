@@ -84,7 +84,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final String PIC = "pic.jpg";
 	private static final String PIC_UPLOAD = "src/test/resources/rest/" + PIC;
 	private static final String PIC_DOWNLOAD = "target/" + PIC;
-	private static final CopyOption[] COPY_OPTIONS = { REPLACE_EXISTING };
+	private static final CopyOption[] COPY_OPTIONS = {REPLACE_EXISTING};
 
 	private static final String PIC_INVALID_MIMETYPE = "pic.bmp";
 	private static final String PIC_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/"
@@ -314,7 +314,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if (JSON_KEY_EMAIL.equals(k)) {
 				job.add(JSON_KEY_EMAIL, MAIL_UPDATE);
-			} else {
+			} 
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
