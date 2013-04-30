@@ -29,11 +29,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -41,7 +36,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
-import de.shop.util.XmlDateAdapter;
 
 /**
  * Die Klasse Bestellung repräsentiert eine Bestellung eines Kunden. Sie
@@ -312,7 +306,7 @@ public class Bestellung implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Bestellung other = (Bestellung) obj;
+		final Bestellung other = (Bestellung) obj;
 		if (bestellungID == null) {
 			if (other.bestellungID != null)
 				return false;

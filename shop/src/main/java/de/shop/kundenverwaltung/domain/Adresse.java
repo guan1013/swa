@@ -48,17 +48,39 @@ import de.shop.util.IdGroup;
 @Table(name = "Adresse")
 @Cacheable
 @NamedQueries({
-		@NamedQuery(name = Adresse.ALL_ADRESSEN, query = "SELECT DISTINCT a from Adresse a"),
-		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE, query = "SELECT DISTINCT a from Adresse as a join a.kunde"),
-		@NamedQuery(name = Adresse.ADRESSE_BY_KUNDEID, query = "SELECT adresse from Adresse as adresse WHERE adresse.kunde.kundeID = :id"),
-		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_WOHNORT, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.ort=:ort"),
-		@NamedQuery(name = Adresse.ADRESSE_BY_WOHNORT, query = "SELECT DISTINCT a FROM Adresse a WHERE a.ort = :ort"),
-		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_PLZ, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.plz=:plz"),
-		@NamedQuery(name = Adresse.ADRESSE_BY_PLZ, query = "SELECT DISTINCT a FROM Adresse a WHERE a.plz = :plz"),
-		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_STRASSE, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.strasse=:strasse"),
-		@NamedQuery(name = Adresse.ADRESSE_BY_STRASSE, query = "SELECT DISTINCT a FROM Adresse a WHERE a.strasse = :strasse"),
-		@NamedQuery(name = Adresse.ADRESSE_MIT_KUNDE_BY_ADRESSEID, query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.adresseID=:adresseID"),
-		@NamedQuery(name = Adresse.ADRESSE_BY_ADRESSEID, query = "SELECT DISTINCT a FROM Adresse a WHERE a.adresseID = :adresseID") })
+		@NamedQuery(
+				name = Adresse.ALL_ADRESSEN, 
+				query = "SELECT DISTINCT a from Adresse a"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_KUNDEID, 
+				query = "SELECT adresse from Adresse as adresse WHERE adresse.kunde.kundeID = :id"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_WOHNORT, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.ort=:ort"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_WOHNORT, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.ort = :ort"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_PLZ, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.plz=:plz"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_PLZ, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.plz = :plz"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_STRASSE, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.strasse=:strasse"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_STRASSE, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.strasse = :strasse"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_MIT_KUNDE_BY_ADRESSEID, 
+				query = "SELECT DISTINCT a from Adresse as a join a.kunde where a.adresseID=:adresseID"),
+		@NamedQuery(
+				name = Adresse.ADRESSE_BY_ADRESSEID, 
+				query = "SELECT DISTINCT a FROM Adresse a WHERE a.adresseID = :adresseID") })
 // @formatter:on
 public class Adresse implements Serializable {
 
@@ -285,11 +307,12 @@ public class Adresse implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Adresse other = (Adresse) obj;
+		final Adresse other = (Adresse) obj;
 		if (adresseID == null) {
 			if (other.adresseID != null)
 				return false;
-		} else if (!adresseID.equals(other.adresseID))
+		}
+		else if (!adresseID.equals(other.adresseID))
 			return false;
 		return true;
 	}
