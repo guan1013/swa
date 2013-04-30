@@ -22,6 +22,7 @@ import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.IdGroup;
 import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.BestellungValidationException;
+import de.shop.util.exceptions.ConcurrentDeletedException;
 import de.shop.util.exceptions.InvalidBestellungIdException;
 import de.shop.util.exceptions.InvalidGesamtpreisException;
 import de.shop.util.exceptions.InvalidKundeIdException;
@@ -106,6 +107,8 @@ public class BestellungService implements Serializable {
 		LOGGER.log(FINER, "SERVICE END: findAllBestellungen");
 		return be;
 	}
+	
+
 
 	/**
 	 * Finde eine Bestellung anhand seiner ID
@@ -286,9 +289,16 @@ public class BestellungService implements Serializable {
 
 		validateBestellung(pBD, pLocale, Default.class);
 
-		LOGGER.log(FINEST, "SERVICE: Bestellung {0} validierung erfolgreich.",
-				pBD.getBestellungID());
+		LOGGER.log(FINEST, "SERVICE: Bestellung {0} validierung erfolgreich.", pBD);
+				em.detach(pBD);
 
+		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
+		Bestellung existingBestellung = findBestellungById(pBD.getBestellungID(), pLocale);
+		if (existingBestellung == null) {
+			throw new ConcurrentDeletedException(pBD.getBestellungID());
+		}
+		em.detach(existingBestellung);
+		
 		/**
 		 * Prüfen ob zu ändernde Bestellung existiert
 		 */
@@ -303,7 +313,7 @@ public class BestellungService implements Serializable {
 		/**
 		 * Update auf übergebene Bestellung
 		 */
-		em.merge(pBD);
+		pBD = em.merge(pBD);
 
 		/**
 		 * Datenbank synchronisieren
