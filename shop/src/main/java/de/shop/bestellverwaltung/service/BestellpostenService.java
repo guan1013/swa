@@ -88,7 +88,7 @@ public class BestellpostenService implements Serializable {
 		 * Wenn Bestellposten mit dieser Id noch nicht existiert, lege ihn
 		 * an.
 		 */
-		Bestellposten bp = findBestellpostenByIdObjekt(nBP.getBestellpostenID(), locale);
+		final Bestellposten bp = findBestellpostenByIdObjekt(nBP.getBestellpostenID(), locale);
 		if (bp == null) {
 			em.persist(nBP);
 		}
@@ -111,7 +111,7 @@ public class BestellpostenService implements Serializable {
 		// Log
 		LOGGER.log(FINER, "BEGINN: Suche alle Bestellposten");
 		
-		List<Bestellposten> bp = em.createNamedQuery(
+		final List<Bestellposten> bp = em.createNamedQuery(
 				Bestellposten.ALL_BESTELLPOSTEN).getResultList();
 		
 		// Log
@@ -192,6 +192,8 @@ public class BestellpostenService implements Serializable {
 
 			bp = em.createNamedQuery(Bestellposten.BESTELLPOSTEN_MIT_BESTELLUNG).setParameter(
 					"bestellposten_id", iD).getResultList();
+			
+			break;
 
 		default:
 			/**
@@ -245,6 +247,8 @@ public class BestellpostenService implements Serializable {
 		
 		bp = em.createNamedQuery(Bestellposten.BESTELLPOSTEN_MIT_BESTELLUNG).setParameter(
 				"bestellungFk", bFK).getResultList();
+		break;
+		
 		default:
 			/**
 			 * Gefundenen Bestellposten speichern
@@ -353,8 +357,8 @@ public class BestellpostenService implements Serializable {
 	// /////////////////////////////////////////////////////////////////////
 
 	private void validateBestellpostenId(Integer bpid, Locale locale) {
-		Validator validator = validatorProvider.getValidator(locale);
-		Set<ConstraintViolation<Bestellposten>> violations = validator.validateValue(
+		final Validator validator = validatorProvider.getValidator(locale);
+		final Set<ConstraintViolation<Bestellposten>> violations = validator.validateValue(
 				Bestellposten.class, "bestellpostenID", bpid, IdGroup.class);
 		if (!violations.isEmpty())
 			throw new InvalidBestellpostenIdException(bpid, violations);
