@@ -19,6 +19,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -86,6 +87,54 @@ public class BestellungResource {
 	// /////////////////////////////////////////////////////////////////////
 	// METHODS
 
+	
+	@PUT
+	@Consumes({ APPLICATION_JSON })
+	@Produces
+	public void updateBestellung(Bestellung bestellung) {
+
+		Locale LOCALE = localeHelper.getLocale(headers);
+//		final String kundeUriStr = bestellung.getKundeUri().toString();
+//		int startPos = kundeUriStr.lastIndexOf('/') + 1;
+//		final String kundeIdStr = kundeUriStr.substring(startPos);
+//		Integer kundeId = null;
+//		try {
+//			kundeId = Integer.valueOf(kundeIdStr);
+//		}
+//		catch (NumberFormatException e) {
+//			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr, e);
+//		}
+//		Locale LOCALE_DEFAULT = localeHelper.getLocale(headers);
+//		Kunde k = ks.findKundeById(kundeId, LOCALE_DEFAULT);
+//		
+//		if(k == null)
+//		{
+//			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr);
+//		}
+//		bestellung.setKunde(k);
+		
+
+		// Vorhandenen Kunden suchen
+		Bestellung kd = bs.findBestellungById(bestellung.getBestellungID(), LOCALE);
+		bestellung.setKunde(ks.findKundeById(101, LOCALE));
+		
+		
+		
+		
+		//LOGGER.tracef("Kunde vorher = %s", kd);
+		// Daten des vorhandenen Objekts überschreiben
+		kd.setValues(bestellung);
+		//LOGGER.tracef("Kunde nachher = %s", kd);
+
+		// Objekt an die Datenbank übergeben
+		bestellung = bs.updateBestellung(kd, LOCALE);
+		if (bestellung == null) {
+			final String msg = "Keine Bestellung mit der ID " + kd.getBestellungID()
+					+ " gefunden.";
+			throw new NotFoundException(msg);
+		}
+	}
+	
 //	@POST
 //	@Consumes({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })
 //	@Produces
@@ -118,68 +167,6 @@ public class BestellungResource {
 		}
 		bestellung.setKunde(k);
 		
-//		// persistente Artikel ermitteln
-//		final Collection<Bestellposten> bestellpositionen = bestellung.getBestellposten();
-//		final List<Long> artikelIds = new ArrayList<>(bestellpositionen.size());
-//		for (Bestellposten bp : bestellpositionen) {
-//			final String artikelUriStr = bp.getBestellpostenUri().toString();
-//			startPos = artikelUriStr.lastIndexOf('/') + 1;
-//			final String artikelIdStr = artikelUriStr.substring(startPos);
-//			Long artikelId = null;
-//			try {
-//				artikelId = Long.valueOf(artikelIdStr);
-//			}
-//			catch (NumberFormatException e) {
-//				// Ungueltige Artikel-ID: wird nicht beruecksichtigt
-//				continue;
-//			}
-//			
-//			artikelIds.add(artikelId);
-//		}
-//		
-//		if (artikelIds.isEmpty()) {
-//			// keine einzige gueltige Artikel-ID
-//			final StringBuilder sb = new StringBuilder("Keine Artikel vorhanden mit den IDs: ");
-//			for (Bestellposition bp : bestellpositionen) {
-//				final String artikelUriStr = bp.getArtikelUri().toString();
-//				startPos = artikelUriStr.lastIndexOf('/') + 1;
-//				sb.append(artikelUriStr.substring(startPos));
-//				sb.append(' ');
-//			}
-//			throw new NotFoundException(sb.toString());
-//		}
-//		
-//		final List<Artikel> gefundeneArtikel = as.findArtikelByIds(artikelIds);
-//		if (gefundeneArtikel.isEmpty()) {
-//			// TODO msg passend zu locale
-//			throw new NotFoundException("Keine Artikel gefunden mit den IDs " + artikelIds);
-//		}
-//		
-//		// Bestellpositionen haben URIs fuer persistente Artikel.
-//		// Diese persistenten Artikel wurden in einem DB-Zugriff ermittelt (s.o.)
-//		// Fuer jede Bestellposition wird der Artikel passend zur Artikel-URL bzw. Artikel-ID gesetzt.
-//		// Bestellpositionen mit nicht-gefundene Artikel werden eliminiert.
-//		int i = 0;
-//		final List<Bestellposition> neueBestellpositionen =
-//			                        new ArrayList<>(bestellpositionen.size());
-//		for (Bestellposition bp : bestellpositionen) {
-//			// Artikel-ID der aktuellen Bestellposition (s.o.):
-//			// artikelIds haben gleiche Reihenfolge wie bestellpositionen
-//			final long artikelId = artikelIds.get(i++);
-//			
-//			// Wurde der Artikel beim DB-Zugriff gefunden?
-//			for (Artikel artikel : gefundeneArtikel) {
-//				if (artikel.getId().longValue() == artikelId) {
-//					// Der Artikel wurde gefunden
-//					bp.setArtikel(artikel);
-//					neueBestellpositionen.add(bp);
-//					break;					
-//				}
-//			}
-//		}
-//		bestellung.setBestellpositionen(neueBestellpositionen);
-//		
-//		// Kunde mit den vorhandenen ("alten") Bestellungen ermitteln
 		final Locale locale = localeHelper.getLocale(headers);
 		bestellung = bs.addBestellung(bestellung, locale);
 		final URI bestellungUri = uriHelperBestellung.getUriBestellung(bestellung, uriInfo);

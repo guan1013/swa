@@ -1,7 +1,6 @@
 package de.shop.bestellverwaltung.rest;
 
 import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,9 +14,11 @@ import static com.jayway.restassured.RestAssured.given;
 
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.util.Set;
 
 import javax.json.JsonArray;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -29,21 +30,6 @@ import org.junit.FixMethodOrder;
 @RunWith(Arquillian.class)
 @FixMethodOrder(NAME_ASCENDING)
 public class BestellungResourceTest extends AbstractResourceTest {
-	private static final String JSON_KEY_ID = "produktID";
-	private static final String JSON_KEY_HERSTELLER = "hersteller";
-	private static final String JSON_KEY_BESCHREIBUNG = "beschreibung";
-	private static final String HERSTELLER_CREATE = "JUnit Hersteller Create";
-	private static final String HERSTELLER_CREATE_INVALID = "";
-	private static final String HERSTELLER_UPDATE = "JUnit Hersteller Update";
-	private static final String BESCHREIBUNG_UPDATE = "JUnit Beschreibung Update";
-	private static final String BESCHREIBUNG_CREATE = "JUnit Beschreibung Create";
-	private static final String BESCHREIBUNG_CREATE_INVALID = "";
-	private static final int NON_EXISTING_ID = 1818;
-	private static final int EXISTING_ID = 303;
-	private static final String PATH_PARAM_PRODUKT_ID = "produktId";
-	private static final String PATH = "/produkte";
-	private static final String PATH_WITH_PARAM_ID = PATH + "/{"
-			+ PATH_PARAM_PRODUKT_ID + "}";
 	//@Ignore
 	@Test
 	public void findBestellungById() {
@@ -62,12 +48,22 @@ public class BestellungResourceTest extends AbstractResourceTest {
 					is(bId));
 		}
 	}
+	
+	@Test
+	public void dontfindBestellungById() {
+		int bId = 65365754;
+
+		Response response = given().auth()
+				.basic(USERNAME, PASSWORD).header(ACCEPT, APPLICATION_JSON)
+				.pathParameter("id", bId).get("/bestellung/{id}");
+
+		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_NOT_FOUND));
+	}
+	
 	//@Ignore
 	@Test
 	public void createBestellung() {
 		final int kundeId = 100;
-		final int produktdaten1ID = 401;
-		final int produktdaten2ID = 402;
 		final String username = USERNAME_ADMIN;
 		final String password = PASSWORD_ADMIN;
 		
@@ -98,6 +94,37 @@ public class BestellungResourceTest extends AbstractResourceTest {
 		final int id = Integer.valueOf(idStr);
 		assertThat(id > 0, is(true));
 	}
+	
+	@Test
+	public void dontcreateBestellung() {
+		final int kundeId = 900;
+		final String username = USERNAME_ADMIN;
+		final String password = PASSWORD_ADMIN;
+		
+		
+		final JsonObject jsonObject = getJsonBuilderFactory()
+				.createObjectBuilder()
+				.add("kundeUri", KUNDEN_URI + "/" + kundeId)
+				.add("gesamtpreis", 123)
+//				.add("bestellposten",
+//						getJsonBuilderFactory()
+//								.createArrayBuilder()
+//								.add()d
+//								.add(getJsonBuilderFactory()
+//										.createObjectBuilder()//.add("bestellungID", 501)
+//										.add("produktID", 407)
+//										.add("anzahl", 8)))
+				.build();
+
+		final Response response = given().auth()
+				.basic(username, password).contentType(APPLICATION_JSON)
+				.body(jsonObject.toString())
+				.post(BESTELLUNGEN_PATH);
+
+		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_NOT_FOUND));
+	}
+	
+	
 	//@Ignore
 	@Test
 	public void findBestellpostenByBestellungId() {
@@ -116,21 +143,72 @@ public class BestellungResourceTest extends AbstractResourceTest {
 			assertThat(jsonObject.size(), is(2));
 		}
 	}
+	
+//	@Test
+//	public void dontfindBestellpostenByBestellungId() {
+//		int bId = 201;
+//
+//		Response response = given().auth()
+//				.basic(USERNAME, PASSWORD).header("Accept", APPLICATION_JSON)
+//				.pathParameter("bestellungFk", bId)
+//				.get("/bestellung/{bestellungFk}/bestellposten");
+//
+//		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_NOT_FOUND));
+//	}
 
-	// @Test
-	// public void updateBestellung() {
-	//
-	// }
-	//@Ignore
-	@Test
-	public void deleteBestellung() {
-		int bId = 502;
-
-		Response response = given().auth()
-				.basic(USERNAME_ADMIN, PASSWORD_ADMIN).pathParameter("id", bId).delete(
-				"/bestellung/{id}");
-
-		assertThat(response.getStatusCode(),
-				is(HttpURLConnection.HTTP_NO_CONTENT));
-	}
+	 @Test
+	 public void updateBestellung() {
+		 final int bestellungId = 501;
+			final double neuerPreis = 666.0;
+			final String username = USERNAME_ADMIN;
+			final String password = PASSWORD_ADMIN;
+			
+			// When
+			Response response = given().auth()
+					.basic(username, username).header(ACCEPT, APPLICATION_JSON)
+					.pathParameter("id", bestellungId).get("/bestellung/{id}");
+			
+			JsonObject jsonObject;
+			try (final JsonReader jsonReader =
+					              getJsonReaderFactory().createReader(new StringReader(response.asString()))) {
+				jsonObject = jsonReader.readObject();
+			}
+	    	assertThat(jsonObject.getJsonNumber("bestellungID").intValue(), is(bestellungId));
+	    	
+	    	// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuem Nachnamen bauen
+	    	final JsonObjectBuilder job = getJsonBuilderFactory().createObjectBuilder();
+	    	final Set<String> keys = jsonObject.keySet();
+	    	for (String k : keys) {
+	    		if ("gesamtpreis".equals(k)) {
+	    			job.add("gesamtpreis", neuerPreis);
+	    		}
+	    		else {
+	    			job.add(k, jsonObject.get(k));
+	    		}
+	    	}
+	    	jsonObject = job.build();
+	    	
+			response = given().auth()
+	                          .basic(username, password).contentType(APPLICATION_JSON)
+					          .body(jsonObject.toString())
+	                          .put(BESTELLUNGEN_PATH);
+			
+			// Then
+			assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_NO_CONTENT));
+	 }
+	 
+	
+	 
+//	//@Ignore
+//	@Test
+//	public void deleteBestellung() {
+//		int bId = 502;
+//
+//		Response response = given().auth()
+//				.basic(USERNAME_ADMIN, PASSWORD_ADMIN).pathParameter("id", bId).delete(
+//				"/bestellung/{id}");
+//
+//		assertThat(response.getStatusCode(),
+//				is(HttpURLConnection.HTTP_NO_CONTENT));
+//	}
 }
