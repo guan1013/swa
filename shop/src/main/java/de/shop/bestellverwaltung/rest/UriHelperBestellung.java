@@ -19,7 +19,7 @@ public class UriHelperBestellung {
 
 		// URL fuer Bestellposten setzen
 
-		UriBuilder ub = uriInfo
+		final UriBuilder ub = uriInfo
 				.getBaseUriBuilder()
 				.path(BestellungResource.class)
 				.path(BestellungResource.class,

@@ -61,7 +61,7 @@ public class KundeService implements Serializable {
 	private ValidatorProvider validatorProvider;
 
 	@Inject
-	private transient Logger LOGGER;
+	private transient Logger logger;
 
 	@Inject
 	private AuthService authService;
@@ -77,12 +77,12 @@ public class KundeService implements Serializable {
 
 	@PostConstruct
 	private void postConstruct() {
-		LOGGER.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
+		logger.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
 	}
 
 	@PreDestroy
 	private void preDestroy() {
-		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
+		logger.debugf("CDI-faehiges Bean %s wird geloescht", this);
 	}
 
 	// /////////////////////////////////////////////////////////////////////
@@ -105,8 +105,8 @@ public class KundeService implements Serializable {
 		// Wenn Kunde mit dieser E-Mail Adresse noch nicht existiert, lege ihn
 		// an und schicke eine Bestätigungsnachricht an diesen.
 
-		List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
-				pLocale);
+		final List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
+				pKD.getEmail(), pLocale);
 		if (kd.isEmpty()) {
 
 			salting(pKD);
@@ -178,7 +178,8 @@ public class KundeService implements Serializable {
 			pic = new File(pBs, filename, pMT);
 			pKD.setPic(pic);
 			em.persist(pic);
-		} else {
+		}
+		else {
 			pic.set(pBs, filename, pMT);
 			em.merge(pic);
 		}
@@ -193,7 +194,7 @@ public class KundeService implements Serializable {
 		/**
 		 * Alle gefunden Kunden speichern.
 		 */
-		List<Kunde> kd = em.createNamedQuery(Kunde.ALL_KUNDEN).getResultList();
+		final List<Kunde> kd = em.createNamedQuery(Kunde.ALL_KUNDEN).getResultList();
 
 		return kd;
 	}
@@ -450,7 +451,8 @@ public class KundeService implements Serializable {
 		Kunde kd;
 		try {
 			kd = findKundeById(pKID, pLocale);
-		} catch (InvalidKundeIdException e) {
+		}
+		catch (InvalidKundeIdException e) {
 			return;
 		}
 		if (kd == null) {
@@ -471,7 +473,7 @@ public class KundeService implements Serializable {
 	// OTHERS
 
 	private void salting(Kunde pKD) {
-		LOGGER.debugf("salting BEGINN: %s", pKD);
+		logger.debugf("salting BEGINN: %s", pKD);
 
 		final String unverschluesselt = pKD.getPassword();
 		final String verschluesselt = authService
@@ -479,13 +481,13 @@ public class KundeService implements Serializable {
 		pKD.setPassword(verschluesselt);
 		pKD.setPasswordWdh(verschluesselt);
 
-		LOGGER.debugf("salting ENDE: %s", verschluesselt);
+		logger.debugf("salting ENDE: %s", verschluesselt);
 	}
 
 	/**
 	 */
 	private boolean hasBestellungen(Kunde pKD) {
-		LOGGER.debugf("hasBestellungen BEGINN: %s", pKD);
+		logger.debugf("hasBestellungen BEGINN: %s", pKD);
 
 		boolean result = false;
 
@@ -496,7 +498,7 @@ public class KundeService implements Serializable {
 			result = true;
 		}
 
-		LOGGER.debugf("hasBestellungen ENDE: %s", result);
+		logger.debugf("hasBestellungen ENDE: %s", result);
 		return result;
 	}
 
