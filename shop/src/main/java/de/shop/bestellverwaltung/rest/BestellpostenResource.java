@@ -131,7 +131,7 @@ public class BestellpostenResource {
 		}
 		
 		final String kundeUriStr = bestellposten.getBestellung().getKundeUri().toString();
-		int startPos = kundeUriStr.lastIndexOf('/') + 1;
+		final int startPos = kundeUriStr.lastIndexOf('/') + 1;
 		final String kundeIdStr = kundeUriStr.substring(startPos);
 		Integer kundeId = null;
 		try {
@@ -141,7 +141,7 @@ public class BestellpostenResource {
 			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr, e);
 		}
 		
-		Kunde kunde = ks.findKundeById(kundeId, LOCALE_DEFAULT);
+		final Kunde kunde = ks.findKundeById(kundeId, LOCALE_DEFAULT);
 		bestellposten.getBestellung().setKunde(kunde);
 		
 		//update durchführen

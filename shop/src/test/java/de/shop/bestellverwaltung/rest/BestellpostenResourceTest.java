@@ -4,9 +4,6 @@ import static de.shop.util.TestConstants.ACCEPT;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_PATH;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_ID_PATH_PARAM;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_ID_PATH;
-import static de.shop.util.TestConstants.KUNDEN_ID_PATH;
-import static de.shop.util.TestConstants.KUNDEN_ID_PATH_PARAM;
-
 import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
 import java.util.Set;
@@ -57,7 +54,7 @@ public class BestellpostenResourceTest extends AbstractResourceTest {
 	private static final Integer ID_EXIST = Integer.valueOf(603);
 	private static final Integer ID_UPDATE_EXIST = Integer.valueOf(602);
 	private static final Integer PRODUKTDATEN_ID_EXIST = Integer.valueOf(402);
-	private static final Integer PRODUKTDATEN_ID_INVALID= Integer.valueOf(999);
+	private static final Integer PRODUKTDATEN_ID_INVALID = Integer.valueOf(999);
 	private static final int ANZAHL = 12;
 	private static final int ANZAHL_UPDATE = 88;
 	private static final int ANZAHL_INVALID = -1;
@@ -71,10 +68,10 @@ public class BestellpostenResourceTest extends AbstractResourceTest {
 		// Given
 		final String username = USERNAME_MITARBEITER;
 		final String password = PASSWORD;
-		JsonObject produktdatenJson = getJsonBuilderFactory()
+		final JsonObject produktdatenJson = getJsonBuilderFactory()
 				.createObjectBuilder()
 				.add(JSON_KEY_PRODUKTDATEN_ID, PRODUKTDATEN_ID_EXIST).build();
-		JsonObject bestellungJson = getJsonBuilderFactory()
+		final JsonObject bestellungJson = getJsonBuilderFactory()
 				.createObjectBuilder()
 				.add(JSON_KEY_BESTELLUNG_ID, BESTELLUNG_ID_EXIST).build();
 
@@ -103,10 +100,10 @@ public class BestellpostenResourceTest extends AbstractResourceTest {
 		// Given
 		final String username = USERNAME;
 		final String password = PASSWORD;
-		JsonObject produktdatenJson = getJsonBuilderFactory()
+		final JsonObject produktdatenJson = getJsonBuilderFactory()
 				.createObjectBuilder()
 				.add(JSON_KEY_PRODUKTDATEN_ID, PRODUKTDATEN_ID_INVALID).build();
-		JsonObject bestellungJson = getJsonBuilderFactory()
+		final JsonObject bestellungJson = getJsonBuilderFactory()
 				.createObjectBuilder()
 				.add(JSON_KEY_BESTELLUNG_ID, BESTELLUNG_ID_INVALID).build();
 
@@ -160,7 +157,8 @@ public class BestellpostenResourceTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if (JSON_KEY_ANZAHL.equals(k)) {
 				job.add(JSON_KEY_ANZAHL, ANZAHL_UPDATE);
-			} else {
+			} 
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
