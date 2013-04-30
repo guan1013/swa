@@ -29,6 +29,8 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellpostenService;
 import de.shop.bestellverwaltung.service.BestellpostenService.FetchType;
 import de.shop.bestellverwaltung.service.BestellungService;
+import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.util.LocaleHelper;
@@ -62,6 +64,9 @@ public class BestellpostenResource {
 	
 	@Inject
 	private BestellungService bs;
+	
+	@Inject
+	private KundeService ks;
 	
 	@Inject
 	private LocaleHelper localeHelper;
@@ -124,6 +129,20 @@ public class BestellpostenResource {
 					getBestellpostenID() + " gefunden";
 			throw new NotFoundException(msg);
 		}
+		
+		final String kundeUriStr = bestellposten.getBestellung().getKundeUri().toString();
+		int startPos = kundeUriStr.lastIndexOf('/') + 1;
+		final String kundeIdStr = kundeUriStr.substring(startPos);
+		Integer kundeId = null;
+		try {
+			kundeId = Integer.valueOf(kundeIdStr);
+		}
+		catch (NumberFormatException e) {
+			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr, e);
+		}
+		
+		Kunde kunde = ks.findKundeById(kundeId, LOCALE_DEFAULT);
+		bestellposten.getBestellung().setKunde(kunde);
 		
 		//update durchführen
 		updBestellposten.setValues(bestellposten);
