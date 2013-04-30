@@ -1,13 +1,17 @@
 package de.shop.bestellverwaltung.rest;
 
+import static de.shop.util.TestConstants.ACCEPT;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_PATH;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_ID_PATH_PARAM;
 import static de.shop.util.TestConstants.BESTELLPOSTEN_ID_PATH;
-
+import java.io.StringReader;
 import java.lang.invoke.MethodHandles;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.junit.FixMethodOrder;
@@ -40,11 +44,15 @@ public class BestellpostenResourceTest extends AbstractResourceTest {
 	private static final String JSON_KEY_BESTELLUNG_ID = "bestellungID";
 	private static final String JSON_KEY_PRODUKTDATEN = "produktdaten";
 	private static final String JSON_KEY_PRODUKTDATEN_ID = "produktdatenID";
+	private static final String JSON_KEY_BESTELLPOSTEN_ID = "bestellpostenID";
 	private static final String JSON_KEY_ANZAHL = "anzahl";
 
-	private static final String BESTELLUNG_ID_EXIST = "501";
-	private static final String PRODUKTDATEN_ID_EXIST = "402";
+	private static final Integer BESTELLUNG_ID_EXIST = Integer.valueOf(501);
+	private static final Integer ID_UPDATE_EXIST = Integer.valueOf(1);
+	private static final Integer PRODUKTDATEN_ID_EXIST = Integer.valueOf(402);
+	private static final Integer PRODUKTDATEN_UPDATE = Integer.valueOf(403);
 	private static final int ANZAHL = 12;
+	private static final int ANZAHL_UPDATE = 99;
 
 	@Test
 	public void testeAddBestellposten() {
@@ -92,5 +100,52 @@ public class BestellpostenResourceTest extends AbstractResourceTest {
 		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
 
 		LOGGER.finer("ENDE");
+	}
+	
+	@Test
+	public void testeUpdateBestellposten() {
+
+		LOGGER.finer("BEGINN");
+
+		// Given
+		final String username = USERNAME_MITARBEITER;
+		final String password = PASSWORD;
+
+		// When
+		Response response = given()
+				.header(ACCEPT, APPLICATION_JSON)
+				.auth()
+				.basic("scma1078", "abc")
+				.pathParameter(BESTELLPOSTEN_ID_PATH_PARAM, ID_UPDATE_EXIST.intValue())
+				.get(BESTELLPOSTEN_ID_PATH);
+
+		JsonObject jsonObject;
+		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
+				new StringReader(response.asString()))) {
+			jsonObject = jsonReader.readObject();
+		}
+		assertThat(jsonObject.getJsonNumber(JSON_KEY_BESTELLPOSTEN_ID).intValue(),
+				is(ID_UPDATE_EXIST.intValue()));
+
+		// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuer
+		// Anzahl bauen
+		final JsonObjectBuilder job = getJsonBuilderFactory()
+				.createObjectBuilder();
+		final Set<String> keys = jsonObject.keySet();
+		for (String k : keys) {
+			if (JSON_KEY_ANZAHL.equals(k)) {
+				job.add(JSON_KEY_ANZAHL, ANZAHL_UPDATE);
+			} else {
+				job.add(k, jsonObject.get(k));
+			}
+		}
+		jsonObject = job.build();
+
+		response = given().contentType(APPLICATION_JSON)
+				.body(jsonObject.toString()).auth().basic(username, password)
+				.put(BESTELLPOSTEN_PATH);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HTTP_NO_CONTENT));
 	}
 }
