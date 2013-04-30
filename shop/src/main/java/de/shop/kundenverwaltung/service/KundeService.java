@@ -239,7 +239,7 @@ public class KundeService implements Serializable {
 				IdGroup.class));
 
 		// In DB suchen
-		Adresse ad = em.find(Adresse.class, pAID);
+		final Adresse ad = em.find(Adresse.class, pAID);
 
 		return ad;
 	}
@@ -360,7 +360,7 @@ public class KundeService implements Serializable {
 		/**
 		 * Alle gefundenen Adressen speichern
 		 */
-		List<Adresse> ad = em.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
+		final List<Adresse> ad = em.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
 				.setParameter("id", id).getResultList();
 
 		return ad;
@@ -385,7 +385,7 @@ public class KundeService implements Serializable {
 		em.detach(pKD);
 
 		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
-		Kunde existingKunde = findKundeById(pKD.getKundeID(), pLocale);
+		final Kunde existingKunde = findKundeById(pKD.getKundeID(), pLocale);
 		if (existingKunde == null) {
 			throw new ConcurrentDeletedException(pKD.getKundeID());
 		}
@@ -393,7 +393,7 @@ public class KundeService implements Serializable {
 
 		// Prüfen ob zu ändernde E-Mail Adresse schon vorhanden ist
 		if (!pKD.getEmail().equals(existingKunde.getEmail())) {
-			List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
+			final List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
 					pKD.getEmail(), pLocale);
 			if (!kd.isEmpty()) {
 				throw new EmailExistsException(pKD.getEmail());
@@ -430,7 +430,7 @@ public class KundeService implements Serializable {
 		em.detach(pAD);
 
 		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
-		Adresse existingAdresse = findAdresseById(pAD.getAdresseID(), pLocale);
+		final Adresse existingAdresse = findAdresseById(pAD.getAdresseID(), pLocale);
 		if (existingAdresse == null) {
 			throw new ConcurrentDeletedException(pAD.getAdresseID());
 		}
@@ -520,9 +520,9 @@ public class KundeService implements Serializable {
 		final Set<ConstraintViolation<Kunde>> violations = validator
 				.validateValue(Kunde.class, "nachname", pName, Default.class);
 		if (!violations.isEmpty()) {
-			StringBuffer temp = new StringBuffer();
+			final StringBuffer temp = new StringBuffer();
 
-			java.util.Iterator<ConstraintViolation<Kunde>> it = violations
+			final java.util.Iterator<ConstraintViolation<Kunde>> it = violations
 					.iterator();
 
 			while (it.hasNext()) {
@@ -558,8 +558,8 @@ public class KundeService implements Serializable {
 	private void validateAdresse(Set<ConstraintViolation<Adresse>> violations) {
 
 		if (!violations.isEmpty()) {
-			StringBuffer buffer = new StringBuffer();
-			Iterator<ConstraintViolation<Adresse>> it = violations.iterator();
+			final StringBuffer buffer = new StringBuffer();
+			final Iterator<ConstraintViolation<Adresse>> it = violations.iterator();
 			while (it.hasNext()) {
 				buffer.append(it.next().getMessage());
 				buffer.append('\n');
