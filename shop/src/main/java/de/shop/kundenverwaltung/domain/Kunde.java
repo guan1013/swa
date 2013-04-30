@@ -71,14 +71,24 @@ import de.shop.util.IdGroup;
 @Table(name = "Kunde")
 @Cacheable
 @NamedQueries({
-		@NamedQuery(name = Kunde.ALL_KUNDEN, query = "SELECT k FROM Kunde k"),
-		@NamedQuery(name = Kunde.KUNDE_BY_NACHNAME, query = "SELECT k FROM Kunde k "
+		@NamedQuery(
+				name = Kunde.ALL_KUNDEN, 
+				query = "SELECT k FROM Kunde k"),
+		@NamedQuery(
+				name = Kunde.KUNDE_BY_NACHNAME, 
+				query = "SELECT k FROM Kunde k "
 				+ "WHERE k.nachname = :name"),
-		@NamedQuery(name = Kunde.KUNDE_BY_NACHNAME_JOIN_BESTELLUNG, query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
+		@NamedQuery(
+				name = Kunde.KUNDE_BY_NACHNAME_JOIN_BESTELLUNG, 
+				query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
 				+ "WHERE k.nachname = :name"),
-		@NamedQuery(name = Kunde.KUNDE_BY_EMAIL, query = "SELECT k FROM Kunde k "
+		@NamedQuery(
+				name = Kunde.KUNDE_BY_EMAIL,
+				query = "SELECT k FROM Kunde k "
 				+ "WHERE k.email = :mail"),
-		@NamedQuery(name = Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG, query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
+		@NamedQuery(
+				name = Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG, 
+				query = "SELECT k FROM Kunde k JOIN k.bestellungen b "
 				+ "WHERE k.email = :mail") })
 // @form:on
 @ScriptAssert(lang = "javascript", script = "(_this.password == null && _this.passwordWdh == null)"
@@ -503,11 +513,12 @@ public class Kunde implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Kunde other = (Kunde) obj;
+		final Kunde other = (Kunde) obj;
 		if (kundeID == null) {
 			if (other.kundeID != null)
 				return false;
-		} else if (!kundeID.equals(other.kundeID))
+		}
+		else if (!kundeID.equals(other.kundeID))
 			return false;
 		return true;
 	}
