@@ -46,7 +46,7 @@ import de.shop.util.exceptions.NotFoundException;
  * @author Matthias Schnell
  */
 @Path("/kunden")
-@Produces({ APPLICATION_JSON })
+@Produces(APPLICATION_JSON)
 @Consumes
 @RequestScoped
 @Transactional
@@ -90,7 +90,7 @@ public class KundeResource {
 	// METHODS
 
 	@POST
-	@Consumes({ APPLICATION_JSON })
+	@Consumes(APPLICATION_JSON)
 	@Produces
 	public Response addKunde(Kunde pKD) {
 
@@ -146,8 +146,8 @@ public class KundeResource {
 	@Path("{kid:[1-9][0-9]*}")
 	public Kunde findKundeById(@PathParam("kid") Integer pID) {
 
-		Locale locale = localeHelper.getLocale(headers);
-		Kunde kd = ks.findKundeById(pID, locale);
+		final Locale locale = localeHelper.getLocale(headers);
+		final Kunde kd = ks.findKundeById(pID, locale);
 		if (kd == null) {
 			final String msg = "Kein Kunde gefunden mit der ID" + pID;
 
@@ -179,10 +179,11 @@ public class KundeResource {
 				final String msg = "Kein Kunde vorhanden";
 				throw new NotFoundException(msg);
 			}
-		} else {
-			Locale LOCALE = localeHelper.getLocale(headers);
+		}
+		else {
+			final Locale locale = localeHelper.getLocale(headers);
 
-			kd = ks.findKundeByNachname(FetchType.JUST_KUNDE, pName, LOCALE);
+			kd = ks.findKundeByNachname(FetchType.JUST_KUNDE, pName, locale);
 			if (kd.isEmpty()) {
 				final String msg = "Kein Kunde mit dem Nachnamen " + pName
 						+ " gefunden.";
@@ -203,10 +204,10 @@ public class KundeResource {
 	public Adresse findAdresseById(@PathParam("aid") Integer aID) {
 
 		// Locale
-		Locale locale = localeHelper.getLocale(headers);
+		final Locale locale = localeHelper.getLocale(headers);
 
 		// Service aufrufen und ggf. Exception
-		Adresse result = ks.findAdresseById(aID, locale);
+		final Adresse result = ks.findAdresseById(aID, locale);
 		if (result == null) {
 			final String msg = "Keine Adresse mit der ID " + aID + " gefunden";
 
@@ -233,10 +234,10 @@ public class KundeResource {
 
 		// URLs der gefundenen Bestellungen anpassen
 		Kunde kd;
-		Locale LOCALE = localeHelper.getLocale(headers);
+		final Locale locale = localeHelper.getLocale(headers);
 		for (Adresse a : ad) {
 
-			kd = ks.findKundeById(a.getKunde().getKundeID(), LOCALE);
+			kd = ks.findKundeById(a.getKunde().getKundeID(), locale);
 			uriHelperKunde.updateUriKunde(kd, uriInfo);
 		}
 
@@ -244,14 +245,14 @@ public class KundeResource {
 	}
 
 	@PUT
-	@Consumes({ APPLICATION_JSON })
+	@Consumes(APPLICATION_JSON)
 	@Produces
 	public void updateKunde(Kunde pKD) {
 
-		Locale LOCALE = localeHelper.getLocale(headers);
+		final Locale locale = localeHelper.getLocale(headers);
 
 		// Vorhandenen Kunden suchen
-		Kunde kd = ks.findKundeById(pKD.getKundeID(), LOCALE);
+		final Kunde kd = ks.findKundeById(pKD.getKundeID(), locale);
 		if (kd == null) {
 			final String msg = "Kein Kunde mit der ID " + pKD.getKundeID()
 					+ " gefunden";
@@ -263,7 +264,7 @@ public class KundeResource {
 		LOGGER.tracef("Kunde nachher = %s", kd);
 
 		// Objekt an die Datenbank übergeben
-		pKD = ks.updateKunde(kd, LOCALE, false);
+		pKD = ks.updateKunde(kd, locale, false);
 		if (pKD == null) {
 			final String msg = "Kein Kunde mit der ID " + kd.getKundeID()
 					+ " gefunden.";
@@ -276,8 +277,8 @@ public class KundeResource {
 	@Produces
 	public void deleteKunde(@PathParam("kid") Integer pKID) {
 
-		Locale LOCALE = localeHelper.getLocale(headers);
-		ks.deleteKundeById(pKID, LOCALE);
+		final Locale locale = localeHelper.getLocale(headers);
+		ks.deleteKundeById(pKID, locale);
 	}
 
 }
