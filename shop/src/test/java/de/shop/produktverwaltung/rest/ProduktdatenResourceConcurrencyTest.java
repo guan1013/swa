@@ -34,10 +34,13 @@ import de.shop.util.ConcurrentUpdate;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProduktdatenResourceConcurrencyTest extends AbstractResourceTest {
 
-	@Test
-	public void updateProduktdaten() throws InterruptedException, ExecutionException {
+	private static final int EXISTING_PRODUKTDATEN_ID = 404;
 
-		int produktId = 404;
+	@Test
+	public void updateProduktdaten() throws InterruptedException,
+			ExecutionException {
+
+		final int produktId = EXISTING_PRODUKTDATEN_ID;
 
 		// When
 		Response response = given().header(ACCEPT, APPLICATION_JSON)
@@ -60,7 +63,8 @@ public class ProduktdatenResourceConcurrencyTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if ("farbe".equals(k)) {
 				job.add("farbe", "blau");
-			} else {
+			}
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
@@ -80,7 +84,8 @@ public class ProduktdatenResourceConcurrencyTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if ("farbe".equals(k)) {
 				job.add("farbe", "rot-weiﬂ");
-			} else {
+			}
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}

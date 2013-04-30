@@ -61,7 +61,7 @@ public class KundeService implements Serializable {
 	private ValidatorProvider validatorProvider;
 
 	@Inject
-	private transient Logger LOGGER;
+	private transient Logger logger;
 
 	@Inject
 	private AuthService authService;
@@ -77,12 +77,12 @@ public class KundeService implements Serializable {
 
 	@PostConstruct
 	private void postConstruct() {
-		LOGGER.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
+		logger.debugf("CDI-faehiges Bean %s wurde erzeugt", this);
 	}
 
 	@PreDestroy
 	private void preDestroy() {
-		LOGGER.debugf("CDI-faehiges Bean %s wird geloescht", this);
+		logger.debugf("CDI-faehiges Bean %s wird geloescht", this);
 	}
 
 	// /////////////////////////////////////////////////////////////////////
@@ -105,8 +105,8 @@ public class KundeService implements Serializable {
 		// Wenn Kunde mit dieser E-Mail Adresse noch nicht existiert, lege ihn
 		// an und schicke eine Bestätigungsnachricht an diesen.
 
-		List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
-				pLocale);
+		final List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
+				pKD.getEmail(), pLocale);
 		if (kd.isEmpty()) {
 
 			salting(pKD);
@@ -178,7 +178,8 @@ public class KundeService implements Serializable {
 			pic = new File(pBs, filename, pMT);
 			pKD.setPic(pic);
 			em.persist(pic);
-		} else {
+		}
+		else {
 			pic.set(pBs, filename, pMT);
 			em.merge(pic);
 		}
@@ -193,7 +194,7 @@ public class KundeService implements Serializable {
 		/**
 		 * Alle gefunden Kunden speichern.
 		 */
-		List<Kunde> kd = em.createNamedQuery(Kunde.ALL_KUNDEN).getResultList();
+		final List<Kunde> kd = em.createNamedQuery(Kunde.ALL_KUNDEN).getResultList();
 
 		return kd;
 	}
@@ -238,7 +239,7 @@ public class KundeService implements Serializable {
 				IdGroup.class));
 
 		// In DB suchen
-		Adresse ad = em.find(Adresse.class, pAID);
+		final Adresse ad = em.find(Adresse.class, pAID);
 
 		return ad;
 	}
@@ -359,7 +360,7 @@ public class KundeService implements Serializable {
 		/**
 		 * Alle gefundenen Adressen speichern
 		 */
-		List<Adresse> ad = em.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
+		final List<Adresse> ad = em.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
 				.setParameter("id", id).getResultList();
 
 		return ad;
@@ -384,7 +385,7 @@ public class KundeService implements Serializable {
 		em.detach(pKD);
 
 		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
-		Kunde existingKunde = findKundeById(pKD.getKundeID(), pLocale);
+		final Kunde existingKunde = findKundeById(pKD.getKundeID(), pLocale);
 		if (existingKunde == null) {
 			throw new ConcurrentDeletedException(pKD.getKundeID());
 		}
@@ -392,7 +393,7 @@ public class KundeService implements Serializable {
 
 		// Prüfen ob zu ändernde E-Mail Adresse schon vorhanden ist
 		if (!pKD.getEmail().equals(existingKunde.getEmail())) {
-			List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
+			final List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
 					pKD.getEmail(), pLocale);
 			if (!kd.isEmpty()) {
 				throw new EmailExistsException(pKD.getEmail());
@@ -429,7 +430,7 @@ public class KundeService implements Serializable {
 		em.detach(pAD);
 
 		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
-		Adresse existingAdresse = findAdresseById(pAD.getAdresseID(), pLocale);
+		final Adresse existingAdresse = findAdresseById(pAD.getAdresseID(), pLocale);
 		if (existingAdresse == null) {
 			throw new ConcurrentDeletedException(pAD.getAdresseID());
 		}
@@ -450,7 +451,8 @@ public class KundeService implements Serializable {
 		Kunde kd;
 		try {
 			kd = findKundeById(pKID, pLocale);
-		} catch (InvalidKundeIdException e) {
+		}
+		catch (InvalidKundeIdException e) {
 			return;
 		}
 		if (kd == null) {
@@ -471,7 +473,7 @@ public class KundeService implements Serializable {
 	// OTHERS
 
 	private void salting(Kunde pKD) {
-		LOGGER.debugf("salting BEGINN: %s", pKD);
+		logger.debugf("salting BEGINN: %s", pKD);
 
 		final String unverschluesselt = pKD.getPassword();
 		final String verschluesselt = authService
@@ -479,13 +481,13 @@ public class KundeService implements Serializable {
 		pKD.setPassword(verschluesselt);
 		pKD.setPasswordWdh(verschluesselt);
 
-		LOGGER.debugf("salting ENDE: %s", verschluesselt);
+		logger.debugf("salting ENDE: %s", verschluesselt);
 	}
 
 	/**
 	 */
 	private boolean hasBestellungen(Kunde pKD) {
-		LOGGER.debugf("hasBestellungen BEGINN: %s", pKD);
+		logger.debugf("hasBestellungen BEGINN: %s", pKD);
 
 		boolean result = false;
 
@@ -496,7 +498,7 @@ public class KundeService implements Serializable {
 			result = true;
 		}
 
-		LOGGER.debugf("hasBestellungen ENDE: %s", result);
+		logger.debugf("hasBestellungen ENDE: %s", result);
 		return result;
 	}
 
@@ -518,9 +520,9 @@ public class KundeService implements Serializable {
 		final Set<ConstraintViolation<Kunde>> violations = validator
 				.validateValue(Kunde.class, "nachname", pName, Default.class);
 		if (!violations.isEmpty()) {
-			StringBuffer temp = new StringBuffer();
+			final StringBuffer temp = new StringBuffer();
 
-			java.util.Iterator<ConstraintViolation<Kunde>> it = violations
+			final java.util.Iterator<ConstraintViolation<Kunde>> it = violations
 					.iterator();
 
 			while (it.hasNext()) {
@@ -556,8 +558,8 @@ public class KundeService implements Serializable {
 	private void validateAdresse(Set<ConstraintViolation<Adresse>> violations) {
 
 		if (!violations.isEmpty()) {
-			StringBuffer buffer = new StringBuffer();
-			Iterator<ConstraintViolation<Adresse>> it = violations.iterator();
+			final StringBuffer buffer = new StringBuffer();
+			final Iterator<ConstraintViolation<Adresse>> it = violations.iterator();
 			while (it.hasNext()) {
 				buffer.append(it.next().getMessage());
 				buffer.append('\n');

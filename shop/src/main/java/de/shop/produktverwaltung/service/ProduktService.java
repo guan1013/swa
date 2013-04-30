@@ -81,7 +81,7 @@ public class ProduktService implements Serializable {
 		// Log
 		LOGGER.log(FINER, "BEGINN: Suche nach allen Produkten");
 
-		List<Produkt> results = entityManager.createNamedQuery(
+		final List<Produkt> results = entityManager.createNamedQuery(
 				Produkt.PRODUKT_KOMPLETT).getResultList();
 
 		// Log
@@ -143,7 +143,7 @@ public class ProduktService implements Serializable {
 				Produkt_.hersteller.getName(), hersteller));
 
 		// Named Query aufrufen
-		List<Produkt> results = entityManager
+		final List<Produkt> results = entityManager
 				.createNamedQuery(Produkt.PRODUKT_BY_HERSTELLER)
 				.setParameter("hersteller", hersteller).getResultList();
 
@@ -167,7 +167,7 @@ public class ProduktService implements Serializable {
 				Produkt_.beschreibung.getName(), beschreibung));
 
 		// Named Query aufrufen
-		List<Produkt> results = entityManager
+		final List<Produkt> results = entityManager
 				.createNamedQuery(Produkt.PRODUKT_BY_LIKE_BESCHREIBUNG)
 				.setParameter("beschreibung", beschreibung).getResultList();
 
@@ -187,15 +187,15 @@ public class ProduktService implements Serializable {
 		// Validierung Produkt
 		checkViolations(getValidator(locale).validate(produkt, Default.class,
 				IdGroup.class));
-		
+
 		entityManager.detach(produkt);
-		
-		Produkt tmp = findProduktByID(produkt.getProduktID(), FetchType.NUR_PRODUKTE, locale);
-		if(tmp == null)
-		{
+
+		final Produkt tmp = findProduktByID(produkt.getProduktID(),
+				FetchType.NUR_PRODUKTE, locale);
+		if (tmp == null) {
 			throw new ConcurrentDeletedException(produkt.getProduktID());
-		} else
-		{
+		}
+		else {
 			entityManager.detach(tmp);
 		}
 
@@ -221,8 +221,9 @@ public class ProduktService implements Serializable {
 		if (!violations.isEmpty()) {
 			LOGGER.log(SEVERE, "{0} Fehler bei der Validierung",
 					violations.size());
-			StringBuffer buffer = new StringBuffer();
-			Iterator<ConstraintViolation<Produkt>> it = violations.iterator();
+			final StringBuffer buffer = new StringBuffer();
+			final Iterator<ConstraintViolation<Produkt>> it = violations
+					.iterator();
 			while (it.hasNext()) {
 				buffer.append(it.next().getMessage());
 				buffer.append('\n');

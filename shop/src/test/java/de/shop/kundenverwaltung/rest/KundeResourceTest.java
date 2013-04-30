@@ -84,7 +84,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final String PIC = "pic.jpg";
 	private static final String PIC_UPLOAD = "src/test/resources/rest/" + PIC;
 	private static final String PIC_DOWNLOAD = "target/" + PIC;
-	private static final CopyOption[] COPY_OPTIONS = { REPLACE_EXISTING };
+	private static final CopyOption[] COPY_OPTIONS = {REPLACE_EXISTING};
 
 	private static final String PIC_INVALID_MIMETYPE = "pic.bmp";
 	private static final String PIC_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/"
@@ -117,6 +117,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 
 	}
 
+	@Ignore
 	@Test
 	public void testeUploadKundePic() throws IOException {
 
@@ -243,7 +244,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 		try (final JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
 			final JsonObject jsonObject = jsonReader.readObject();
-			assertThat(jsonObject.getJsonNumber("kundeID").intValue(),
+			assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
 					is(ID_EXIST.intValue()));
 		}
 
@@ -305,15 +306,16 @@ public class KundeResourceTest extends AbstractResourceTest {
 		assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
 				is(ID_UPDATE_EXIST.intValue()));
 
-		// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuem
-		// Nachnamen bauen
+		// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuer EMAIL
+		// bauen
 		final JsonObjectBuilder job = getJsonBuilderFactory()
 				.createObjectBuilder();
 		final Set<String> keys = jsonObject.keySet();
 		for (String k : keys) {
 			if (JSON_KEY_EMAIL.equals(k)) {
 				job.add(JSON_KEY_EMAIL, MAIL_UPDATE);
-			} else {
+			} 
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}

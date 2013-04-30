@@ -34,10 +34,13 @@ import de.shop.util.ConcurrentUpdate;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ProduktResourceConcurrencyTest extends AbstractResourceTest {
 
+	private static final int EXISTING_PRODUKT_ID = 303;
+	private static final String JSON_KEY_HERSTELLER = "hersteller";
+
 	@Test
 	public void updateProdukt() throws InterruptedException, ExecutionException {
 
-		int produktId = 303;
+		final int produktId = EXISTING_PRODUKT_ID;
 
 		// When
 		Response response = given().header(ACCEPT, APPLICATION_JSON)
@@ -58,9 +61,10 @@ public class ProduktResourceConcurrencyTest extends AbstractResourceTest {
 		JsonObjectBuilder job = getJsonBuilderFactory().createObjectBuilder();
 		Set<String> keys = jsonObject.keySet();
 		for (String k : keys) {
-			if ("hersteller".equals(k)) {
-				job.add("hersteller", "ConcurrencyHersteller");
-			} else {
+			if (JSON_KEY_HERSTELLER.equals(k)) {
+				job.add(JSON_KEY_HERSTELLER, "ConcurrencyHersteller");
+			}
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
@@ -78,9 +82,10 @@ public class ProduktResourceConcurrencyTest extends AbstractResourceTest {
 		job = getJsonBuilderFactory().createObjectBuilder();
 		keys = jsonObject.keySet();
 		for (String k : keys) {
-			if ("hersteller".equals(k)) {
-				job.add("hersteller", "Hersteller Concurrency 2");
-			} else {
+			if (JSON_KEY_HERSTELLER.equals(k)) {
+				job.add(JSON_KEY_HERSTELLER, "Hersteller Concurrency 2");
+			}
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}

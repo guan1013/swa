@@ -30,6 +30,12 @@ import de.shop.util.AbstractResourceTest;
 @FixMethodOrder(NAME_ASCENDING)
 public class ProduktdatenResourceTest extends AbstractResourceTest {
 
+	private static final double UPDATE_PREIS = 9999.99;
+	private static final double CREATE_PREIS = 99.99;
+	private static final int CREATE_ANZAHL = 3;
+	private static final int EXISTING_PRODUKT_ID = 301;
+	private static final int NON_EXISTING_PRODUKTDATEN_ID = 1717;
+	private static final int EXISTING_PRODUKTDATEN_ID = 404;
 	private static final String PATH = "/produktdaten";
 	private static final String PATH_PARAM_PRODUKTDATEN_ID = "produktdatenId";
 	private static final String PATH_WITH_PARAM_ID = PATH + "/{"
@@ -50,10 +56,11 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 	public void findProduktdatenById() {
 
 		// Given
-		Integer produktdatenId = Integer.valueOf(404);
+		final Integer produktdatenId = Integer
+				.valueOf(EXISTING_PRODUKTDATEN_ID);
 
 		// When
-		Response response = given().header("Accept", APPLICATION_JSON)
+		final Response response = given().header("Accept", APPLICATION_JSON)
 				.pathParameter("produktdatenId", produktdatenId)
 				.get("/produktdaten/{produktdatenId}");
 
@@ -62,7 +69,7 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 		try (JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
 
-			JsonObject jsonObject = jsonReader.readObject();
+			final JsonObject jsonObject = jsonReader.readObject();
 			assertThat(jsonObject.getJsonNumber("produktdatenID").intValue(),
 					is(produktdatenId.intValue()));
 
@@ -76,10 +83,11 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 	public void findNonExistingProduktdatenById() {
 
 		// Given
-		Integer produktdatenId = Integer.valueOf(1717);
+		final Integer produktdatenId = Integer
+				.valueOf(NON_EXISTING_PRODUKTDATEN_ID);
 
 		// When
-		Response response = given().header("Accept", APPLICATION_JSON)
+		final Response response = given().header("Accept", APPLICATION_JSON)
 				.pathParameter("produktdatenId", produktdatenId)
 				.get("/produktdaten/{produktdatenId}");
 
@@ -95,15 +103,18 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 	public void createProduktdaten() {
 
 		// Given
-		JsonObject produktJson = getJsonBuilderFactory().createObjectBuilder()
-				.add("produktID", 301).build();
+		final JsonObject produktJson = getJsonBuilderFactory()
+				.createObjectBuilder().add("produktID", EXISTING_PRODUKT_ID)
+				.build();
 
 		// When
-		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
-				.add("anzahlVerfuegbar", 3).add("groesse", "XL TEST")
-				.add("preis", 99.99).add("farbe", "TEST/rot/gold")
-				.add("produkt", produktJson).build();
-		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+		final JsonObject jsonObject = getJsonBuilderFactory()
+				.createObjectBuilder().add("anzahlVerfuegbar", CREATE_ANZAHL)
+				.add("groesse", "XL TEST").add("preis", CREATE_PREIS)
+				.add("farbe", "TEST/rot/gold").add("produkt", produktJson)
+				.build();
+		final Response response = given().auth()
+				.basic(BASIC_USER, BASIC_PASSWORD)
 				.contentType(APPLICATION_JSON).body(jsonObject.toString())
 				.post(PATH);
 
@@ -118,15 +129,17 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 	public void createProduktdatenInvalid() {
 
 		// Given
-		JsonObject produktJson = getJsonBuilderFactory().createObjectBuilder()
-				.add("produktID", 301).build();
+		final JsonObject produktJson = getJsonBuilderFactory()
+				.createObjectBuilder().add("produktID", EXISTING_PRODUKT_ID)
+				.build();
 
 		// When
-		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
-				.add("anzahlVerfuegbar", 3).add("groesse", "XL TEST")
-				.add("farbe", "TEST/rot/gold").add("produkt", produktJson)
-				.build();
-		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+		final JsonObject jsonObject = getJsonBuilderFactory()
+				.createObjectBuilder().add("anzahlVerfuegbar", CREATE_ANZAHL)
+				.add("groesse", "XL TEST").add("farbe", "TEST/rot/gold")
+				.add("produkt", produktJson).build();
+		final Response response = given().auth()
+				.basic(BASIC_USER, BASIC_PASSWORD)
 				.contentType(APPLICATION_JSON).body(jsonObject.toString())
 				.post(PATH);
 
@@ -161,11 +174,14 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 
 			if (key.equals(JSON_KEY_FARBE)) {
 				job.add(JSON_KEY_FARBE, "NEUE FARBE");
-			} else if (key.equals(JSON_KEY_GROESSE)) {
+			}
+			else if (key.equals(JSON_KEY_GROESSE)) {
 				job.add(JSON_KEY_GROESSE, "NEUE GROESSE");
-			} else if (key.equals(JSON_KEY_PREIS)) {
-				job.add(JSON_KEY_PREIS, 9999.99);
-			} else {
+			}
+			else if (key.equals(JSON_KEY_PREIS)) {
+				job.add(JSON_KEY_PREIS, UPDATE_PREIS);
+			}
+			else {
 				job.add(key, jsonObject.get(key));
 			}
 
@@ -209,11 +225,14 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 
 			if (key.equals(JSON_KEY_FARBE)) {
 				job.add(JSON_KEY_FARBE, "");
-			} else if (key.equals(JSON_KEY_GROESSE)) {
+			}
+			else if (key.equals(JSON_KEY_GROESSE)) {
 				job.add(JSON_KEY_GROESSE, "");
-			} else if (key.equals(JSON_KEY_PREIS)) {
+			}
+			else if (key.equals(JSON_KEY_PREIS)) {
 				job.add(JSON_KEY_PREIS, 0);
-			} else {
+			}
+			else {
 				job.add(key, jsonObject.get(key));
 			}
 

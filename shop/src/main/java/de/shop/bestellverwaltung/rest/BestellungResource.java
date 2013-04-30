@@ -2,13 +2,9 @@ package de.shop.bestellverwaltung.rest;
 
 import static java.util.logging.Level.FINER;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-import static javax.ws.rs.core.MediaType.APPLICATION_XML;
-import static javax.ws.rs.core.MediaType.TEXT_XML;
 
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
@@ -40,8 +36,8 @@ import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.util.LocaleHelper;
 import de.shop.util.Log;
-import de.shop.util.exceptions.NotFoundException;
 import de.shop.util.Transactional;
+import de.shop.util.exceptions.NotFoundException;
 
 /**
  * Resource Klasse für Bestellung für die RestfullWebservices
@@ -49,7 +45,7 @@ import de.shop.util.Transactional;
  * @author Matthias Schnell
  */
 @Path("/bestellung")
-@Produces({ APPLICATION_JSON })
+@Produces(APPLICATION_JSON)
 @Consumes
 @RequestScoped
 @Transactional
@@ -89,11 +85,11 @@ public class BestellungResource {
 
 	
 	@PUT
-	@Consumes({ APPLICATION_JSON })
+	@Consumes(APPLICATION_JSON)
 	@Produces
 	public void updateBestellung(Bestellung bestellung) {
 
-		Locale LOCALE = localeHelper.getLocale(headers);
+		Locale locale = localeHelper.getLocale(headers);
 //		final String kundeUriStr = bestellung.getKundeUri().toString();
 //		int startPos = kundeUriStr.lastIndexOf('/') + 1;
 //		final String kundeIdStr = kundeUriStr.substring(startPos);
@@ -115,8 +111,8 @@ public class BestellungResource {
 		
 
 		// Vorhandenen Kunden suchen
-		Bestellung kd = bs.findBestellungById(bestellung.getBestellungID(), LOCALE);
-		bestellung.setKunde(ks.findKundeById(101, LOCALE));
+		Bestellung kd = bs.findBestellungById(bestellung.getBestellungID(), locale);
+		bestellung.setKunde(ks.findKundeById(101, locale));
 		
 		
 		
@@ -127,7 +123,7 @@ public class BestellungResource {
 		//LOGGER.tracef("Kunde nachher = %s", kd);
 
 		// Objekt an die Datenbank übergeben
-		bestellung = bs.updateBestellung(kd, LOCALE);
+		bestellung = bs.updateBestellung(kd, locale);
 		if (bestellung == null) {
 			final String msg = "Keine Bestellung mit der ID " + kd.getBestellungID()
 					+ " gefunden.";
@@ -181,8 +177,8 @@ public class BestellungResource {
 	@Produces
 	public void deleteBestellung(@PathParam("id") Integer pKID) {
 
-		Locale LOCALE = localeHelper.getLocale(headers);
-		bs.deleteBestellungById(pKID, LOCALE);
+		Locale locale = localeHelper.getLocale(headers);
+		bs.deleteBestellungById(pKID, locale);
 	}
 	
 	@GET
@@ -230,9 +226,9 @@ public class BestellungResource {
 			@QueryParam("min") Double pMin, @QueryParam("max") Double pMax,
 			@Context UriInfo uriInfo) {
 		List<Bestellung> be = null;
-		Locale LOCALE_DEFAULT = localeHelper.getLocale(headers);
+		Locale locale_default = localeHelper.getLocale(headers);
 		be = bs.findBestellungByPreisspanne(FetchType.JUST_BESTELLUNG, pMin,
-				pMax, LOCALE_DEFAULT);
+				pMax, locale_default);
 		if (be.isEmpty()) {
 			final String msg = "Keine Bestellung mit einer Preisspanne von "
 					+ pMin + " bis " + pMax + " gefunden.";
@@ -281,13 +277,13 @@ public class BestellungResource {
 	public List<Bestellposten> findBestellpostenByBestellungId(
 			@PathParam("bestellungFk") Integer bestellungFk,
 			@Context UriInfo uriInfo) {
-		Locale LOCALE_DEFAULT = localeHelper.getLocale(headers);
+		Locale locale_default = localeHelper.getLocale(headers);
 		List<Bestellposten> bestellposten = null;
 
 		bestellposten = bps
 				.findBestellpostenByBestellungId(
 						de.shop.bestellverwaltung.service.BestellpostenService.FetchType.JUST_BESTELLPOSTEN,
-						bestellungFk, LOCALE_DEFAULT);
+						bestellungFk, locale_default);
 		if (bestellposten == null) {
 
 			throw new NotFoundException("Keine Bestellung gefunden mit ID "
@@ -296,7 +292,7 @@ public class BestellungResource {
 		Bestellung best;
 		for (Bestellposten b : bestellposten) {
 			best = bs.findBestellungById(b.getBestellung().getBestellungID(),
-					LOCALE_DEFAULT);
+					locale_default);
 			uriHelperBestellung.updateUriBestellung(best, uriInfo);
 		}
 

@@ -98,7 +98,7 @@ public class ProduktdatenService implements Serializable {
 		// Log
 		LOGGER.log(FINER, "BEGINN: Finde alle Produktdaten");
 
-		List<Produktdaten> result = entityManager.createNamedQuery(
+		final List<Produktdaten> result = entityManager.createNamedQuery(
 				Produktdaten.PRODUKTDATEN_KOMPLETT).getResultList();
 
 		// Log
@@ -128,7 +128,7 @@ public class ProduktdatenService implements Serializable {
 				IdGroup.class));
 
 		// Suche in DB
-		Produktdaten produktdaten = entityManager.find(Produktdaten.class,
+		final Produktdaten produktdaten = entityManager.find(Produktdaten.class,
 				produktdatenID);
 
 		// Log
@@ -160,38 +160,38 @@ public class ProduktdatenService implements Serializable {
 		LOGGER.log(FINER,
 				"BEGINN: Suche nach Produktdaten anhand Suchfilter={0}", filter);
 
-		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		final CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
 		// SELECT pd
-		CriteriaQuery<Produktdaten> query = builder
+		final CriteriaQuery<Produktdaten> query = builder
 				.createQuery(Produktdaten.class);
 
 		// FROM Produktdaten
-		Root<Produktdaten> pd = query.from(Produktdaten.class);
+		final Root<Produktdaten> pd = query.from(Produktdaten.class);
 
 		// JOIN pd.produkt
-		Join<Produktdaten, Produkt> join = pd.join(Produktdaten_.produkt);
+		final Join<Produktdaten, Produkt> join = pd.join(Produktdaten_.produkt);
 
 		// WHERE
-		List<Predicate> predicates = new LinkedList<Predicate>();
+		final List<Predicate> predicates = new LinkedList<Predicate>();
 
 		// ANZAHL
 		if (filter.getAnzahl() != null) {
-			Predicate predAnzahl = builder.gt(
+			final Predicate predAnzahl = builder.gt(
 					pd.get(Produktdaten_.anzahlVerfuegbar), filter.getAnzahl());
 			predicates.add(predAnzahl);
 		}
 
 		// PREIS
 		if (filter.getPreisOben() != null && filter.getPreisUnten() != null) {
-			Predicate predPreis = builder.between(pd.get(Produktdaten_.preis),
+			final Predicate predPreis = builder.between(pd.get(Produktdaten_.preis),
 					filter.getPreisUnten(), filter.getPreisOben());
 			predicates.add(predPreis);
 		}
 
 		// FARBE
 		if (filter.getFarbe() != null) {
-			Predicate predFarbe = builder.like(
+			final Predicate predFarbe = builder.like(
 					builder.lower(pd.get(Produktdaten_.farbe)), "%"
 							+ filter.getFarbe().toLowerCase() + "%");
 			predicates.add(predFarbe);
@@ -199,7 +199,7 @@ public class ProduktdatenService implements Serializable {
 
 		// GROESSE
 		if (filter.getGroesse() != null) {
-			Predicate predGroesse = builder.equal(builder.lower(pd
+			final Predicate predGroesse = builder.equal(builder.lower(pd
 					.get(Produktdaten_.groesse)), filter.getGroesse()
 					.toLowerCase());
 			predicates.add(predGroesse);
@@ -207,7 +207,7 @@ public class ProduktdatenService implements Serializable {
 
 		// HERSTELLER
 		if (filter.getHersteller() != null) {
-			Predicate predHersteller = builder.like(
+			final Predicate predHersteller = builder.like(
 					builder.lower(join.get(Produkt_.hersteller)), "%"
 							+ filter.getHersteller().toLowerCase() + "%");
 			predicates.add(predHersteller);
@@ -215,17 +215,17 @@ public class ProduktdatenService implements Serializable {
 
 		// BESCHREIBUNG
 		if (filter.getBeschreibung() != null) {
-			Predicate predBeschreibung = builder.like(
+			final Predicate predBeschreibung = builder.like(
 					builder.lower(join.get(Produkt_.beschreibung)), "%"
 							+ filter.getBeschreibung().toLowerCase() + "%");
 			predicates.add(predBeschreibung);
 		}
 
-		Predicate[] predArray = new Predicate[predicates.size()];
+		final Predicate[] predArray = new Predicate[predicates.size()];
 		query.where(builder.and(predicates.toArray(predArray)));
 
 		// Suche in DB
-		List<Produktdaten> gefundeneProduktdaten = entityManager.createQuery(
+		final List<Produktdaten> gefundeneProduktdaten = entityManager.createQuery(
 				query).getResultList();
 
 		// Log
@@ -244,7 +244,7 @@ public class ProduktdatenService implements Serializable {
 		LOGGER.log(FINER, "BEGINN: Suche nach Produktdaten by ProduktID={0}",
 				produktId);
 
-		List<Produktdaten> results = entityManager
+		final List<Produktdaten> results = entityManager
 				.createNamedQuery(Produktdaten.PRODUKTDATEN_BY_PRODUKT_ID)
 				.setParameter("id", produktId).getResultList();
 
@@ -294,8 +294,8 @@ public class ProduktdatenService implements Serializable {
 		if (!violations.isEmpty()) {
 			LOGGER.log(SEVERE, "{0} Fehler bei der Validierung",
 					violations.size());
-			StringBuffer buffer = new StringBuffer();
-			Iterator<ConstraintViolation<Produktdaten>> it = violations
+			final StringBuffer buffer = new StringBuffer();
+			final Iterator<ConstraintViolation<Produktdaten>> it = violations
 					.iterator();
 			while (it.hasNext()) {
 				buffer.append(it.next().getMessage());

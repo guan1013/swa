@@ -187,7 +187,7 @@ public class Produktdaten implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Produktdaten other = (Produktdaten) obj;
+		final Produktdaten other = (Produktdaten) obj;
 		if (anzahlVerfuegbar != other.anzahlVerfuegbar)
 			return false;
 		if (farbe == null) {
