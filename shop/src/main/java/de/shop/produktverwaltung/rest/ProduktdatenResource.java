@@ -61,7 +61,7 @@ public class ProduktdatenResource {
 
 	// formatter:off
 	@POST
-	@Consumes({ APPLICATION_JSON })
+	@Consumes(APPLICATION_JSON)
 	@Produces
 	// formatter:on
 	public Response addProduktdaten(Produktdaten produktdaten,
@@ -76,7 +76,7 @@ public class ProduktdatenResource {
 				.get(0);
 
 		// Produkt nachladen
-		Produkt currProdukt = produktService.findProduktByID(produktdaten
+		final Produkt currProdukt = produktService.findProduktByID(produktdaten
 				.getProdukt().getProduktID(), FetchType.NUR_PRODUKTE, locale);
 		produktdaten.setProdukt(currProdukt);
 
@@ -106,7 +106,7 @@ public class ProduktdatenResource {
 				.get(0);
 
 		// Service aufrufen
-		Produktdaten result = produktdatenService.findProduktdatenByID(id,
+		final Produktdaten result = produktdatenService.findProduktdatenByID(id,
 				locale);
 
 		// Ggf. Fehlermeldung
@@ -134,7 +134,7 @@ public class ProduktdatenResource {
 			@QueryParam("preis_oben") double preisOben,
 			@Context UriInfo uriInfo, @Context HttpHeaders headers) {
 
-		SuchFilter filter = new SuchFilter();
+		final SuchFilter filter = new SuchFilter();
 		filter.setFarbe(farbe);
 		filter.setAnzahl(anzahl == 0 ? null : anzahl);
 		filter.setBeschreibung(beschreibung);
@@ -155,7 +155,7 @@ public class ProduktdatenResource {
 				.get(0);
 
 		// Service aufrufen
-		List<Produktdaten> results = produktdatenService
+		final List<Produktdaten> results = produktdatenService
 				.findProduktdatenByFilter(filter, locale);
 
 		// Ggf. Fehlermeldung
@@ -173,11 +173,9 @@ public class ProduktdatenResource {
 		return results;
 	}
 
-	// formatter:off
 	@PUT
-	@Consumes({ APPLICATION_JSON })
+	@Consumes(APPLICATION_JSON)
 	@Produces
-	// formatter:on
 	public void updateProduktdaten(Produktdaten produktdaten,
 			@Context UriInfo uriInfo, @Context HttpHeaders headers) {
 

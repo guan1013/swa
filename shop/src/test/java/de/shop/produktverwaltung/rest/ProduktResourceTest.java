@@ -57,10 +57,10 @@ public class ProduktResourceTest extends AbstractResourceTest {
 	public void findProduktByProduktId() {
 
 		// Given
-		Integer produktId = Integer.valueOf(EXISTING_ID);
+		final Integer produktId = Integer.valueOf(EXISTING_ID);
 
 		// When
-		Response response = given().header(ACCEPT, APPLICATION_JSON)
+		final Response response = given().header(ACCEPT, APPLICATION_JSON)
 				.pathParameter(PATH_PARAM_PRODUKT_ID, produktId)
 				.get(PATH_WITH_PARAM_ID);
 
@@ -69,7 +69,7 @@ public class ProduktResourceTest extends AbstractResourceTest {
 		try (JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
 
-			JsonObject jsonObject = jsonReader.readObject();
+			final JsonObject jsonObject = jsonReader.readObject();
 			assertThat(jsonObject.getJsonNumber(JSON_KEY_ID).intValue(),
 					is(produktId.intValue()));
 
@@ -83,10 +83,10 @@ public class ProduktResourceTest extends AbstractResourceTest {
 	public void findNonExistingProduktById() {
 
 		// Given
-		Integer produktId = Integer.valueOf(NON_EXISTING_ID);
+		final Integer produktId = Integer.valueOf(NON_EXISTING_ID);
 
 		// When
-		Response response = given().header(ACCEPT, APPLICATION_JSON)
+		final Response response = given().header(ACCEPT, APPLICATION_JSON)
 				.pathParameter(PATH_PARAM_PRODUKT_ID, produktId)
 				.get(PATH_WITH_PARAM_ID);
 
@@ -125,10 +125,12 @@ public class ProduktResourceTest extends AbstractResourceTest {
 		// Given
 
 		// When
-		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
+		final JsonObject jsonObject = getJsonBuilderFactory()
+				.createObjectBuilder()
 				.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_CREATE)
 				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE).build();
-		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+		final Response response = given().auth()
+				.basic(BASIC_USER, BASIC_PASSWORD)
 				.contentType(APPLICATION_JSON).body(jsonObject.toString())
 				.post(PATH);
 
@@ -141,13 +143,16 @@ public class ProduktResourceTest extends AbstractResourceTest {
 	 */
 	@Test
 	public void createProduktInvalid() {
+
 		// Given
 
 		// When
-		JsonObject jsonObject = getJsonBuilderFactory().createObjectBuilder()
+		final JsonObject jsonObject = getJsonBuilderFactory()
+				.createObjectBuilder()
 				.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_CREATE_INVALID)
 				.add(JSON_KEY_HERSTELLER, HERSTELLER_CREATE_INVALID).build();
-		Response response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+		final Response response = given().auth()
+				.basic(BASIC_USER, BASIC_PASSWORD)
 				.contentType(APPLICATION_JSON).body(jsonObject.toString())
 				.post(PATH);
 
@@ -183,10 +188,12 @@ public class ProduktResourceTest extends AbstractResourceTest {
 			if (key.equals(JSON_KEY_BESCHREIBUNG)) {
 				job.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_UPDATE);
 
-			} else if (key.equals(JSON_KEY_HERSTELLER)) {
+			}
+			else if (key.equals(JSON_KEY_HERSTELLER)) {
 				job.add(JSON_KEY_HERSTELLER, HERSTELLER_UPDATE);
 
-			} else {
+			}
+			else {
 				job.add(key, jsonObject.get(key));
 			}
 
@@ -231,15 +238,17 @@ public class ProduktResourceTest extends AbstractResourceTest {
 			if (key.equals(JSON_KEY_BESCHREIBUNG)) {
 				job.add(JSON_KEY_BESCHREIBUNG, BESCHREIBUNG_UPDATE);
 
-			} else if (key.equals(JSON_KEY_HERSTELLER)) {
+			}
+			else if (key.equals(JSON_KEY_HERSTELLER)) {
 				job.add(JSON_KEY_HERSTELLER, HERSTELLER_UPDATE);
 			}
 		}
 
 		jsonObject = job.build();
 
-		response = given().auth().basic(BASIC_USER, BASIC_PASSWORD).contentType(APPLICATION_JSON)
-				.body(jsonObject.toString()).put(PATH);
+		response = given().auth().basic(BASIC_USER, BASIC_PASSWORD)
+				.contentType(APPLICATION_JSON).body(jsonObject.toString())
+				.put(PATH);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HTTP_NOT_FOUND));

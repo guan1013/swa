@@ -39,7 +39,7 @@ import de.shop.util.exceptions.NotFoundException;
 @RequestScoped
 @Transactional
 @Log
-//@formatter:on
+// @formatter:on
 public class ProduktResource {
 
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
@@ -54,9 +54,8 @@ public class ProduktResource {
 	@Inject
 	private UriHelperProdukt uriHelperProdukt;
 
-	//formatter:off
 	@POST
-	@Consumes({ APPLICATION_JSON })
+	@Consumes(APPLICATION_JSON)
 	@Produces
 	public Response addProdukt(Produkt produkt, @Context UriInfo uriInfo,
 			@Context HttpHeaders headers) {
@@ -94,7 +93,7 @@ public class ProduktResource {
 				.get(0);
 
 		// Service aufrufen
-		Produkt produkt = produktService.findProduktByID(id,
+		final Produkt produkt = produktService.findProduktByID(id,
 				ProduktService.FetchType.NUR_PRODUKTE, locale);
 
 		// Ggf. Fehlermeldung
@@ -115,101 +114,86 @@ public class ProduktResource {
 	}
 
 	/*
-	@GET
-	@Wrapped(element = "produkte")
-	@Path("/hersteller")
-	public Collection<Produkt> findProduktByHersteller(
-			@QueryParam("hersteller") String hersteller,
-			@Context UriInfo uriInfo, @Context HttpHeaders headers) {
-
-		// Log
-		LOGGER.log(FINER, "REST Beginn: Finde Produkte by Hersteller={0}",
-				hersteller);
-
-		// Locale auswählen
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
-
-		Collection<Produkt> results;
-
-		if (hersteller == null || hersteller.equals("")) {
-			// Log
-			LOGGER.log(FINER, "Hersteller is null/empty => Alle Produkte");
-
-			results = produktService.findProdukte();
-		}
-		else {
-			results = produktService.findProduktByHersteller(hersteller,
-					ProduktService.FetchType.KOMPLETT, locale);
-		}
-
-		// Ggf. Fehlermeldung
-		if (results.isEmpty()) {
-			throw new NotFoundException("Kein Produkte von Hersteller="
-					+ hersteller + " gefunden!");
-		}
-
-		// URI
-		for (Produkt produkt : results) {
-			uriHelperProdukt.updateProduktdatenURI(produkt, uriInfo);
-		}
-
-		// Log
-		LOGGER.log(FINER,
-				"REST Ende: Finde Produkte by Hersteller (gefunden: {0})",
-				results.size());
-
-		return results;
-	}
-	*/
+	 * @GET
+	 * 
+	 * @Wrapped(element = "produkte")
+	 * 
+	 * @Path("/hersteller") public Collection<Produkt> findProduktByHersteller(
+	 * 
+	 * @QueryParam("hersteller") String hersteller,
+	 * 
+	 * @Context UriInfo uriInfo, @Context HttpHeaders headers) {
+	 * 
+	 * // Log LOGGER.log(FINER, "REST Beginn: Finde Produkte by Hersteller={0}",
+	 * hersteller);
+	 * 
+	 * // Locale auswählen final List<Locale> locales =
+	 * headers.getAcceptableLanguages(); final Locale locale = locales.isEmpty()
+	 * ? Locale.getDefault() : locales .get(0);
+	 * 
+	 * Collection<Produkt> results;
+	 * 
+	 * if (hersteller == null || hersteller.equals("")) { // Log
+	 * LOGGER.log(FINER, "Hersteller is null/empty => Alle Produkte");
+	 * 
+	 * results = produktService.findProdukte(); } else { results =
+	 * produktService.findProduktByHersteller(hersteller,
+	 * ProduktService.FetchType.KOMPLETT, locale); }
+	 * 
+	 * // Ggf. Fehlermeldung if (results.isEmpty()) { throw new
+	 * NotFoundException("Kein Produkte von Hersteller=" + hersteller +
+	 * " gefunden!"); }
+	 * 
+	 * // URI for (Produkt produkt : results) {
+	 * uriHelperProdukt.updateProduktdatenURI(produkt, uriInfo); }
+	 * 
+	 * // Log LOGGER.log(FINER,
+	 * "REST Ende: Finde Produkte by Hersteller (gefunden: {0})",
+	 * results.size());
+	 * 
+	 * return results; }
+	 */
 
 	/*
-	@GET
-	@Wrapped(element = "produkte")
-	public Collection<Produkt> findProduktByBeschreibung(
-			@QueryParam("beschreibung") String beschreibung,
-			@Context UriInfo uriInfo, @Context HttpHeaders headers) {
+	 * @GET
+	 * 
+	 * @Wrapped(element = "produkte") public Collection<Produkt>
+	 * findProduktByBeschreibung(
+	 * 
+	 * @QueryParam("beschreibung") String beschreibung,
+	 * 
+	 * @Context UriInfo uriInfo, @Context HttpHeaders headers) {
+	 * 
+	 * // Log LOGGER.log(FINER,
+	 * "REST Beginn: Finde Produkte by Beschreibung={0}", beschreibung);
+	 * 
+	 * // Locale auswählen final List<Locale> locales =
+	 * headers.getAcceptableLanguages(); final Locale locale = locales.isEmpty()
+	 * ? Locale.getDefault() : locales .get(0);
+	 * 
+	 * // Service aufrufen Collection<Produkt> results =
+	 * produktService.findProduktByBeschreibung( beschreibung,
+	 * ProduktService.FetchType.KOMPLETT, locale);
+	 * 
+	 * // Ggf. Fehlermeldung if (results.isEmpty()) { throw new
+	 * NotFoundException("Kein Produkte mit Beschreibung=" + beschreibung +
+	 * " gefunden!"); }
+	 * 
+	 * // URI for (Produkt produkt : results) {
+	 * uriHelperProdukt.updateProduktdatenURI(produkt, uriInfo); }
+	 * 
+	 * // Log LOGGER.log(FINER,
+	 * "REST Ende: Finde Produkte by Beschreibung (gefunden: {0})",
+	 * results.size());
+	 * 
+	 * return results; }
+	 */
 
-		// Log
-		LOGGER.log(FINER, "REST Beginn: Finde Produkte by Beschreibung={0}",
-				beschreibung);
-
-		// Locale auswählen
-		final List<Locale> locales = headers.getAcceptableLanguages();
-		final Locale locale = locales.isEmpty() ? Locale.getDefault() : locales
-				.get(0);
-
-		// Service aufrufen
-		Collection<Produkt> results = produktService.findProduktByBeschreibung(
-				beschreibung, ProduktService.FetchType.KOMPLETT, locale);
-
-		// Ggf. Fehlermeldung
-		if (results.isEmpty()) {
-			throw new NotFoundException("Kein Produkte mit Beschreibung="
-					+ beschreibung + " gefunden!");
-		}
-
-		// URI
-		for (Produkt produkt : results) {
-			uriHelperProdukt.updateProduktdatenURI(produkt, uriInfo);
-		}
-
-		// Log
-		LOGGER.log(FINER,
-				"REST Ende: Finde Produkte by Beschreibung (gefunden: {0})",
-				results.size());
-
-		return results;
-	}
-	
-	*/
-
-	//formatter:off
+	// formatter:off
 	@PUT
-	@Consumes({ APPLICATION_JSON })
+	@Consumes(APPLICATION_JSON)
 	@Produces
-	//formatter:on
+	// formatter:on
 	public void updateProdukt(Produkt produkt, @Context UriInfo uriInfo,
 			@Context HttpHeaders headers) {
 
@@ -222,7 +206,7 @@ public class ProduktResource {
 				.get(0);
 
 		// Produktdaten laden
-		List<Produktdaten> pdaten = produktdatenService
+		final List<Produktdaten> pdaten = produktdatenService
 				.findProduktdatenByProduktId(produkt.getProduktID());
 		produkt.setProduktdaten(pdaten);
 
@@ -243,7 +227,7 @@ public class ProduktResource {
 		LOGGER.log(FINER, "REST BEGINN: Find Produktdaten by ProduktID={0}", id);
 
 		// Service aufrufen
-		List<Produktdaten> results = produktdatenService
+		final List<Produktdaten> results = produktdatenService
 				.findProduktdatenByProduktId(id);
 
 		if (results.isEmpty()) {
