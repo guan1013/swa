@@ -3,23 +3,25 @@ package de.shop.produktverwaltung.controller;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import de.shop.produktverwaltung.domain.Produkt;
-import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.util.Log;
 import de.shop.util.Transactional;
 
 @Named("pc")
-@RequestScoped
+@SessionScoped
 @Log
 public class ProduktController implements Serializable {
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////
+	// ATTRIBUTES
 
 	private static final long serialVersionUID = 5513563371749151869L;
 
@@ -36,8 +38,13 @@ public class ProduktController implements Serializable {
 
 	private Integer produktId;
 
+	private List<Produkt> produkte;
+
 	@Inject
 	private Flash flash;
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
+	// PUBLIC METHODS
 
 	@Transactional
 	public String sucheProdukt() {
@@ -56,18 +63,13 @@ public class ProduktController implements Serializable {
 	}
 
 	@Transactional
-	public void sucheAlleProduktdaten() {
-
-		List<Produktdaten> liste = pdatenService.findProduktdatenKomplett();
-		request.setAttribute("produktdaten", liste);
-
-	}
-
-	@Transactional
 	public void sucheAlleProdukte() {
-		List<Produkt> liste = pService.findProdukte();
-		request.setAttribute("produkte", liste);
+
+		produkte = pService.findProdukte();
 	}
+
+	// //////////////////////////////////////////////////////////////////////////////////////////////
+	// GETTER & SETTER
 
 	public Produkt getProdukt() {
 		return produkt;
@@ -81,4 +83,7 @@ public class ProduktController implements Serializable {
 		this.produktId = produktId;
 	}
 
+	public List<Produkt> getProdukte() {
+		return produkte;
+	}
 }
