@@ -4,7 +4,7 @@
 
     <!-- LINK: STARTSEITE -->
 	<p id="index">
-		<h:outputLink id="menuIndex" value="#{request.contextPath}">
+		<h:outputLink id="menuIndex" value="#{request.contextPath}/faces/index.jsf">
 			#{msg['nav.start']}
 		</h:outputLink>
 	</p>
@@ -14,6 +14,14 @@
 		<h:outputLink id="menuSearchProdukt"
 			value="#{request.contextPath}/produktverwaltung/viewProdukt.jsf">
 			#{msg['nav.produkt.suche']}
+		</h:outputLink>
+	</p>
+	
+	<!-- LINK: PRODUKT.ERSTELLEN -->
+	<p id="createKunde">
+		<h:outputLink id="menuCreateProdukt"
+			value="#{request.contextPath}/produktverwaltung/createProdukt.jsf">
+			#{msg['nav.produkt.erstellen']}
 		</h:outputLink>
 	</p>
 </ui:composition>

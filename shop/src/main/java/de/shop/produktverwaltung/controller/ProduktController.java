@@ -10,6 +10,7 @@ import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import de.shop.produktverwaltung.domain.Produkt;
+import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.util.Log;
@@ -34,14 +35,18 @@ public class ProduktController implements Serializable {
 	@Inject
 	private transient HttpServletRequest request;
 
+	@Inject
+	private Flash flash;
+
 	private Produkt produkt;
 
 	private Integer produktId;
 
 	private List<Produkt> produkte;
 
-	@Inject
-	private Flash flash;
+	private Produkt neuesProdukt;
+
+	private Produktdaten neueProduktdaten;
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
@@ -68,6 +73,29 @@ public class ProduktController implements Serializable {
 		produkte = pService.findProdukte();
 	}
 
+	public void createEmptyProdukt() {
+
+		if (neuesProdukt != null) {
+			return;
+		}
+
+		neuesProdukt = new Produkt();
+		neueProduktdaten = new Produktdaten();
+
+		neuesProdukt.addProduktdaten(neueProduktdaten);
+
+	}
+
+	@Transactional
+	public String createProdukt() {
+
+		pService.addProdukt(neuesProdukt, null);
+		neuesProdukt = null;
+
+		return "";
+
+	}
+
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// GETTER & SETTER
 
@@ -86,4 +114,13 @@ public class ProduktController implements Serializable {
 	public List<Produkt> getProdukte() {
 		return produkte;
 	}
+
+	public Produkt getNeuesProdukt() {
+		return neuesProdukt;
+	}
+
+	public Produktdaten getNeueProduktdaten() {
+		return neueProduktdaten;
+	}
+
 }

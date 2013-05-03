@@ -4,6 +4,11 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 	<display-name>shop</display-name>
 	<context-param>
+		<description>Dateien fuer den Facelets-Compiler</description>
+		<param-name>javax.faces.FACELETS_VIEW_MAPPINGS</param-name>
+		<param-value>*.xhtml</param-value>
+	</context-param>
+	<context-param>
 		<description>In Produktion: Javascript komprimieren, d.h. auf true setzen</description>
 		<param-name>com.sun.faces.compressJavaScript</param-name>
 		<param-value>false</param-value>

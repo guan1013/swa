@@ -33,6 +33,8 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import static javax.persistence.CascadeType.ALL;
+
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
 
@@ -45,28 +47,17 @@ import de.shop.util.IdGroup;
  * @author Andreas Güntzel
  * 
  */
-//@formatter:off
+// @formatter:off
 @Entity
 @Table(name = "Produkt")
 @NamedQueries({
-		@NamedQuery(
-				name = Produkt.PRODUKT_KOMPLETT,
-				query = "FROM Produkt p"),
-		@NamedQuery(
-				name = Produkt.PRODUKT_ID_FETCH,
-				query = "SELECT DISTINCT p FROM Produkt p LEFT JOIN p.produktdaten WHERE p.produktID = :id"),
-		@NamedQuery(
-				name = Produkt.PRODUKT_MIT_PRODUKTDATEN, 
-				query = "SELECT distinct p FROM Produkt p JOIN p.produktdaten"),
-		@NamedQuery(
-				name = Produkt.PRODUKT_BY_HERSTELLER, 
-				query = "FROM Produkt p WHERE p.hersteller = :hersteller"),
-		@NamedQuery(
-				name = Produkt.PRODUKT_BY_LIKE_BESCHREIBUNG,
-				query = "SELECT produkt FROM Produkt as produkt "
-						+ "WHERE beschreibung LIKE CONCAT('%',:beschreibung,'%')")
-})
-//@formatter:on
+		@NamedQuery(name = Produkt.PRODUKT_KOMPLETT, query = "FROM Produkt p"),
+		@NamedQuery(name = Produkt.PRODUKT_ID_FETCH, query = "SELECT DISTINCT p FROM Produkt p LEFT JOIN p.produktdaten WHERE p.produktID = :id"),
+		@NamedQuery(name = Produkt.PRODUKT_MIT_PRODUKTDATEN, query = "SELECT distinct p FROM Produkt p JOIN p.produktdaten"),
+		@NamedQuery(name = Produkt.PRODUKT_BY_HERSTELLER, query = "FROM Produkt p WHERE p.hersteller = :hersteller"),
+		@NamedQuery(name = Produkt.PRODUKT_BY_LIKE_BESCHREIBUNG, query = "SELECT produkt FROM Produkt as produkt "
+				+ "WHERE beschreibung LIKE CONCAT('%',:beschreibung,'%')") })
+// @formatter:on
 public class Produkt implements Serializable {
 
 	// /////////////////////////////////////////////////////////////////////
@@ -134,7 +125,7 @@ public class Produkt implements Serializable {
 	/**
 	 * Liste aller Varianten dieses Produktes
 	 */
-	@OneToMany
+	@OneToMany(cascade = { ALL })
 	@JoinColumn(name = "Produkt_FK")
 	@NotNull(message = "{produktverwaltung.produktdaten.notnull}")
 	@Valid
@@ -161,12 +152,11 @@ public class Produkt implements Serializable {
 	@Temporal(DATE)
 	@JsonIgnore
 	private Date geaendert;
-	
+
 	@Version
 	@Basic(optional = false)
 	@JsonProperty
 	private int version = 0;
-	
 
 	// /////////////////////////////////////////////////////////////////////
 	// CONSTRUCTOR
@@ -241,6 +231,7 @@ public class Produkt implements Serializable {
 				produktdaten = new ArrayList<>();
 			}
 			produktdaten.add(neueProduktdaten);
+			neueProduktdaten.setProdukt(this);
 		}
 		return this;
 	}

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:define name="metadata">
+		<f:event type="preRenderView" listener="#{pc.createEmptyProdukt}" />
+	</ui:define>
+
+	<ui:define name="article">
+
+		<h:form id="erstelleNeuesProdukt">
+
+			<rich:panel id="createProduktPanel" header="Neues Produkt anlegen">
+
+				<h:panelGrid columns="2">
+
+					<h:outputLabel value="Hersteller"  for="inputHersteller"/>
+					<h:inputText id="inputHersteller" value="#{pc.neuesProdukt.hersteller}" />
+					<h:outputLabel value="Beschreibung" for="inputBeschreibung" />
+					<h:inputTextarea id="inputBeschreibung" value="#{pc.neuesProdukt.beschreibung}" />
+					<h:outputLabel value="Farbe"  for="inputFarbe"/>
+					<h:inputText id="inputFarbe" value="#{pc.neueProduktdaten.farbe}" />
+					<h:outputLabel value="Groesse"  for="inputGroesse"/>
+					<h:inputText id="inputGroesse" value="#{pc.neueProduktdaten.groesse}" />
+					<h:outputLabel value="Preis"  for="inputPreis"/>
+					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}" />
+
+				</h:panelGrid>
+				
+				<h:commandButton action="#{pc.createProdukt}" value="Neues Produkt anlegen" />
+				
+			</rich:panel>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>
