@@ -18,15 +18,12 @@ import javax.validation.Validator;
 import javax.validation.groups.Default;
 
 import de.shop.bestellverwaltung.domain.Bestellung;
-import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.util.IdGroup;
 import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.BestellungValidationException;
 import de.shop.util.exceptions.ConcurrentDeletedException;
 import de.shop.util.exceptions.InvalidBestellungIdException;
 import de.shop.util.exceptions.InvalidGesamtpreisException;
-import de.shop.util.exceptions.InvalidKundeIdException;
-import de.shop.util.exceptions.KundeDeleteBestellungException;
 
 /**
  * Anwendungslogik fuer die Bestellung Services
