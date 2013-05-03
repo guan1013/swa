@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:define name="article">
+
+		<h:form id="sucheForm">
+			<rich:panel id="suchePanel" header="Suche ein Produkt">
+
+				<h:panelGrid id="suchePanelGrid" columns="3">
+
+					<h:outputLabel value="Produkt Nr." id="idInputLabel" for="idInput" />
+					<h:inputText value="#{pc.produktId}" id="idInput" />
+					<a4j:commandButton id="sucheButton" action="#{pc.sucheProdukt}"
+						value="Suchen" render="gesuchtesProduktPanel" />
+
+				</h:panelGrid>
+
+			</rich:panel>
+		</h:form>
+		<p id="abstand" />
+		<a4j:outputPanel id="gesuchtesProduktPanel">
+			<c:if test="#{not empty flash.produkt}">
+				<c:set var="produkt" value="#{flash.produkt}" scope="view" />
+				<c:set target="#{flash}" property="produkt" value="#{produkt}" />
+				<rich:panel header="Suchergebnis">
+					<h:panelGrid id="gesuchtesProdukt" columns="2" border="1">
+						<h:outputText id="produktNrLabel" value="Produkt Nr." />
+						<h:outputText id="produktNr" value="#{produkt.produktID}" />
+						<h:outputText id="produktHerstellerLabel" value="Hersteller" />
+						<h:outputText id="produktHersteller"
+							value="#{produkt.hersteller}" />
+						<h:outputText id="produktBeschreibungLabel" value="Beschreibung" />
+						<h:outputText id="produktBeschreibung"
+							value="#{produkt.beschreibung}" />
+					</h:panelGrid>
+				</rich:panel>
+			</c:if>
+		</a4j:outputPanel>
+	</ui:define>
+
+</ui:composition>
+
+</html>

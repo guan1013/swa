@@ -1,0 +1,18 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html">
+                <!--
+	<p id="index">
+		<h:outputLink id="menuIndex" value="#{request.contextPath}">
+			#{msg['nav.index']}
+		</h:outputLink>
+	</p>
+	
+	-->
+	<p id="viewKunde">
+		<h:outputLink id="menuSearchProdukt"
+		              value="#{request.contextPath}/produktverwaltung/viewProdukt.jsf">
+			#{msg['nav.suche_produkt']}
+		</h:outputLink>
+	</p>
+</ui:composition>

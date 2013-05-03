@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core">
+
+	<rich:dataTable
+	    id="alleProdukte" 
+	    var="produkt" 
+	    value="#{produkte}"
+		rendered="#{not empty produkte}">
+		
+		<f:facet name="header">#{msg['index.angebot']}</f:facet>		
+		<rich:column id="beschreibung">	    
+			<h:link 
+			    id="produktlink" 
+			    outcome="/produktverwaltung/viewProdukt"
+				value="#{produkt.beschreibung}">
+				<f:param param="id" value="#{produkt.produktID}" />
+			</h:link>		
+		</rich:column>		
+	</rich:dataTable>
+</ui:composition>

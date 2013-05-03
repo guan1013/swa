@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:define name="metadata">
+		<f:event type="preRenderView" listener="#{pc.sucheProdukt}" />
+		<f:viewParam id="viewParam" name="produktId" />
+	</ui:define>
+
+	<ui:param name="pageTitle" value="Web-Shop der Gruppe 10" />
+
+	<ui:define name="article">
+
+		<h1></h1>
+
+		<rich:message rendered="#{empty produkt}">#{msgPv['error.no_produkt']}</rich:message>
+		<rich:dataTable id="alleProdukte" var="produkt" value="#{produkt}"
+			rendered="#{not empty produkt}">
+
+			<rich:column id="produktId">
+				<f:facet name="header">#{msgPv['produkt.info.id']}</f:facet>#{produkt.produktID}</rich:column>
+			<rich:column id="beschreibung">
+				<f:facet name="header">#{msgPv['produkt.info.beschreibung']}</f:facet>#{produkt.beschreibung}</rich:column>
+			<rich:column id="hersteller">
+				<f:facet name="header">#{msgPv['produkt.info.hersteller']}</f:facet>#{produkt.hersteller}</rich:column>
+		</rich:dataTable>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>
