@@ -3,6 +3,7 @@ package de.shop.produktverwaltung.controller;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.Flash;
 import javax.inject.Inject;
@@ -38,8 +39,10 @@ public class ProduktController implements Serializable {
 	@Inject
 	private Flash flash;
 
+	@RequestScoped
 	private Produkt produkt;
 
+	@RequestScoped
 	private Integer produktId;
 
 	private List<Produkt> produkte;

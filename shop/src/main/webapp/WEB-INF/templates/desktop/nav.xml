@@ -1,27 +1,40 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html">
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich">
 
 
-    <!-- LINK: STARTSEITE -->
-	<p id="index">
-		<h:outputLink id="menuIndex" value="#{request.contextPath}/faces/index.jsf">
-			#{msg['nav.start']}
-		</h:outputLink>
-	</p>
-	
-	<!-- LINK: PRODUKT.SUCHE -->
-	<p id="viewKunde">
-		<h:outputLink id="menuSearchProdukt"
-			value="#{request.contextPath}/produktverwaltung/viewProdukt.jsf">
-			#{msg['nav.produkt.suche']}
-		</h:outputLink>
-	</p>
-	
-	<!-- LINK: PRODUKT.ERSTELLEN -->
-	<p id="createKunde">
-		<h:outputLink id="menuCreateProdukt"
-			value="#{request.contextPath}/produktverwaltung/createProdukt.jsf">
-			#{msg['nav.produkt.erstellen']}
-		</h:outputLink>
-	</p>
+	<rich:panel header="#{msg['nav.header']}" border="1">
+
+		<!-- LINK: STARTSEITE -->
+		<p id="index">
+			<h:outputLink id="menuIndex" value="#{request.contextPath}/index.jsf">
+				#{msg['nav.start']}
+			</h:outputLink>
+		</p>
+
+		<!-- LINK: PRODUKT.SUCHE -->
+		<p id="seachProdukt">
+			<h:outputLink id="menuSearchProdukt"
+				value="#{request.contextPath}/produktverwaltung/viewProdukt.jsf">
+				#{msg['nav.produkt.suche']}
+			</h:outputLink>
+		</p>
+
+		<!-- LINK: PRODUKT.ERSTELLEN -->
+		<p id="createProdukt">
+			<h:outputLink id="menuCreateProdukt"
+				value="#{request.contextPath}/produktverwaltung/createProdukt.jsf">
+				#{msg['nav.produkt.erstellen']}
+			</h:outputLink>
+		</p>
+
+		<!-- LINK: PRODUKT.UPDATE -->
+		<p id="updateProdukt">
+			<h:outputLink id="menuUpdateProdukt"
+				value="#{request.contextPath}/produktverwaltung/updateProdukt.jsf">
+				#{msg['nav.produkt.update']}
+			</h:outputLink>
+		</p>
+
+	</rich:panel>
 </ui:composition>
