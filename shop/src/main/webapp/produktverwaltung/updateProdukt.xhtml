@@ -5,40 +5,53 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:rich="http://richfaces.org/rich">
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:define name="metadata">
+		<f:viewParam id="viewParam" name="produktId" />
+	</ui:define>
 
 	<ui:param name="pageTitle" value="#{msgPv['produkt.update.title']}" />
 
 	<ui:define name="article">
 
 		<h:form id="updateProdukt">
+			<c:if test="#{not empty flash.produkt}">
 
-			<rich:panel id="updateProduktPanel" header="#{msgPv['produkt.update.title']}">
+				<c:set var="produkt" value="#{flash.produkt}" scope="view" />
+				<c:set target="#{flash}" property="produkt" value="#{produkt}" />
 
-				<h:panelGrid columns="2">
+				<rich:panel id="updateProduktPanel"
+					header="#{msgPv['produkt.update.title']}">
 
-					<h:outputLabel value="Hersteller" for="inputHersteller" />
-					<h:inputText id="inputHersteller"
-						value="#{pc.neuesProdukt.hersteller}" />
-					<h:outputLabel value="Beschreibung" for="inputBeschreibung" />
-					<h:inputTextarea id="inputBeschreibung"
-						value="#{pc.neuesProdukt.beschreibung}" />
-					<h:outputLabel value="Farbe" for="inputFarbe" />
-					<h:inputText id="inputFarbe" value="#{pc.neueProduktdaten.farbe}" />
-					<h:outputLabel value="Groesse" for="inputGroesse" />
-					<h:inputText id="inputGroesse"
-						value="#{pc.neueProduktdaten.groesse}" />
-					<h:outputLabel value="Preis" for="inputPreis" />
-					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}" />
+					<h:panelGrid columns="2">
 
-				</h:panelGrid>
+						<!-- ID -->
+						<h:outputLabel value="#{msgPv['produkt.label.id']}" for="inputID" />
+						<h:inputText id="inputID" value="#{produkt.produktID}"
+							disabled="true" />
 
-				<h:commandButton action="#{pc.createProdukt}"
-					value="Neues Produkt anlegen" />
+						<!-- HERSTELLER -->
+						<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
+							for="inputHersteller" />
+						<h:inputText id="inputHersteller" value="#{produkt.hersteller}" />
 
-			</rich:panel>
+						<!-- BESCHREIBUNG -->
+						<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
+							for="inputBeschreibung" />
+						<h:inputTextarea id="inputBeschreibung"
+							value="#{produkt.beschreibung}" />
+
+					</h:panelGrid>
+
+					<h:commandButton action="#{pc.updateProdukt}"
+						value="#{msgPv['produkt.update.submit']}" />
+
+				</rich:panel>
+			</c:if>
 
 		</h:form>
 

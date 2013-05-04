@@ -25,6 +25,8 @@ public class ProduktController implements Serializable {
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
 
+	private static final String FLASH_KEY_PRODUKT = "produkt";
+
 	private static final long serialVersionUID = 5513563371749151869L;
 
 	@Inject
@@ -57,17 +59,24 @@ public class ProduktController implements Serializable {
 	@Transactional
 	public String sucheProdukt() {
 
-		produkt = pService.findProduktByID(produktId.intValue(),
-				ProduktService.FetchType.NUR_PRODUKTE, null);
-
-		if (produkt == null) {
-			flash.remove("produkt");
-			return null;
+		if (produktId == null || produktId == 0) {
+			return "";
 		}
 
-		flash.put("produkt", produkt);
+		Produkt produkt = pService.findProduktByID(produktId.intValue(),
+				ProduktService.FetchType.KOMPLETT, null);
 
-		return "/produktverwaltung/viewProdukt";
+		if (produkt == null) {
+			return "";
+		}
+
+		flash.put(FLASH_KEY_PRODUKT, produkt);
+		request.setAttribute("produktId", produktId.intValue());
+		request.setAttribute("anzahlProduktdaten", produkt.getProduktdaten()
+				.size());
+		produktId = null;
+
+		return "";
 	}
 
 	@Transactional
@@ -97,6 +106,11 @@ public class ProduktController implements Serializable {
 
 		return "";
 
+	}
+
+	@Transactional
+	public String updateProdukt() {
+		return "";
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////
