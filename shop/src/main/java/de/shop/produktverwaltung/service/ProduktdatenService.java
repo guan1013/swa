@@ -176,29 +176,30 @@ public class ProduktdatenService implements Serializable {
 		final List<Predicate> predicates = new LinkedList<Predicate>();
 
 		// ANZAHL
-		if (filter.getAnzahl() != null) {
+		if (filter.getAnzahl() != null && filter.getAnzahl().intValue() != 0) {
 			final Predicate predAnzahl = builder.gt(
 					pd.get(Produktdaten_.anzahlVerfuegbar), filter.getAnzahl());
 			predicates.add(predAnzahl);
 		}
 
 		// PREIS
-		if (filter.getPreisOben() != null && filter.getPreisUnten() != null) {
+		if (filter.getPreisOben() != null && filter.getPreisUnten() != null && filter.getPreisOben().doubleValue() != 0.0) {
 			final Predicate predPreis = builder.between(pd.get(Produktdaten_.preis),
 					filter.getPreisUnten(), filter.getPreisOben());
 			predicates.add(predPreis);
 		}
 
 		// FARBE
-		if (filter.getFarbe() != null) {
+		if (filter.getFarbe() != null && !filter.getFarbe().isEmpty()) {
 			final Predicate predFarbe = builder.like(
 					builder.lower(pd.get(Produktdaten_.farbe)), "%"
 							+ filter.getFarbe().toLowerCase() + "%");
 			predicates.add(predFarbe);
 		}
+		
 
 		// GROESSE
-		if (filter.getGroesse() != null) {
+		if (filter.getGroesse() != null && !filter.getGroesse().isEmpty()) {
 			final Predicate predGroesse = builder.equal(builder.lower(pd
 					.get(Produktdaten_.groesse)), filter.getGroesse()
 					.toLowerCase());
@@ -206,7 +207,7 @@ public class ProduktdatenService implements Serializable {
 		}
 
 		// HERSTELLER
-		if (filter.getHersteller() != null) {
+		if (filter.getHersteller() != null && !filter.getHersteller().isEmpty()) {
 			final Predicate predHersteller = builder.like(
 					builder.lower(join.get(Produkt_.hersteller)), "%"
 							+ filter.getHersteller().toLowerCase() + "%");
@@ -214,7 +215,7 @@ public class ProduktdatenService implements Serializable {
 		}
 
 		// BESCHREIBUNG
-		if (filter.getBeschreibung() != null) {
+		if (filter.getBeschreibung() != null && !filter.getBeschreibung().isEmpty()) {
 			final Predicate predBeschreibung = builder.like(
 					builder.lower(join.get(Produkt_.beschreibung)), "%"
 							+ filter.getBeschreibung().toLowerCase() + "%");

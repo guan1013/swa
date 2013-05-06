@@ -16,6 +16,17 @@ public class SuchFilter {
 	
 	private String beschreibung;
 
+	public SuchFilter() {
+		super();
+		this.anzahl = 0;
+		this.preisUnten = 0.0;
+		this.preisOben = 0.0;
+		this.farbe = "";
+		this.groesse = "";
+		this.hersteller = "";
+		this.beschreibung = "";
+	}
+
 	public Integer getAnzahl() {
 		return anzahl;
 	}

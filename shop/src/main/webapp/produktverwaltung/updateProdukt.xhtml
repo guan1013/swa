@@ -46,12 +46,71 @@
 							value="#{produkt.beschreibung}" />
 
 					</h:panelGrid>
+					<p />
 
+					<!-- PRODUKTDATEN ANZEIGEN -->
+					<rich:panel header="#{msgPv['produkt.search.produktdaten']}">
+						<rich:dataTable id="alleProduktdaten" var="pdata"
+							value="#{produkt.produktdaten}"
+							rendered="#{not empty produkt.produktdaten}"
+							rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
+							width="500">
+							<rich:column id="pDataId">
+								<f:facet name="header">#{msgPv['produkt.label.idProduktdaten']}</f:facet>
+						#{pdata.produktdatenID}
+						</rich:column>
+							<rich:column id="pDataFarbe">
+								<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>#{pdata.farbe}</rich:column>
+							<rich:column id="pDataGroesse">
+								<f:facet name="header">#{msgPv['produkt.label.groesse']}</f:facet>#{pdata.groesse}</rich:column>
+							<rich:column id="pDataAnzahl">
+								<f:facet name="header">#{msgPv['produkt.label.anzahl']}</f:facet>#{pdata.anzahlVerfuegbar}</rich:column>
+							<rich:column id="pDataPreis">
+								<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{pdata.preis}</rich:column>
+							<rich:column id="pDataEdit">
+								<h:commandButton image="#{resource['images:edit.gif']}"
+									alt="#{msg['action.edit']}">
+									<rich:componentControl target="popup" operation="show"
+										onbeforeoperation="#{pc.ladeProduktdaten(pdata)}" />
+								</h:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</rich:panel>
+					<p />
+
+					<p />
+					<p />
+					<h:commandButton value="#{msgPv['produkt.update.addProduktdaten']}">
+						<rich:componentControl target="popupNew" operation="show" />
+					</h:commandButton>
 					<h:commandButton action="#{pc.updateProdukt}"
 						value="#{msgPv['produkt.update.submit']}" />
 
 				</rich:panel>
 			</c:if>
+
+			<rich:popupPanel id="popup">
+				<f:facet name="controls">
+					<h:outputLink value="#"
+						onclick="#{rich:component('popup')}.hide(); return false;">X</h:outputLink>
+				</f:facet>
+				<f:facet name="header">
+					<h:outputText value="#{msgPv['produkt.update.produktdaten']}" />
+				</f:facet>
+				<h:panelGrid columns="1">Noch nicht imlementiert</h:panelGrid>
+
+			</rich:popupPanel>
+
+			<rich:popupPanel id="popupNew">
+				<f:facet name="controls">
+					<h:outputLink value="#"
+						onclick="#{rich:component('popupNew')}.hide(); return false;">X</h:outputLink>
+				</f:facet>
+				<f:facet name="header">
+					<h:outputText value="#{msgPv['produkt.update.addProduktdaten']}" />
+				</f:facet>
+				<h:panelGrid columns="1">Noch nicht imlementiert</h:panelGrid>
+			</rich:popupPanel>
 
 		</h:form>
 
