@@ -49,7 +49,7 @@ import de.shop.util.IdGroup;
 	@NamedQuery(
 			name = Produktdaten.PRODUKTDATEN_BY_PRODUKT_ID,
 			query = "select produktdaten from Produktdaten as produktdaten "
-					+ "WHERE produktdaten.produkt.produktID = :id") })
+					+ "WHERE produktdaten.produkt.produktId = :id") })
 //@formatter:on
 public class Produktdaten implements Serializable {
 

@@ -52,7 +52,7 @@ import de.shop.util.IdGroup;
 @Table(name = "Produkt")
 @NamedQueries({
 		@NamedQuery(name = Produkt.PRODUKT_KOMPLETT, query = "FROM Produkt p"),
-		@NamedQuery(name = Produkt.PRODUKT_ID_FETCH, query = "SELECT DISTINCT p FROM Produkt p LEFT JOIN p.produktdaten WHERE p.produktID = :id"),
+		@NamedQuery(name = Produkt.PRODUKT_ID_FETCH, query = "SELECT DISTINCT p FROM Produkt p LEFT JOIN p.produktdaten WHERE p.produktId = :id"),
 		@NamedQuery(name = Produkt.PRODUKT_MIT_PRODUKTDATEN, query = "SELECT distinct p FROM Produkt p JOIN p.produktdaten"),
 		@NamedQuery(name = Produkt.PRODUKT_BY_HERSTELLER, query = "FROM Produkt p WHERE p.hersteller = :hersteller"),
 		@NamedQuery(name = Produkt.PRODUKT_BY_LIKE_BESCHREIBUNG, query = "SELECT produkt FROM Produkt as produkt "
@@ -104,7 +104,7 @@ public class Produkt implements Serializable {
 	@Column(name = "Produkt_ID", updatable = false, nullable = false)
 	@Min(value = 1, groups = IdGroup.class, message = "{produktverwaltung.id.min}")
 	@NotNull(groups = IdGroup.class, message = "{produktverwaltung.id.notnull}")
-	private Integer produktID;
+	private Integer produktId;
 
 	// TODO Für Titel und Beschreibung eigene Attribute einführen
 	/**
@@ -166,7 +166,7 @@ public class Produkt implements Serializable {
 	 */
 	public Produkt() {
 
-		this.produktID = null;
+		this.produktId = null;
 		this.beschreibung = "";
 		this.hersteller = "";
 		this.produktdaten = new ArrayList<Produktdaten>();
@@ -243,7 +243,7 @@ public class Produkt implements Serializable {
 		result = prime * result
 				+ ((beschreibung == null) ? 0 : beschreibung.hashCode());
 		result = prime * result
-				+ ((produktID == null) ? 0 : produktID.hashCode());
+				+ ((produktId == null) ? 0 : produktId.hashCode());
 		return result;
 	}
 
@@ -262,18 +262,18 @@ public class Produkt implements Serializable {
 		}
 		else if (!beschreibung.equals(other.beschreibung))
 			return false;
-		if (produktID == null) {
-			if (other.produktID != null)
+		if (produktId == null) {
+			if (other.produktId != null)
 				return false;
 		}
-		else if (!produktID.equals(other.produktID))
+		else if (!produktId.equals(other.produktId))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Produkt [produktID=" + produktID + ", beschreibung="
+		return "Produkt [produktId=" + produktId + ", beschreibung="
 				+ beschreibung + ", hersteller=" + hersteller + ", erstellt="
 				+ erstellt + ", geaendert=" + geaendert + "]";
 	}
@@ -281,12 +281,12 @@ public class Produkt implements Serializable {
 	// /////////////////////////////////////////////////////////////////////
 	// GETTER & SETTER
 
-	public Integer getProduktID() {
-		return this.produktID;
+	public Integer getProduktId() {
+		return this.produktId;
 	}
 
-	public void setProduktID(Integer produktID) {
-		this.produktID = produktID;
+	public void setProduktId(Integer produktId) {
+		this.produktId = produktId;
 	}
 
 	public String getBeschreibung() {

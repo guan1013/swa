@@ -2,20 +2,21 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core">
 
-	<rich:dataTable
-	    id="alleProdukte" 
-	    var="produkt" 
-	    value="#{pc.produkte}"
+	<rich:dataTable id="alleProdukte" var="produkt" value="#{pc.produkte}"
 		rendered="#{not empty pc.produkte}">
+
+		<f:facet name="header">#{msg['index.angebot']}</f:facet>
 		
-		<f:facet name="header">#{msg['index.angebot']}</f:facet>		
-		<rich:column id="beschreibung">	    
-			<h:link 
-			    id="produktlink" 
-			    outcome="/produktverwaltung/viewProdukt"
+		<rich:column id="id">
+			#{produkt.produktId}
+		</rich:column>
+		
+		<rich:column id="beschreibung">
+			<h:link id="produktlink" outcome="/produktverwaltung/viewProdukt?produktId=#{produkt.produktId}"
 				value="#{produkt.beschreibung}">
-				<f:param param="id" value="#{produkt.produktID}" />
-			</h:link>		
-		</rich:column>		
+				<f:param id="idParam" param="produktId" value="#{produkt.produktId}" />
+			</h:link>
+		</rich:column>
+
 	</rich:dataTable>
 </ui:composition>

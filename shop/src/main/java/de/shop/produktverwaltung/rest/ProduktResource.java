@@ -207,7 +207,7 @@ public class ProduktResource {
 
 		// Produktdaten laden
 		final List<Produktdaten> pdaten = produktdatenService
-				.findProduktdatenByProduktId(produkt.getProduktID());
+				.findProduktdatenByProduktId(produkt.getProduktId());
 		produkt.setProduktdaten(pdaten);
 
 		// Service aufrufen

@@ -1,0 +1,161 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:define name="metadata">
+		<f:event type="preRenderView" listener="#{pc.createEmptySuchfilter}" />
+	</ui:define>
+
+	<ui:param name="pageTitle" value="#{msgPv['produkt.search.title']}" />
+
+	<ui:define name="article">
+
+		<h:panelGrid columns="2">
+
+			<!-- SUCHMASKEN ANZEIGEN -->
+			<rich:panel>
+
+				<!-- PRODUKT NACH ID SUCHEN -->
+				<h:form id="sucheFormId">
+					<rich:panel id="suchePanel"
+						header="#{msgPv['produkt.search.title']}">
+
+						<h:panelGrid id="suchePanelGrid" columns="2">
+
+							<h:outputLabel value="#{msgPv['produkt.label.id']}"
+								id="idInputLabel" for="idInput" />
+							<h:inputText value="#{pc.produktId}" id="idInput" />
+							<f:verbatim />
+							<a4j:commandButton id="sucheButton" action="#{pc.sucheById}"
+								value="#{msgPv['produkt.search.submit']}"
+								render="produktSucheErgebnis" />
+
+						</h:panelGrid>
+
+					</rich:panel>
+				</h:form>
+
+				<p />
+
+				<!-- PRODUKT NACH FILTER SUCHEN -->
+				<h:form id="sucheFormFilter">
+
+					<rich:panel id="filtersuchePanel"
+						header="#{msgPv['produkt.search.title.filter']}">
+
+						<h:panelGrid id="filtersuchePanelGrid" columns="2">
+
+							<!-- BESCHREIBUNG -->
+							<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
+								id="beschreibungInputLabel" for="beschreibungInput" />
+							<h:inputText value="#{pc.suchFilter.beschreibung}"
+								id="beschreibungInput" />
+
+							<!-- HERSTELLER -->
+							<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
+								id="herstellerInputLabel" for="herstellerInput" />
+							<h:inputText value="#{pc.suchFilter.hersteller}"
+								id="herstellerInput" />
+
+							<!-- FARBE -->
+							<h:outputLabel value="#{msgPv['produkt.label.farbe']}"
+								id="farbeInputLabel" for="farbeInput" />
+							<h:inputText value="#{pc.suchFilter.farbe}" id="farbeInput" />
+
+							<!-- GROESSE -->
+							<h:outputLabel value="#{msgPv['produkt.label.groesse']}"
+								id="groesseInputLabel" for="groesseInput" />
+							<h:inputText value="#{pc.suchFilter.groesse}" id="groesseInput" />
+
+							<!-- PREIS MAX -->
+							<h:outputLabel value="#{msgPv['produkt.search.label.preis.max']}"
+								id="preisMaxInputLabel" for="preisMaxInput" />
+							<h:inputText value="#{pc.suchFilter.preisOben}"
+								id="preisMaxInput" />
+
+							<f:verbatim />
+
+							<!-- SUBMIT BUTTON -->
+							<a4j:commandButton id="filtersucheButton"
+								action="#{pc.sucheByFilter}"
+								value="#{msgPv['produkt.search.submit']}"
+								render="produktSucheErgebnis" />
+
+						</h:panelGrid>
+
+					</rich:panel>
+
+				</h:form>
+
+			</rich:panel>
+
+			<!-- SUCHERGEBNISSE ANZEIGEN -->
+			<a4j:outputPanel id="produktSucheErgebnis">
+
+				<c:if test="#{not empty flash.suchergebnis}">
+
+					<c:set var="produkte" value="#{flash.suchergebnis}"
+						scope="view" />
+					<c:set target="#{flash}" property="suchergebnis"
+						value="#{produkte}" />
+
+					<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
+						value="#{produkte}" rowClasses="odd-row, even-row"
+						styleClass="tabelleMitZebrastil">
+						
+						<!-- PRODUKT ID -->
+						<rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.id']}</f:facet>#{produktdaten.produkt.produktId}
+					</rich:column>
+
+						<!-- PRODUKTDATEN ID -->
+						<rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.idProduktdaten']}</f:facet>#{produktdaten.produktdatenID}
+					</rich:column>
+
+						<!-- PRODUKT BESCHREIBUNG -->
+						<rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>#{produktdaten.produkt.beschreibung}
+					</rich:column>
+
+						<!-- HERSTELLER -->
+						<rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.hersteller']}</f:facet>#{produktdaten.produkt.hersteller}
+					</rich:column>
+
+						<!-- FARBE -->
+						<rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>#{produktdaten.farbe}
+					</rich:column>
+
+						<!-- GROESSE -->
+						<rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.groesse']}</f:facet>#{produktdaten.groesse}
+					</rich:column>
+
+						<!-- PREIS -->
+						<rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{produktdaten.preis}
+					</rich:column>
+
+					</rich:dataTable>
+
+				</c:if>
+
+			</a4j:outputPanel>
+
+		</h:panelGrid>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

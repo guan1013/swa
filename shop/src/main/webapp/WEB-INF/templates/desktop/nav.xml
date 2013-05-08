@@ -15,7 +15,7 @@
 		<!-- LINK: PRODUKT.SUCHE -->
 		<p id="seachProdukt">
 			<h:outputLink id="menuSearchProdukt"
-				value="#{request.contextPath}/produktverwaltung/viewProdukt.jsf">
+				value="#{request.contextPath}/produktverwaltung/searchProdukt.jsf">
 				#{msg['nav.produkt.suche']}
 			</h:outputLink>
 		</p>

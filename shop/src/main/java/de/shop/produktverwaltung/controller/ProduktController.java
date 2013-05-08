@@ -1,14 +1,18 @@
 package de.shop.produktverwaltung.controller;
 
 import java.io.Serializable;
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.enterprise.context.RequestScoped;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.Flash;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
+
+import org.jboss.logging.Logger;
 
 import de.shop.produktverwaltung.domain.Produkt;
 import de.shop.produktverwaltung.domain.Produktdaten;
@@ -26,10 +30,15 @@ public class ProduktController implements Serializable {
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
 
-	private static final String FLASH_KEY_FILTERSUCHE = "ergebnisFilterSuche";
+	private static final Logger LOGGER = Logger.getLogger(MethodHandles
+			.lookup().lookupClass().getName());
 
-	private static final String FLASH_KEY_PRODUKT = "produkt";
-	
+	private static final String FLASH_KEY_SUCHE = "suchergebnis";
+
+	private static final String FLASH_KEY_VIEW = "viewProdukt";
+
+	private static final String FLASH_KEY_EDIT = "editProdukt";
+
 	private static final String FLASH_KEY_EDIT_PRODUKTDATEN = "editProduktdaten";
 
 	private static final long serialVersionUID = 5513563371749151869L;
@@ -46,10 +55,6 @@ public class ProduktController implements Serializable {
 	@Inject
 	private Flash flash;
 
-	@RequestScoped
-	private Produkt produkt;
-
-	@RequestScoped
 	private Integer produktId;
 
 	private List<Produkt> produkte;
@@ -58,42 +63,75 @@ public class ProduktController implements Serializable {
 
 	private Produktdaten neueProduktdaten;
 
-	@RequestScoped
 	private SuchFilter suchFilter;
 
 	private Produktdaten editProduktdaten;
-	
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 
 	@Transactional
-	public String sucheProdukt() {
+	public void sucheById() {
 
-		if (produktId == null || produktId == 0) {
-			return "";
+		// Vorherige Suchergebnisse löschen
+		flash.put(FLASH_KEY_SUCHE, null);
+
+		// Parameter-Test
+		if (produktId == null) {
+			return;
 		}
 
 		Produkt produkt = produktService.findProduktByID(produktId.intValue(),
-				ProduktService.FetchType.KOMPLETT, null);
+				ProduktService.FetchType.NUR_PRODUKTE, null);
+		List<Produktdaten> suchErgebnis = new ArrayList<Produktdaten>();
 
 		if (produkt == null) {
-			return "";
+			return;
 		}
 
-		flash.remove(FLASH_KEY_FILTERSUCHE);
-		flash.put(FLASH_KEY_PRODUKT, produkt);
-		request.setAttribute("produktId", produktId.intValue());
-		request.setAttribute("anzahlProduktdaten", produkt.getProduktdaten()
-				.size());
-		produktId = null;
+		// Produktdaten nachladen, Suchergebnis der Ergebnisliste hinzufügen,
+		// Puffern
+		suchErgebnis.addAll(produkt.getProduktdaten());
+		flash.put(FLASH_KEY_SUCHE, suchErgebnis);
 
-		return "";
 	}
 
 	@Transactional
-	public void sucheAlleProdukte() {
+	public void sucheByFilter() {
 
-		produkte = produktService.findProdukte();
+		// Vorherige Suchergebnisse löschen
+		flash.put(FLASH_KEY_SUCHE, null);
+
+		// Parameter-Test
+		if (suchFilter == null) {
+			return;
+		}
+
+		// Produktdaten suchen
+		List<Produktdaten> result = produktdatenService
+				.findProduktdatenByFilter(suchFilter, null);
+
+		// Suchergebnis puffern
+		flash.put(FLASH_KEY_SUCHE, result);
+	}
+
+	@PostConstruct
+	@Transactional
+	private void ladeAlleProdukt() {
+
+		if (produkte == null) {
+			produkte = produktService.findProdukte();
+		}
+	}
+
+	@Transactional
+	public void createEmptySuchfilter() {
+
+		// Suchfilter ggf initialisieren
+		if (suchFilter != null) {
+			return;
+		}
+		suchFilter = new SuchFilter();
 	}
 
 	public void createEmptyProdukt() {
@@ -122,7 +160,7 @@ public class ProduktController implements Serializable {
 	@Transactional
 	public String updateProdukt() {
 
-		Produkt produkt = (Produkt) flash.get(FLASH_KEY_PRODUKT);
+		Produkt produkt = (Produkt) flash.get(FLASH_KEY_EDIT);
 
 		if (produkt == null) {
 			return "";
@@ -133,39 +171,48 @@ public class ProduktController implements Serializable {
 		return "/index";
 	}
 
-	public void createSuchfilter() {
-		if (suchFilter != null) {
-			return;
-		}
-
-		suchFilter = new SuchFilter();
-	}
-
 	@Transactional
-	public void sucheMitFilter() {
+	public void ladeProdukt() {
 
-		List<Produktdaten> result = produktdatenService
-				.findProduktdatenByFilter(suchFilter, null);
+		// Query-Parameter auslesen
+		String produktIdStr = request.getParameter("produktId");
+		Integer produktId;
 
-		flash.remove(FLASH_KEY_PRODUKT);
-		flash.put(FLASH_KEY_FILTERSUCHE, result);
+		try {
+			// ID in int umwandeln und Produkt laden, Produktdaten nachladen
+			produktId = Integer.valueOf(produktIdStr);
+			System.out.println("!!! Such: " + produktId);
+			Produkt result = produktService.findProduktByID(produktId,
+					ProduktService.FetchType.NUR_PRODUKTE, null);
+			request.setAttribute("anzahlProduktdaten", result.getProduktdaten()
+					.size());
+			System.out.println("!!! Such: " + result);
+
+			// Ergebnis in Flash puffern
+			flash.put("viewProdukt", result);
+			
+			System.out.println("produkt == null ? " + (result==null));
+			System.out.println("flash.containsKey = " + flash.containsKey("viewProdukt"));
+
+		}
+		catch (NumberFormatException e) {
+			// TODO: Fehlermeldung implementieren
+		}
 	}
 
-	public void ladeProduktdaten(Produktdaten pdaten)
-	{
+	public void ladeProduktdaten(Produktdaten pdaten) {
 		flash.put(FLASH_KEY_EDIT_PRODUKTDATEN, pdaten);
 		this.editProduktdaten = pdaten;
 	}
-	
+
+	// ////////////////////////////////////////////////////////////////////////////////////////////////
+	// PRIVATE METHODS
+
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// GETTER & SETTER
 
 	public SuchFilter getSuchFilter() {
 		return suchFilter;
-	}
-
-	public Produkt getProdukt() {
-		return produkt;
 	}
 
 	public Integer getProduktId() {
@@ -188,10 +235,8 @@ public class ProduktController implements Serializable {
 		return neueProduktdaten;
 	}
 
-	
 	public Produktdaten getEditProduktdaten() {
 		return editProduktdaten;
 	}
 
-	
 }

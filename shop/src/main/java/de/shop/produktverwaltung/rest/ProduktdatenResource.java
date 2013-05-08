@@ -77,7 +77,7 @@ public class ProduktdatenResource {
 
 		// Produkt nachladen
 		final Produkt currProdukt = produktService.findProduktByID(produktdaten
-				.getProdukt().getProduktID(), FetchType.NUR_PRODUKTE, locale);
+				.getProdukt().getProduktId(), FetchType.NUR_PRODUKTE, locale);
 		produktdaten.setProdukt(currProdukt);
 
 		produktdaten = produktdatenService

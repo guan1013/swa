@@ -36,7 +36,10 @@
 					<h:inputText id="inputGroesse"
 						value="#{pc.neueProduktdaten.groesse}" />
 					<h:outputLabel value="Preis" for="inputPreis" />
-					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}" />
+					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}">
+						<f:convertNumber type="currency" currencyCode="EUR"
+							maxFractionDigits="2" />
+					</h:inputText>
 
 				</h:panelGrid>
 

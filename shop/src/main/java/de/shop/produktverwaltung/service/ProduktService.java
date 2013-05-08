@@ -106,7 +106,7 @@ public class ProduktService implements Serializable {
 
 		// Validierung
 		checkViolations(getValidator(locale).validateValue(Produkt.class,
-				Produkt_.produktID.getName(), id, IdGroup.class));
+				Produkt_.produktId.getName(), id, IdGroup.class));
 
 		// Suchen in DB
 		Produkt result = null;
@@ -190,10 +190,10 @@ public class ProduktService implements Serializable {
 
 		entityManager.detach(produkt);
 
-		final Produkt tmp = findProduktByID(produkt.getProduktID(),
+		final Produkt tmp = findProduktByID(produkt.getProduktId(),
 				FetchType.NUR_PRODUKTE, locale);
 		if (tmp == null) {
-			throw new ConcurrentDeletedException(produkt.getProduktID());
+			throw new ConcurrentDeletedException(produkt.getProduktId());
 		}
 		else {
 			entityManager.detach(tmp);

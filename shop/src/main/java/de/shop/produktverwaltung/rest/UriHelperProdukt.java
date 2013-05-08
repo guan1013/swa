@@ -17,7 +17,7 @@ public class UriHelperProdukt {
 		final UriBuilder ub = uriInfo.getBaseUriBuilder()
 				.path(ProduktResource.class)
 				.path(ProduktResource.class, "findProduktById");
-		final URI uri = ub.build(produkt.getProduktID());
+		final URI uri = ub.build(produkt.getProduktId());
 		return uri;
 
 	}
@@ -28,7 +28,7 @@ public class UriHelperProdukt {
 				.path(ProduktResource.class)
 				.path(ProduktResource.class, "findProduktdatenByProduktId");
 
-		produkt.setProduktdatenURI(ub.build(produkt.getProduktID()));
+		produkt.setProduktdatenURI(ub.build(produkt.getProduktId()));
 
 	}
 }
