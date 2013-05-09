@@ -18,15 +18,14 @@
 	<ui:param name="pageTitle" value="#{msgPv['produkt.search.title']}" />
 
 	<ui:define name="article">
-		<c:if test="#{not empty flash.viewProdukt}">
 
-			<c:set var="aktProdukt" value="#{flash.viewProdukt}" scope="view" />
-			<c:set target="#{flash}" property="viewProdukt" value="#{produkt}" />
-			<h:panelGrid columns="2" border="0">
+			<h:panelGrid columns="3" border="0">
 
-				<rich:panel header="#{msgPv['produkt.label.id']}">#{aktProdukt.produktId}</rich:panel>
+				<rich:panel header="#{msgPv['produkt.label.id']}">#{pc.viewProdukt.produktId}</rich:panel>
 
-				<rich:panel header="#{msgPv['produkt.label.hersteller']}">#{aktProdukt.hersteller}</rich:panel>
+				<rich:panel header="#{msgPv['produkt.label.hersteller']}">#{pc.viewProdukt.hersteller}</rich:panel>
+				
+				<rich:panel header="#{msgPv['produkt.label.seit']}">#{pc.viewProdukt.erstellt}</rich:panel>
 
 			</h:panelGrid>
 
@@ -34,7 +33,7 @@
 
 			<h:panelGrid columns="1" border="0">
 
-				<rich:panel header="#{msgPv['produkt.label.beschreibung']}">#{aktProdukt.beschreibung}</rich:panel>
+				<rich:panel header="#{msgPv['produkt.label.beschreibung']}">#{pc.viewProdukt.beschreibung}</rich:panel>
 
 			</h:panelGrid>
 
@@ -45,8 +44,8 @@
 				<rich:panel header="#{msgPv['produkt.search.produktdaten']}">
 
 					<rich:dataTable id="alleProduktdaten" var="pdata"
-						value="#{aktProdukt.produktdaten}"
-						rendered="#{not empty aktProdukt.produktdaten}"
+						value="#{pc.viewProdukt.produktdaten}"
+						rendered="#{not empty pc.viewProdukt.produktdaten}"
 						rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
 						width="500">
 						<rich:column id="pDataId">
@@ -65,7 +64,6 @@
 				</rich:panel>
 
 			</h:panelGrid>
-		</c:if>
 	</ui:define>
 
 </ui:composition>

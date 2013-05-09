@@ -60,6 +60,8 @@ public class ProduktController implements Serializable {
 	private List<Produkt> produkte;
 
 	private Produkt neuesProdukt;
+	
+	private Produkt viewProdukt;
 
 	private Produktdaten neueProduktdaten;
 
@@ -181,19 +183,10 @@ public class ProduktController implements Serializable {
 		try {
 			// ID in int umwandeln und Produkt laden, Produktdaten nachladen
 			produktId = Integer.valueOf(produktIdStr);
-			System.out.println("!!! Such: " + produktId);
-			Produkt result = produktService.findProduktByID(produktId,
+			viewProdukt = produktService.findProduktByID(produktId,
 					ProduktService.FetchType.NUR_PRODUKTE, null);
-			request.setAttribute("anzahlProduktdaten", result.getProduktdaten()
+			request.setAttribute("anzahlProduktdaten", viewProdukt.getProduktdaten()
 					.size());
-			System.out.println("!!! Such: " + result);
-
-			// Ergebnis in Flash puffern
-			flash.put("viewProdukt", result);
-			
-			System.out.println("produkt == null ? " + (result==null));
-			System.out.println("flash.containsKey = " + flash.containsKey("viewProdukt"));
-
 		}
 		catch (NumberFormatException e) {
 			// TODO: Fehlermeldung implementieren
@@ -237,6 +230,10 @@ public class ProduktController implements Serializable {
 
 	public Produktdaten getEditProduktdaten() {
 		return editProduktdaten;
+	}
+
+	public Produkt getViewProdukt() {
+		return viewProdukt;
 	}
 
 }
