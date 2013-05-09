@@ -102,8 +102,7 @@
 
 				<c:if test="#{not empty flash.suchergebnis}">
 
-					<c:set var="produkte" value="#{flash.suchergebnis}"
-						scope="view" />
+					<c:set var="produkte" value="#{flash.suchergebnis}" scope="view" />
 					<c:set target="#{flash}" property="suchergebnis"
 						value="#{produkte}" />
 
@@ -111,40 +110,49 @@
 						value="#{produkte}" rowClasses="odd-row, even-row"
 						styleClass="tabelleMitZebrastil">
 						
-						<!-- PRODUKT ID -->
+						<!-- PRODUKT ID NICHT ANZEIGEN
 						<rich:column>
 							<f:facet name="header">#{msgPv['produkt.label.id']}</f:facet>#{produktdaten.produkt.produktId}
-					</rich:column>
-
-						<!-- PRODUKTDATEN ID -->
+						</rich:column>
+						 
+						 PRODUKTDATEN ID NICHT ANZEIGEN
 						<rich:column>
 							<f:facet name="header">#{msgPv['produkt.label.idProduktdaten']}</f:facet>#{produktdaten.produktdatenID}
-					</rich:column>
+						</rich:column>
+						
+						 -->
+						
 
 						<!-- PRODUKT BESCHREIBUNG -->
 						<rich:column>
-							<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>#{produktdaten.produkt.beschreibung}
-					</rich:column>
+							<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>
+							<h:link id="produktlink"
+								outcome="/produktverwaltung/viewProdukt?produktId=#{produktdaten.produkt.produktId}"
+								value="#{produktdaten.produkt.beschreibung}" />
+						</rich:column>
 
 						<!-- HERSTELLER -->
 						<rich:column>
 							<f:facet name="header">#{msgPv['produkt.label.hersteller']}</f:facet>#{produktdaten.produkt.hersteller}
-					</rich:column>
+						</rich:column>
 
 						<!-- FARBE -->
 						<rich:column>
 							<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>#{produktdaten.farbe}
-					</rich:column>
+						</rich:column>
 
 						<!-- GROESSE -->
 						<rich:column>
 							<f:facet name="header">#{msgPv['produkt.label.groesse']}</f:facet>#{produktdaten.groesse}
-					</rich:column>
+						</rich:column>
 
 						<!-- PREIS -->
 						<rich:column>
 							<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{produktdaten.preis}
-					</rich:column>
+						</rich:column>
+
+						<!-- AKTIONEN -->
+
 
 					</rich:dataTable>
 

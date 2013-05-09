@@ -26,6 +26,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.DateFormatter;
 import de.shop.util.IdGroup;
+import de.shop.util.ProduktdatenIdGroup;
 
 /**
  * Diese Klasse Produktdaten repräsentiert eine Variante eines bestimmten
@@ -71,7 +72,7 @@ public class Produktdaten implements Serializable {
 	@Id
 	@GeneratedValue
 	@Column(name = "Produktdaten_ID", updatable = false)
-	@NotNull(groups = IdGroup.class)
+	@NotNull(groups = ProduktdatenIdGroup.class, message = "{produktverwaltung.id.daten.notnull}")
 	private Integer produktdatenID;
 
 	@Column(name = "Anzahl_verfuegbar")

@@ -60,7 +60,7 @@ public class ProduktController implements Serializable {
 	private List<Produkt> produkte;
 
 	private Produkt neuesProdukt;
-	
+
 	private Produkt viewProdukt;
 
 	private Produktdaten neueProduktdaten;
@@ -155,14 +155,14 @@ public class ProduktController implements Serializable {
 		produktService.addProdukt(neuesProdukt, null);
 		neuesProdukt = null;
 
-		return "";
+		return "/index";
 
 	}
 
 	@Transactional
 	public String updateProdukt() {
 
-		Produkt produkt = (Produkt) flash.get(FLASH_KEY_EDIT);
+		Produkt produkt = viewProdukt;
 
 		if (produkt == null) {
 			return "";
@@ -170,7 +170,7 @@ public class ProduktController implements Serializable {
 
 		produktService.updateProdukt(produkt, null);
 
-		return "/index";
+		return "viewProdukt?produktId=" + produkt.getProduktId();
 	}
 
 	@Transactional
@@ -185,8 +185,8 @@ public class ProduktController implements Serializable {
 			produktId = Integer.valueOf(produktIdStr);
 			viewProdukt = produktService.findProduktByID(produktId,
 					ProduktService.FetchType.NUR_PRODUKTE, null);
-			request.setAttribute("anzahlProduktdaten", viewProdukt.getProduktdaten()
-					.size());
+			request.setAttribute("anzahlProduktdaten", viewProdukt
+					.getProduktdaten().size());
 		}
 		catch (NumberFormatException e) {
 			// TODO: Fehlermeldung implementieren
@@ -196,6 +196,16 @@ public class ProduktController implements Serializable {
 	public void ladeProduktdaten(Produktdaten pdaten) {
 		flash.put(FLASH_KEY_EDIT_PRODUKTDATEN, pdaten);
 		this.editProduktdaten = pdaten;
+	}
+
+	public String addEmptyProduktdaten() {
+		if (viewProdukt == null) {
+			return "";
+		}
+
+		viewProdukt.addProduktdaten(new Produktdaten());
+
+		return "";
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////

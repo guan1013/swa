@@ -7,14 +7,9 @@
 
 		<f:facet name="header">#{msg['index.angebot']}</f:facet>
 		
-		<rich:column id="id">
-			#{produkt.produktId}
-		</rich:column>
-		
 		<rich:column id="beschreibung">
 			<h:link id="produktlink" outcome="/produktverwaltung/viewProdukt?produktId=#{produkt.produktId}"
 				value="#{produkt.beschreibung}">
-				<f:param id="idParam" param="produktId" value="#{produkt.produktId}" />
 			</h:link>
 		</rich:column>
 
