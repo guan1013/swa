@@ -105,9 +105,9 @@ public class KundeService implements Serializable {
 		// Wenn Kunde mit dieser E-Mail Adresse noch nicht existiert, lege ihn
 		// an und schicke eine Bestätigungsnachricht an diesen.
 
-		final List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
-				pKD.getEmail(), pLocale);
-		if (kd.isEmpty()) {
+		final Kunde kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
+				pLocale);
+		if (kd == null) {
 
 			salting(pKD);
 			em.persist(pKD);
@@ -178,8 +178,7 @@ public class KundeService implements Serializable {
 			pic = new File(pBs, filename, pMT);
 			pKD.setPic(pic);
 			em.persist(pic);
-		}
-		else {
+		} else {
 			pic.set(pBs, filename, pMT);
 			em.merge(pic);
 		}
@@ -194,7 +193,8 @@ public class KundeService implements Serializable {
 		/**
 		 * Alle gefunden Kunden speichern.
 		 */
-		final List<Kunde> kd = em.createNamedQuery(Kunde.ALL_KUNDEN).getResultList();
+		final List<Kunde> kd = em.createNamedQuery(Kunde.ALL_KUNDEN)
+				.getResultList();
 
 		return kd;
 	}
@@ -250,9 +250,7 @@ public class KundeService implements Serializable {
 	 * @param pMail
 	 * @return gefundenen Kunden als Liste
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Kunde> findKundeByMail(FetchType pFe, String pMail,
-			Locale pLocale) {
+	public Kunde findKundeByMail(FetchType pFe, String pMail, Locale pLocale) {
 		if (pMail == null) {
 			return null;
 		}
@@ -266,7 +264,7 @@ public class KundeService implements Serializable {
 		/**
 		 * Initalisiere Liste von Kunden kd
 		 */
-		List<Kunde> kd;
+		Kunde kd = null;
 
 		switch (pFe) {
 
@@ -274,8 +272,8 @@ public class KundeService implements Serializable {
 			/**
 			 * Gefundenen Kunde in eine Liste speichern
 			 */
-			kd = em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
-					.setParameter("mail", pMail).getResultList();
+			kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
+					.setParameter("mail", pMail).getSingleResult();
 			break;
 
 		case WITH_BESTELLUNGEN:
@@ -283,16 +281,17 @@ public class KundeService implements Serializable {
 			 * Gefundenen Kunde in eine Liste speichern
 			 */
 
-			kd = em.createNamedQuery(Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG)
-					.setParameter("mail", pMail).getResultList();
+			kd = (Kunde) em
+					.createNamedQuery(Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG)
+					.setParameter("mail", pMail).getSingleResult();
 			break;
 
 		default:
 			/**
 			 * Gefundenen Kunde in eine Liste speichern
 			 */
-			kd = em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
-					.setParameter("mail", pMail).getResultList();
+			kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
+					.setParameter("mail", pMail).getSingleResult();
 			break;
 
 		}
@@ -360,7 +359,8 @@ public class KundeService implements Serializable {
 		/**
 		 * Alle gefundenen Adressen speichern
 		 */
-		final List<Adresse> ad = em.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
+		final List<Adresse> ad = em
+				.createNamedQuery(Adresse.ADRESSE_BY_KUNDEID)
 				.setParameter("id", id).getResultList();
 
 		return ad;
@@ -393,9 +393,9 @@ public class KundeService implements Serializable {
 
 		// Prüfen ob zu ändernde E-Mail Adresse schon vorhanden ist
 		if (!pKD.getEmail().equals(existingKunde.getEmail())) {
-			final List<Kunde> kd = findKundeByMail(FetchType.JUST_KUNDE,
+			final Kunde kd = findKundeByMail(FetchType.JUST_KUNDE,
 					pKD.getEmail(), pLocale);
-			if (!kd.isEmpty()) {
+			if (kd != null) {
 				throw new EmailExistsException(pKD.getEmail());
 			}
 		}
@@ -430,7 +430,8 @@ public class KundeService implements Serializable {
 		em.detach(pAD);
 
 		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
-		final Adresse existingAdresse = findAdresseById(pAD.getAdresseID(), pLocale);
+		final Adresse existingAdresse = findAdresseById(pAD.getAdresseID(),
+				pLocale);
 		if (existingAdresse == null) {
 			throw new ConcurrentDeletedException(pAD.getAdresseID());
 		}
@@ -451,8 +452,7 @@ public class KundeService implements Serializable {
 		Kunde kd;
 		try {
 			kd = findKundeById(pKID, pLocale);
-		}
-		catch (InvalidKundeIdException e) {
+		} catch (InvalidKundeIdException e) {
 			return;
 		}
 		if (kd == null) {
@@ -559,7 +559,8 @@ public class KundeService implements Serializable {
 
 		if (!violations.isEmpty()) {
 			final StringBuffer buffer = new StringBuffer();
-			final Iterator<ConstraintViolation<Adresse>> it = violations.iterator();
+			final Iterator<ConstraintViolation<Adresse>> it = violations
+					.iterator();
 			while (it.hasNext()) {
 				buffer.append(it.next().getMessage());
 				buffer.append('\n');

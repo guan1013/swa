@@ -15,6 +15,7 @@ import static java.net.HttpURLConnection.HTTP_CREATED;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_NO_CONTENT;
 import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.hamcrest.CoreMatchers.endsWith;
@@ -84,7 +85,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final String PIC = "pic.jpg";
 	private static final String PIC_UPLOAD = "src/test/resources/rest/" + PIC;
 	private static final String PIC_DOWNLOAD = "target/" + PIC;
-	private static final CopyOption[] COPY_OPTIONS = {REPLACE_EXISTING};
+	private static final CopyOption[] COPY_OPTIONS = { REPLACE_EXISTING };
 
 	private static final String PIC_INVALID_MIMETYPE = "pic.bmp";
 	private static final String PIC_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/"
@@ -253,6 +254,21 @@ public class KundeResourceTest extends AbstractResourceTest {
 	}
 
 	@Test
+	public void testeFindExistingKundeByIdUnAuth() {
+		LOGGER.finer("BEGINN");
+		// When
+		final Response response = given().header(ACCEPT, APPLICATION_JSON)
+				.pathParameter(KUNDEN_ID_PATH_PARAM, ID_EXIST)
+				.get(KUNDEN_ID_PATH);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HTTP_UNAUTHORIZED));
+
+		LOGGER.finer("ENDE");
+
+	}
+
+	@Test
 	public void testeFindNonExistingKundeById() {
 		LOGGER.finer("BEGINN");
 
@@ -314,8 +330,7 @@ public class KundeResourceTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if (JSON_KEY_EMAIL.equals(k)) {
 				job.add(JSON_KEY_EMAIL, MAIL_UPDATE);
-			} 
-			else {
+			} else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
