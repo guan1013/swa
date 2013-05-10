@@ -65,7 +65,7 @@
 
 		</h:panelGrid>
 
-		<h:panelGrid columns="1" border="0">
+		<h:panelGrid columns="1" border="0" rendered="#{rich:isUserInRole('admin')}">
 
 			<h:link id="updateProduktLink"
 				outcome="/produktverwaltung/updateProdukt.jsf"

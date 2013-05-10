@@ -1,7 +1,7 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core">
-	
+
 	<rich:toolbar header="40px">
 		<rich:toolbarGroup id="toolbarGroupLanguage"
 			location="right">
@@ -17,10 +17,40 @@
 				</rich:dropDownMenu>
 			</h:form>
 		</rich:toolbarGroup>
+		<rich:toolbarGroup id="toolbarWelcome" location="right" rendered="#{auth.loggedIn}">
+			<h:outputFormat id="welcomeMessage" value="#{msg['welcome.message']}">
+				<f:param value="#{auth.user.vorname}" />
+				<f:param value="#{auth.user.nachname}" />
+			</h:outputFormat>
+		</rich:toolbarGroup>
+		<rich:toolbarGroup id="toolbarLogout" location="right" rendered="#{auth.loggedIn}">
+			<h:form id="logoutFormToolbar">
+
+				<h:commandLink id="logoutLink" action="#{auth.logout}">
+					<h:outputFormat id="logoutLinkText" value="#{msg['login.logout']}">
+						<f:param value="#{auth.user.vorname}" />
+						<f:param value="#{auth.user.nachname}" />
+					</h:outputFormat>
+				</h:commandLink>
+			</h:form>
+		</rich:toolbarGroup>
 	</rich:toolbar>
 	<p>
 		<h:graphicImage id="hsLogoImage" name="logo.png"
 			library="images" alt="#{msg['header.logo.alt']}" />
 	</p>
-	
+	<h:form id="loginForm" rendered="#{not auth.loggedIn}">
+		<h:panelGrid id="loginGrid" columns="3">
+			<h:outputLabel id="usernameLabel" value="#{msg['login.kundeId']}"
+				for="username" />
+			<h:inputText id="username" value="#{auth.username}" />
+			<f:verbatim />
+			<h:outputLabel id="passwordLabel" value="#{msg['login.password']}"
+				for="password" />
+			<h:inputSecret id="password" value="#{auth.password}" />
+			<h:commandButton id="loginButton" action="#{auth.login}"
+				value="#{msg['login.submit']}" />
+		</h:panelGrid>
+	</h:form>
+
 </ui:composition>

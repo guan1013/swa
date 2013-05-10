@@ -31,7 +31,7 @@
 		<!-- LINK: PRODUKT.UPDATE -->
 		<p id="updateProdukt">
 			<h:outputLink id="menuUpdateProdukt"
-				value="#{request.contextPath}/produktverwaltung/updateProdukt.jsf">
+				value="#{request.contextPath}/produktverwaltung/updateProdukt.jsf" rendered="#{rich:isUserInRole('admin')}">
 				#{msg['nav.produkt.update']}
 			</h:outputLink>
 		</p>
