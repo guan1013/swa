@@ -1,6 +1,26 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html">
-	<p> <h:graphicImage id="hsLogoImage" name="logo.png" library="images" 
-			alt="#{msg['header.logo.alt']}"/>
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core">
+	
+	<rich:toolbar header="40px">
+		<rich:toolbarGroup id="toolbarGroupLanguage"
+			location="right">
+			<h:form id="spracheForm">
+				<rich:dropDownMenu id="dropDownLanguage">
+					<f:facet name="label">
+						#{msg['header.sprache']}
+					</f:facet>
+					<rich:menuItem id="menuItemEn" label="#{msg['header.sprache.en']}"
+						actionListener="#{sprache.change('en')}" />
+					<rich:menuItem id="menuItemDe" label="#{msg['header.sprache.de']}"
+						actionListener="#{sprache.change('de')}" />
+				</rich:dropDownMenu>
+			</h:form>
+		</rich:toolbarGroup>
+	</rich:toolbar>
+	<p>
+		<h:graphicImage id="hsLogoImage" name="logo.png"
+			library="images" alt="#{msg['header.logo.alt']}" />
 	</p>
+	
 </ui:composition>

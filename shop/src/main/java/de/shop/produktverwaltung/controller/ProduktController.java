@@ -4,10 +4,15 @@ import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
+import javax.enterprise.inject.Produces;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +24,7 @@ import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.produktverwaltung.service.util.SuchFilter;
+import de.shop.util.Client;
 import de.shop.util.Log;
 import de.shop.util.Transactional;
 
@@ -68,6 +74,8 @@ public class ProduktController implements Serializable {
 	private SuchFilter suchFilter;
 
 	private Produktdaten editProduktdaten;
+
+	private boolean geaendert = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
@@ -162,19 +170,24 @@ public class ProduktController implements Serializable {
 	@Transactional
 	public String updateProdukt() {
 
+		if (!geaendert)
+			return "/index";
+
 		Produkt produkt = viewProdukt;
 
 		if (produkt == null) {
 			return "";
 		}
 
-		produktService.updateProdukt(produkt, null);
+		produktService.updateProdukt(produkt, new Locale("de"));
 
 		return "viewProdukt?produktId=" + produkt.getProduktId();
 	}
 
 	@Transactional
 	public void ladeProdukt() {
+
+		geaendert = false;
 
 		// Query-Parameter auslesen
 		String produktIdStr = request.getParameter("produktId");
@@ -206,6 +219,19 @@ public class ProduktController implements Serializable {
 		viewProdukt.addProduktdaten(new Produktdaten());
 
 		return "";
+	}
+
+	public void geaendert(ValueChangeEvent event) {
+
+		if (geaendert)
+			return;
+		if (event.getOldValue() == null) {
+			if (event.getNewValue() != null)
+				geaendert = true;
+			return;
+		}
+		if (!event.getOldValue().equals(event.getNewValue()))
+			geaendert = true;
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -245,5 +271,4 @@ public class ProduktController implements Serializable {
 	public Produkt getViewProdukt() {
 		return viewProdukt;
 	}
-
 }

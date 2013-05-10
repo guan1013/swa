@@ -24,18 +24,23 @@
 
 				<h:panelGrid columns="2">
 
-					<h:outputLabel value="Hersteller" for="inputHersteller" />
+					<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
+						for="inputHersteller" />
 					<h:inputText id="inputHersteller"
 						value="#{pc.neuesProdukt.hersteller}" />
-					<h:outputLabel value="Beschreibung" for="inputBeschreibung" />
+					<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
+						for="inputBeschreibung" />
 					<h:inputTextarea id="inputBeschreibung"
 						value="#{pc.neuesProdukt.beschreibung}" />
-					<h:outputLabel value="Farbe" for="inputFarbe" />
+					<h:outputLabel value="#{msgPv['produkt.label.farbe']}"
+						for="inputFarbe" />
 					<h:inputText id="inputFarbe" value="#{pc.neueProduktdaten.farbe}" />
-					<h:outputLabel value="Groesse" for="inputGroesse" />
+					<h:outputLabel value="#{msgPv['produkt.label.groesse']}"
+						for="inputGroesse" />
 					<h:inputText id="inputGroesse"
 						value="#{pc.neueProduktdaten.groesse}" />
-					<h:outputLabel value="Preis" for="inputPreis" />
+					<h:outputLabel value="#{msgPv['produkt.label.preis']}"
+						for="inputPreis" />
 					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}">
 						<f:convertNumber type="currency" currencyCode="EUR"
 							maxFractionDigits="2" />
