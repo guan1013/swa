@@ -22,29 +22,51 @@
 			<rich:panel id="createProduktPanel"
 				header="#{msgPv['produkt.create.titel']}">
 
-				<h:panelGrid columns="2">
+				<h:panelGrid columns="3">
 
+					<!-- HERSTELLER -->
 					<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
 						for="inputHersteller" />
 					<h:inputText id="inputHersteller"
-						value="#{pc.neuesProdukt.hersteller}" />
+						value="#{pc.neuesProdukt.hersteller}">
+						<rich:validator />
+					</h:inputText>
+					<rich:message id="messageHersteller" for="inputHersteller" />
+
+					<!-- BESCHREIBUNG -->
 					<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
 						for="inputBeschreibung" />
 					<h:inputTextarea id="inputBeschreibung"
-						value="#{pc.neuesProdukt.beschreibung}" />
+						value="#{pc.neuesProdukt.beschreibung}">
+						<rich:validator />
+					</h:inputTextarea>
+					<rich:message id="messageBeschreibung" for="inputBeschreibung" />
+
+					<!-- FARBE -->
 					<h:outputLabel value="#{msgPv['produkt.label.farbe']}"
 						for="inputFarbe" />
-					<h:inputText id="inputFarbe" value="#{pc.neueProduktdaten.farbe}" />
+					<h:inputText id="inputFarbe" value="#{pc.neueProduktdaten.farbe}">
+						<rich:validator />
+					</h:inputText>
+					<rich:message id="messageFarbe" for="inputFarbe" />
+
+					<!-- GROESSE -->
 					<h:outputLabel value="#{msgPv['produkt.label.groesse']}"
 						for="inputGroesse" />
 					<h:inputText id="inputGroesse"
 						value="#{pc.neueProduktdaten.groesse}" />
+					<rich:message id="messageGroesse" for="inputGroesse" />
+
+
+					<!-- PREIS -->
 					<h:outputLabel value="#{msgPv['produkt.label.preis']}"
 						for="inputPreis" />
 					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}">
 						<f:convertNumber type="currency" currencyCode="EUR"
 							maxFractionDigits="2" />
+						<rich:validator />
 					</h:inputText>
+					<rich:message id="messagePreis" for="inputPreis" />
 
 				</h:panelGrid>
 

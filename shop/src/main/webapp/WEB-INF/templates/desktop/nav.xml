@@ -20,6 +20,12 @@
 			</h:outputLink>
 		</p>
 
+
+
+	</rich:panel>
+	<p />
+	<rich:panel header="#{msg['nav.admin']}" border="1"
+		rendered="#{rich:isUserInRole('admin')}">
 		<!-- LINK: PRODUKT.ERSTELLEN -->
 		<p id="createProdukt">
 			<h:outputLink id="menuCreateProdukt"
@@ -31,10 +37,9 @@
 		<!-- LINK: PRODUKT.UPDATE -->
 		<p id="updateProdukt">
 			<h:outputLink id="menuUpdateProdukt"
-				value="#{request.contextPath}/produktverwaltung/updateProdukt.jsf" rendered="#{rich:isUserInRole('admin')}">
+				value="#{request.contextPath}/produktverwaltung/updateProdukt.jsf">
 				#{msg['nav.produkt.update']}
 			</h:outputLink>
 		</p>
-
 	</rich:panel>
 </ui:composition>

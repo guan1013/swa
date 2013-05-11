@@ -3,6 +3,27 @@
 	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core">
 
 	<rich:toolbar header="40px">
+
+		<rich:toolbarGroup id="toolbarGroupLogin" location="right">
+			<h:form id="loginForm" rendered="#{not auth.loggedIn}">
+				<h:panelGrid id="loginGrid" columns="3">
+					<h:inputText id="username" value="#{auth.username}">
+						<rich:placeholder id="idInputPlaceholder" value="#{msg['login.kundeId']}" />
+					</h:inputText>
+					<h:inputSecret id="password" value="#{auth.password}">
+						<rich:placeholder id="passwordInputPlaceholder" value="#{msg['login.password']}" />
+					</h:inputSecret>
+					<h:commandButton id="loginButton" action="#{auth.login}"
+						value="#{msg['login.submit']}" />
+				</h:panelGrid>
+				<!-- <h:form id="loginForm" rendered="#{not auth.loggedIn}"> <h:panelGrid 
+					id="loginGrid" columns="3"> <h:inputText id="username" value="#{auth.username}" 
+					/> <h:inputSecret id="password" value="#{auth.password}" /> <h:commandButton 
+					id="loginButton" action="#{auth.login}" value="#{msg['login.submit']}" /> 
+					</h:panelGrid> </h:form> -->
+			</h:form>
+		</rich:toolbarGroup>
+
 		<rich:toolbarGroup id="toolbarGroupLanguage"
 			location="right">
 			<h:form id="spracheForm">
@@ -17,13 +38,15 @@
 				</rich:dropDownMenu>
 			</h:form>
 		</rich:toolbarGroup>
-		<rich:toolbarGroup id="toolbarWelcome" location="right" rendered="#{auth.loggedIn}">
+		<rich:toolbarGroup id="toolbarWelcome" location="right"
+			rendered="#{auth.loggedIn}">
 			<h:outputFormat id="welcomeMessage" value="#{msg['welcome.message']}">
 				<f:param value="#{auth.user.vorname}" />
 				<f:param value="#{auth.user.nachname}" />
 			</h:outputFormat>
 		</rich:toolbarGroup>
-		<rich:toolbarGroup id="toolbarLogout" location="right" rendered="#{auth.loggedIn}">
+		<rich:toolbarGroup id="toolbarLogout" location="right"
+			rendered="#{auth.loggedIn}">
 			<h:form id="logoutFormToolbar">
 
 				<h:commandLink id="logoutLink" action="#{auth.logout}">
@@ -36,21 +59,9 @@
 		</rich:toolbarGroup>
 	</rich:toolbar>
 	<p>
-		<h:graphicImage id="hsLogoImage" name="logo.png"
+		<h:graphicImage id="hsLogoImage" name="logo3.png"
 			library="images" alt="#{msg['header.logo.alt']}" />
 	</p>
-	<h:form id="loginForm" rendered="#{not auth.loggedIn}">
-		<h:panelGrid id="loginGrid" columns="3">
-			<h:outputLabel id="usernameLabel" value="#{msg['login.kundeId']}"
-				for="username" />
-			<h:inputText id="username" value="#{auth.username}" />
-			<f:verbatim />
-			<h:outputLabel id="passwordLabel" value="#{msg['login.password']}"
-				for="password" />
-			<h:inputSecret id="password" value="#{auth.password}" />
-			<h:commandButton id="loginButton" action="#{auth.login}"
-				value="#{msg['login.submit']}" />
-		</h:panelGrid>
-	</h:form>
+
 
 </ui:composition>

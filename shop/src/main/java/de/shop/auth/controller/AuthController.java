@@ -88,8 +88,13 @@ public class AuthController implements Serializable {
 		try
 		{
 			request.logout();
+			
 		} catch(ServletException e)
 		{
+			user = null;
+			username = null;
+			password = null;
+			session.invalidate();
 			reset();
 			return null;
 		}
