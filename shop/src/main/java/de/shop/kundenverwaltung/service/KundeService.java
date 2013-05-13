@@ -299,6 +299,17 @@ public class KundeService implements Serializable {
 		return kd;
 	}
 
+	public Kunde findKundeByUsername(String pUser) {
+		if (pUser == null) {
+			return null;
+		}
+
+		Kunde kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
+				.setParameter("mail", pUser).getSingleResult();
+
+		return kd;
+	}
+
 	/**
 	 * Finde Kunden anhand der Nachnamen
 	 * 

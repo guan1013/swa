@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.util.Log;
+import de.shop.util.Transactional;
 
 @Named("auth")
 @SessionScoped
@@ -68,6 +69,26 @@ public class AuthController implements Serializable {
 
 		String path = facesCtx.getViewRoot().getViewId();
 		return path;
+	}
+	
+	/**
+	 * Nachtraegliche Einloggen eines registrierten Kunden mit Benutzername und Password.
+	 */
+	@Transactional
+	public void preserveLogin() {
+		if (username != null && user != null) {
+			return;
+		}
+		
+		// Benutzername beim Login ermitteln
+		username = request.getRemoteUser();
+
+		user = ks.findKundeByUsername(username);
+		if (user == null) {
+			// Darf nicht passieren, wenn unmittelbar zuvor das Login erfolgreich war
+			logout();
+			throw new InternalError("Kein Kunde mit dem Loginnamen \"" + username + "\" gefunden");
+		}
 	}
 
 	public boolean isLoggedIn() {
