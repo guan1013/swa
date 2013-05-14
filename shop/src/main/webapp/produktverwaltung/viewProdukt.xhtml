@@ -25,7 +25,12 @@
 
 			<rich:panel header="#{msgPv['produkt.label.hersteller']}">#{pc.viewProdukt.hersteller}</rich:panel>
 
-			<rich:panel header="#{msgPv['produkt.label.seit']}">#{pc.viewProdukt.erstellt}</rich:panel>
+			<rich:panel header="#{msgPv['produkt.label.seit']}">
+				<h:outputText value="#{pc.viewProdukt.erstellt}">
+					<f:convertDateTime type="date" dateStyle="long"
+						timezone="Europe/Berlin" />
+				</h:outputText>
+			</rich:panel>
 
 		</h:panelGrid>
 
@@ -59,13 +64,18 @@
 					<rich:column id="pDataAnzahl">
 						<f:facet name="header">#{msgPv['produkt.label.anzahl']}</f:facet>#{pdata.anzahlVerfuegbar}</rich:column>
 					<rich:column id="pDataPreis">
-						<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{pdata.preis}</rich:column>
+						<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>
+						<h:outputText id="outputTextPreis" value="#{pdata.preis}">
+							<f:convertNumber type="currency" currencyCode="EUR" />
+						</h:outputText>
+					</rich:column>
 				</rich:dataTable>
 			</rich:panel>
 
 		</h:panelGrid>
 
-		<h:panelGrid columns="1" border="0" rendered="#{rich:isUserInRole('admin')}">
+		<h:panelGrid columns="1" border="0"
+			rendered="#{rich:isUserInRole('admin')}">
 
 			<h:link id="updateProduktLink"
 				outcome="/produktverwaltung/updateProdukt.jsf"

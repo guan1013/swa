@@ -56,14 +56,16 @@
 							<!-- BESCHREIBUNG -->
 							<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
 								id="beschreibungInputLabel" for="beschreibungInput" />
-							<h:inputText value="#{pc.suchFilter.beschreibung}"
-								id="beschreibungInput" />
+							<rich:autocomplete id="beschreibungInput"
+								value="#{pc.suchFilter.beschreibung}" mode="ajax" minChars="1"
+								autocompleteMethod="#{pc.findeBeschreibungByPrefix}" />
 
 							<!-- HERSTELLER -->
 							<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
 								id="herstellerInputLabel" for="herstellerInput" />
-							<h:inputText value="#{pc.suchFilter.hersteller}"
-								id="herstellerInput" />
+							<rich:autocomplete id="herstellerInput"
+								value="#{pc.suchFilter.hersteller}" mode="ajax" minChars="1"
+								autocompleteMethod="#{pc.findeHerstellerByPrefix}" />
 
 							<!-- FARBE -->
 							<h:outputLabel value="#{msgPv['produkt.label.farbe']}"
@@ -73,7 +75,9 @@
 							<!-- GROESSE -->
 							<h:outputLabel value="#{msgPv['produkt.label.groesse']}"
 								id="groesseInputLabel" for="groesseInput" />
-							<h:inputText value="#{pc.suchFilter.groesse}" id="groesseInput" />
+							<rich:autocomplete id="groesseInput"
+								value="#{pc.suchFilter.groesse}" mode="ajax" minChars="1"
+								autocompleteMethod="#{pc.findeGroessenByPrefix}" />
 
 							<!-- PREIS MAX -->
 							<h:outputLabel value="#{msgPv['produkt.search.label.preis.max']}"
@@ -83,13 +87,19 @@
 
 							<f:verbatim />
 
-							<!-- SUBMIT BUTTON -->
-							<a4j:commandButton id="filtersucheButton"
-								action="#{pc.sucheByFilter}"
-								value="#{msgPv['produkt.search.submit']}"
-								render="produktSucheErgebnis" />
+
 
 						</h:panelGrid>
+
+						<!-- SUBMIT BUTTON -->
+						<a4j:commandButton id="filtersucheButton"
+							action="#{pc.sucheByFilter}"
+							value="#{msgPv['produkt.search.submit']}"
+							render="produktSucheErgebnis" />
+
+						<!-- RESET BUTTON -->
+						<h:commandButton value="#{msgPv['produkt.search.reset']}"
+							type="reset" />
 
 					</rich:panel>
 
@@ -109,7 +119,7 @@
 					<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
 						value="#{produkte}" rowClasses="odd-row, even-row"
 						styleClass="tabelleMitZebrastil">
-						
+
 						<!-- PRODUKT ID NICHT ANZEIGEN
 						<rich:column>
 							<f:facet name="header">#{msgPv['produkt.label.id']}</f:facet>#{produktdaten.produkt.produktId}
@@ -121,7 +131,7 @@
 						</rich:column>
 						
 						 -->
-						
+
 
 						<!-- PRODUKT BESCHREIBUNG -->
 						<rich:column>
@@ -148,7 +158,10 @@
 
 						<!-- PREIS -->
 						<rich:column>
-							<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{produktdaten.preis}
+							<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>
+							<h:outputText id="outputTextPreis" value="#{produktdaten.preis}">
+								<f:convertNumber type="currency" currencyCode="EUR" />
+							</h:outputText>
 						</rich:column>
 
 						<!-- AKTIONEN -->

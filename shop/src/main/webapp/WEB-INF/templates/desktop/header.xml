@@ -4,6 +4,7 @@
 
 	<rich:toolbar header="40px">
 
+		<!-- LOGIN FORMULAR -->
 		<rich:toolbarGroup id="toolbarGroupLogin" location="right">
 			<h:form id="loginForm" rendered="#{not auth.loggedIn}">
 				<h:panelGrid id="loginGrid" columns="3">
@@ -11,19 +12,16 @@
 						<rich:placeholder id="idInputPlaceholder" value="#{msg['login.kundeId']}" />
 					</h:inputText>
 					<h:inputSecret id="password" value="#{auth.password}">
-						<rich:placeholder id="passwordInputPlaceholder" value="#{msg['login.password']}" />
+						<rich:placeholder id="passwordInputPlaceholder"
+							value="#{msg['login.password']}" />
 					</h:inputSecret>
 					<h:commandButton id="loginButton" action="#{auth.login}"
 						value="#{msg['login.submit']}" />
 				</h:panelGrid>
-				<!-- <h:form id="loginForm" rendered="#{not auth.loggedIn}"> <h:panelGrid 
-					id="loginGrid" columns="3"> <h:inputText id="username" value="#{auth.username}" 
-					/> <h:inputSecret id="password" value="#{auth.password}" /> <h:commandButton 
-					id="loginButton" action="#{auth.login}" value="#{msg['login.submit']}" /> 
-					</h:panelGrid> </h:form> -->
 			</h:form>
 		</rich:toolbarGroup>
 
+		<!-- SPRACHE ÄNDERN -->
 		<rich:toolbarGroup id="toolbarGroupLanguage"
 			location="right">
 			<h:form id="spracheForm">
@@ -38,6 +36,8 @@
 				</rich:dropDownMenu>
 			</h:form>
 		</rich:toolbarGroup>
+
+		<!-- WELCOME MESSAGE: 'HALLO XXX' -->
 		<rich:toolbarGroup id="toolbarWelcome" location="right"
 			rendered="#{auth.loggedIn}">
 			<h:outputFormat id="welcomeMessage" value="#{msg['welcome.message']}">
@@ -45,6 +45,8 @@
 				<f:param value="#{auth.user.nachname}" />
 			</h:outputFormat>
 		</rich:toolbarGroup>
+
+		<!-- LOGOUT LINK -->
 		<rich:toolbarGroup id="toolbarLogout" location="right"
 			rendered="#{auth.loggedIn}">
 			<h:form id="logoutFormToolbar">
@@ -59,8 +61,10 @@
 		</rich:toolbarGroup>
 	</rich:toolbar>
 	<p>
-		<h:graphicImage id="hsLogoImage" name="logo3.png"
-			library="images" alt="#{msg['header.logo.alt']}" />
+		<h:outputLink value="#{request.contextPath}/index.jsf">
+			<h:graphicImage id="hsLogoImage" name="logo3.png"
+				library="images" alt="#{msg['header.logo.alt']}" />
+		</h:outputLink>
 	</p>
 
 

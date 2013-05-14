@@ -61,17 +61,33 @@
 					<!-- PREIS -->
 					<h:outputLabel value="#{msgPv['produkt.label.preis']}"
 						for="inputPreis" />
-					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}">
+					<h:inputText id="inputPreis" value="#{pc.neueProduktdaten.preis}"
+						converterMessage="#{msgPv['error.preis']}" size="10">
 						<f:convertNumber type="currency" currencyCode="EUR"
 							maxFractionDigits="2" />
 						<rich:validator />
 					</h:inputText>
 					<rich:message id="messagePreis" for="inputPreis" />
 
+					<!-- ANZAHL -->
+					<h:outputLabel value="#{msgPv['produkt.label.anzahl']}"
+						for="inputAnzahl" />
+					<rich:inputNumberSpinner id="inputAnzahl"
+						value="#{pc.neueProduktdaten.anzahlVerfuegbar}" minValue="0"
+						maxValue="99" inputSize="2">
+						<rich:validator />
+					</rich:inputNumberSpinner>
+					<rich:message id="messageAnzahl" for="inputAnzahl" />
+					
+
 				</h:panelGrid>
 
 				<h:commandButton action="#{pc.createProdukt}"
 					value="#{msgPv['produkt.create.submit']}" />
+
+				<!-- RESET BUTTON -->
+				<h:commandButton value="#{msgPv['produkt.create.reset']}"
+					type="reset" />
 
 			</rich:panel>
 

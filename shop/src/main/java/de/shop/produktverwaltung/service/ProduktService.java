@@ -57,6 +57,57 @@ public class ProduktService implements Serializable {
 	// /////////////////////////////////////////////////////////////////////
 	// METHODS
 
+	@SuppressWarnings("unchecked")
+	public List<String> findGroessenByPrefix(String prefix) {
+
+		// Log
+		LOGGER.log(FINER, "BEGINN: Suche Groessen by Prefix");
+
+		final List<String> results = entityManager
+				.createNamedQuery(Produkt.PRODUKT_LISTE_GROESSEN)
+				.setParameter("prefix", prefix).getResultList();
+
+		// Log
+		LOGGER.log(FINER, "ENDE: Suche Groessen by Prefix");
+
+		return results;
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> findHerstellerPrefix(String prefix) {
+
+		// Log
+		LOGGER.log(FINER, "BEGINN: Suche Hersteller by Prefix");
+
+		final List<String> results = entityManager
+				.createNamedQuery(Produkt.PRODUKT_LISTE_HERSTELLER)
+				.setParameter("prefix", prefix).getResultList();
+
+		// Log
+		LOGGER.log(FINER, "ENDE: Suche Hersteller by Prefix");
+
+		return results;
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<String> findBeschreibungPrefix(String prefix) {
+
+		// Log
+		LOGGER.log(FINER, "BEGINN: Suche Beschreibung by Prefix");
+
+		final List<String> results = entityManager
+				.createNamedQuery(Produkt.PRODUKT_LISTE_PRODUKTE)
+				.setParameter("prefix", prefix).getResultList();
+
+		// Log
+		LOGGER.log(FINER, "ENDE: Suche Beschreibung by Prefix");
+
+		return results;
+
+	}
+
 	public Produkt addProdukt(Produkt neuesProdukt, Locale locale) {
 
 		// Log

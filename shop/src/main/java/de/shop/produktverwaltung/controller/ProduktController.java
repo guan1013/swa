@@ -234,6 +234,33 @@ public class ProduktController implements Serializable {
 			geaendert = true;
 	}
 
+	@Transactional
+	public List<String> findeGroessenByPrefix(String prefix) {
+
+		List<String> result = produktService.findGroessenByPrefix(prefix);
+
+		return result;
+
+	}
+
+	@Transactional
+	public List<String> findeHerstellerByPrefix(String prefix) {
+
+		List<String> result = produktService.findHerstellerPrefix(prefix);
+
+		return result;
+
+	}
+	
+	@Transactional
+	public List<String> findeBeschreibungByPrefix(String prefix) {
+
+		List<String> result = produktService.findBeschreibungPrefix(prefix);
+
+		return result;
+
+	}
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PRIVATE METHODS
 

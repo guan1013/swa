@@ -51,12 +51,33 @@ import de.shop.util.IdGroup;
 @Entity
 @Table(name = "Produkt")
 @NamedQueries({
-		@NamedQuery(name = Produkt.PRODUKT_KOMPLETT, query = "FROM Produkt p"),
-		@NamedQuery(name = Produkt.PRODUKT_ID_FETCH, query = "SELECT DISTINCT p FROM Produkt p LEFT JOIN p.produktdaten WHERE p.produktId = :id"),
-		@NamedQuery(name = Produkt.PRODUKT_MIT_PRODUKTDATEN, query = "SELECT distinct p FROM Produkt p JOIN p.produktdaten"),
-		@NamedQuery(name = Produkt.PRODUKT_BY_HERSTELLER, query = "FROM Produkt p WHERE p.hersteller = :hersteller"),
-		@NamedQuery(name = Produkt.PRODUKT_BY_LIKE_BESCHREIBUNG, query = "SELECT produkt FROM Produkt as produkt "
-				+ "WHERE beschreibung LIKE CONCAT('%',:beschreibung,'%')") })
+		@NamedQuery(
+				name = Produkt.PRODUKT_KOMPLETT, 
+				query = "FROM Produkt p"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_ID_FETCH, 
+				query = "SELECT DISTINCT p FROM Produkt p LEFT JOIN p.produktdaten WHERE p.produktId = :id"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_MIT_PRODUKTDATEN, 
+				query = "SELECT distinct p FROM Produkt p JOIN p.produktdaten"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_BY_HERSTELLER, 
+				query = "FROM Produkt p WHERE p.hersteller = :hersteller"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_BY_LIKE_BESCHREIBUNG, 
+				query = "SELECT produkt FROM Produkt as produkt WHERE beschreibung LIKE CONCAT('%',:beschreibung,'%')"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_LISTE_GROESSEN, 
+				query = "SELECT DISTINCT p.groesse FROM Produktdaten p WHERE UPPER(p.groesse) "
+						+ "LIKE UPPER(CONCAT(:prefix,'%')) ORDER BY p.groesse ASC"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_LISTE_HERSTELLER,
+				query = "SELECT DISTINCT p.hersteller FROM Produkt p WHERE UPPER(p.hersteller) "
+						+ "LIKE UPPER(CONCAT(:prefix,'%')) ORDER BY p.hersteller ASC"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_LISTE_PRODUKTE, 
+				query = "SELECT DISTINCT p.beschreibung FROM Produkt p WHERE UPPER(p.beschreibung) "
+						+ "LIKE UPPER(CONCAT(:prefix,'%')) ORDER BY p.beschreibung ASC")})
 // @formatter:on
 public class Produkt implements Serializable {
 
@@ -96,6 +117,15 @@ public class Produkt implements Serializable {
 
 	public static final String PRODUKT_KOMPLETT = PREFIX + "SucheAlleProdukte";
 
+	public static final String PRODUKT_LISTE_GROESSEN = PREFIX
+			+ "listeAlleGroessen";
+	
+	public static final String PRODUKT_LISTE_HERSTELLER = PREFIX
+			+ "listeAlleHersteller";
+	
+	public static final String PRODUKT_LISTE_PRODUKTE = PREFIX
+			+ "listeAlleProdukte";
+
 	/**
 	 * Die ID des Produktes. Wird von Hibernate automatisch generiert
 	 */
@@ -111,6 +141,7 @@ public class Produkt implements Serializable {
 	 * Die Beschreibung/Titel des Produktes
 	 */
 	@NotEmpty(message = "{produktverwaltung.beschreibung.notempty}")
+	@NotNull(message = "{produktverwaltung.beschreibung.notnull}")
 	@Column(name = "Beschreibung", length = 255)
 	private String beschreibung;
 
