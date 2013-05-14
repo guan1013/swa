@@ -19,13 +19,36 @@
 				#{msg['nav.produkt.suche']}
 			</h:outputLink>
 		</p>
-
-
-
 	</rich:panel>
+
 	<p />
 	<rich:panel header="#{msg['nav.admin']}" border="1"
 		rendered="#{rich:isUserInRole('admin')}">
+		<!-- LINK: KUNDE.FIND -->
+		<p id="viewKunde">
+			<h:outputLink id="menuViewKunde"
+				value="#{request.contextPath}/kundenverwaltung/viewKunde.jsf">
+				#{msg['nav.kunde.find']}
+			</h:outputLink>
+		</p>
+
+		<!-- LINK: KUNDE.CREATE -->
+		<p id="createKunde">
+			<h:outputLink id="menuCreateKunde"
+				value="#{request.contextPath}/kundenverwaltung/createKunde.jsf">
+				#{msg['nav.kunde.create']}
+			</h:outputLink>
+		</p>
+
+		<!-- LINK: KUNDE.UPDATE -->
+		<p id="updateKunde">
+			<h:outputLink id="menuUpdateKunde"
+				value="#{request.contextPath}/produktverwaltung/updateKunde.jsf">
+				#{msg['nav.kunde.update']}
+			</h:outputLink>
+		</p>
+
+
 		<!-- LINK: PRODUKT.ERSTELLEN -->
 		<p id="createProdukt">
 			<h:outputLink id="menuCreateProdukt"
@@ -42,4 +65,6 @@
 			</h:outputLink>
 		</p>
 	</rich:panel>
+
+
 </ui:composition>

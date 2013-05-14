@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+	<ui:define name="metadata">
+		<f:event type="preRenderView" listener="#{kc.createEmptyKunde}" />
+	</ui:define>
+
+	<ui:param name="pageTitle" value="#{msgKv['createKunde.title']}" />
+
+	<ui:define name="article">
+		<h1>#{msgKv['createPrivatkunde.heading']}</h1>
+
+		<h:form id="createKundeForm">
+			<rich:jQuery id="nachnameFocus" selector="#nachname" query="focus()" />
+			<!-- fokussiert auf id="kategorie" statt auf id="nachname" WARUM?
+				<rich:focus id="createKundeFormFocus"/>
+				-->
+
+			<!--
+					https://issues.jboss.org/browse/AS7-1348
+					http://community.jboss.org/thread/169487 
+				-->
+			<rich:graphValidator id="kundeValidator" value="#{kc.newKunde}"
+				groups="#{kc.passwordGroup}">
+				<rich:messages for="kundeValidator" />
+				<rich:messages id="fehlermeldungPassword" globalOnly="true" />
+				<p id="abstand" />
+
+				<h:panelGrid id="createKundeTabelle" columns="3">
+
+					<h:outputLabel id="nachnameLabel" for="nachname"
+						value="#{msgKv['createKunde.nachname']}" />
+					<h:inputText id="nachname" value="#{kc.newKunde.nachname}">
+						<rich:validator
+							oninvalid="$(#{rich:element('nachname')}).addClass('invalid')"
+							onvalid="$(#{rich:element('nachname')}).removeClass('invalid')" />
+					</h:inputText>
+					<rich:messages id="fehlermeldungenNachname" for="nachname" />
+
+					<h:outputLabel id="vornameLabel" for="vorname"
+						value="#{msgKv['createKunde.vorname']}" />
+					<h:inputText id="vorname" value="#{kc.newKunde.vorname}" />
+					<f:verbatim />
+
+					<f:verbatim />
+
+					<h:outputLabel id="erstelltLabel" for="erstellt"
+						value="#{msgKv['createKunde.erstellt']}" />
+					<rich:calendar id="erstellt"
+						datePattern="#{msgKv['createKunde.calendar.pattern']}"
+						value="#{kc.newKunde.erstellt}" timezone="CET">
+						<!-- https://issues.jboss.org/browse/RF-10224
+							<rich:validator/>
+							-->
+						<rich:placeholder id="erstelltPlaceholder"
+							value="#{msgKv['createKunde.erstellt.placeholder']}" />
+					</rich:calendar>
+					<rich:messages id="fehlermeldungenErstellt" for="erstellt" />
+
+
+					<h:outputLabel id="emailLabel" for="email"
+						value="#{msgKv['createKunde.email']}" />
+					<h:inputText id="email" value="#{kc.newKunde.email}">
+						<rich:validator
+							oninvalid="$(#{rich:element('email')}).addClass('invalid')"
+							onvalid="$(#{rich:element('email')}).removeClass('invalid')" />
+					</h:inputText>
+					<rich:messages id="fehlermeldungEmail" for="email" />
+
+					<h:outputLabel id="passwordLabel" for="password"
+						value="#{msgKv['createKunde.password']}" />
+					<h:inputSecret id="password" value="#{kc.newKunde.password}"
+						redisplay="true" />
+					<f:verbatim />
+
+					<h:outputLabel id="passwordWdhLabel" for="passwordWdh"
+						value="#{msgKv['createKunde.passwordWdh']}" />
+					<h:inputSecret id="passwordWdh" value="#{kc.newKunde.passwordWdh}"
+						redisplay="true" />
+					<f:verbatim />
+
+					<h:outputLabel id="plzLabel" for="plz"
+						value="#{msgKv['createKunde.plz']}" />
+					<h:inputText id="plz" value="#{kc.newKunde.adressen[0].plz}">
+						<rich:validator
+							oninvalid="$(#{rich:element('plz')}).addClass('invalid')"
+							onvalid="$(#{rich:element('plz')}).removeClass('invalid')" />
+					</h:inputText>
+					<rich:messages id="fehlermeldungPlz" for="plz" />
+
+					<h:outputLabel id="ortLabel" for="ort"
+						value="#{msgKv['createKunde.ort']}" />
+					<h:inputText id="ort" value="#{kc.newKunde.adressen[0].ort}">
+						<rich:validator
+							oninvalid="$(#{rich:element('ort')}).addClass('invalid')"
+							onvalid="$(#{rich:element('ort')}).removeClass('invalid')" />
+					</h:inputText>
+					<rich:messages id="fehlermeldungOrt" for="ort" />
+
+					<h:outputLabel id="strasseLabel" for="strasse"
+						value="#{msgKv['createKunde.strasse']}" />
+					<h:inputText id="strasse"
+						value="#{kc.newKunde.adressen[0].strasse}">
+						<rich:validator
+							oninvalid="$(#{rich:element('strasse')}).addClass('invalid')"
+							onvalid="$(#{rich:element('strasse')}).removeClass('invalid')" />
+					</h:inputText>
+					<rich:messages id="fehlermeldungStrasse" for="strasse" />
+					<f:verbatim />
+
+					<p id="buttons">
+						<h:commandButton id="createSubmit" action="#{kc.createKunde}"
+							value="#{msgKv['createKunde.submit']}" />
+						#{' '}
+						<h:commandButton id="reset" type="reset"
+							value="#{msgKv['createKunde.reset']}" />
+					</p>
+			</rich:graphValidator>
+		</h:form>
+
+		<p id="hinweisPflichtfelder">
+			#{msgKv['createPrivatkunde.required']}</p>
+	</ui:define>
+</ui:composition>
+</html>
