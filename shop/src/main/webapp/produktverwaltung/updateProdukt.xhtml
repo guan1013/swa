@@ -24,19 +24,26 @@
 					<!-- ID -->
 					<h:outputLabel value="#{msgPv['produkt.label.id']}" for="inputID" />
 					<h:inputText id="inputID" value="#{pc.viewProdukt.produktId}"
-						disabled="true" />
+						disabled="true">
+					</h:inputText>
 
 					<!-- HERSTELLER -->
 					<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
 						for="inputHersteller" />
 					<h:inputText id="inputHersteller"
-						value="#{pc.viewProdukt.hersteller}" valueChangeListener="#{pc.geaendert}"/>
+						value="#{pc.viewProdukt.hersteller}"
+						valueChangeListener="#{pc.geaendert}">
+						<rich:validator />
+					</h:inputText>
 
 					<!-- BESCHREIBUNG -->
 					<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
 						for="inputBeschreibung" />
 					<h:inputTextarea id="inputBeschreibung"
-						value="#{pc.viewProdukt.beschreibung}" valueChangeListener="#{pc.geaendert}" />
+						value="#{pc.viewProdukt.beschreibung}"
+						valueChangeListener="#{pc.geaendert}">
+						<rich:validator />
+					</h:inputTextarea>
 
 				</h:panelGrid>
 				<p />
@@ -55,30 +62,43 @@
 						</rich:column>
 						<rich:column id="pDataFarbe">
 							<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>
-							<h:inputText value="#{pdata.farbe}" id="farbeInput"  size="10"  valueChangeListener="#{pc.geaendert}"/>
+							<h:inputText value="#{pdata.farbe}" id="farbeInput" size="10"
+								valueChangeListener="#{pc.geaendert}">
+								<rich:validator />
+							</h:inputText>
 						</rich:column>
 						<rich:column id="pDataGroesse">
 							<f:facet name="header">#{msgPv['produkt.label.groesse']}</f:facet>
-							<h:inputText value="#{pdata.groesse}" id="groesseInput"  size="4" valueChangeListener="#{pc.geaendert}"/>
+							<h:inputText value="#{pdata.groesse}" id="groesseInput" size="4"
+								valueChangeListener="#{pc.geaendert}">
+								<rich:validator />
+							</h:inputText>
 						</rich:column>
 						<rich:column id="pDataAnzahl">
 							<f:facet name="header">#{msgPv['produkt.label.anzahl']}</f:facet>
-							<h:inputText value="#{pdata.anzahlVerfuegbar}" id="anzahlInput"  size="4" valueChangeListener="#{pc.geaendert}"/>
+							<h:inputText value="#{pdata.anzahlVerfuegbar}" id="anzahlInput"
+								size="4" valueChangeListener="#{pc.geaendert}">
+								<rich:validator />
+							</h:inputText>
 						</rich:column>
 						<rich:column id="pDataPreis">
 							<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>
-							<h:inputText value="#{pdata.preis}" id="preisInput" size="10" valueChangeListener="#{pc.geaendert}"/>
+							<h:inputText value="#{pdata.preis}" id="preisInput" size="10"
+								valueChangeListener="#{pc.geaendert}">
+								<rich:validator />
+							</h:inputText>
 						</rich:column>
 
 					</rich:dataTable>
-					
+
 				</rich:panel>
-				
+
 				<p />
 				<p />
 				<p />
-				
-				<h:commandButton value="#{msgPv['produkt.update.addProduktdaten']}" action="#{pc.addEmptyProduktdaten}">
+
+				<h:commandButton value="#{msgPv['produkt.update.addProduktdaten']}"
+					action="#{pc.addEmptyProduktdaten}">
 				</h:commandButton>
 				<h:commandButton action="#{pc.updateProdukt}"
 					value="#{msgPv['produkt.update.submit']}" />
