@@ -1,5 +1,7 @@
 package de.shop.produktverwaltung.domain;
 
+import static javax.persistence.TemporalType.DATE;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 import javax.persistence.Version;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -100,11 +103,13 @@ public class Produktdaten implements Serializable {
 	@Column(name = "Erstellt")
 	@Past
 	@JsonIgnore
+	@Temporal(DATE)
 	private Date erstellt;
 
 	@Column(name = "Geaendert")
 	@Past
 	@JsonIgnore
+	@Temporal(DATE)
 	private Date geaendert;
 	
 	@Version

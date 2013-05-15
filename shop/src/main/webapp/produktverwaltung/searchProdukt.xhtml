@@ -58,7 +58,8 @@
 								id="beschreibungInputLabel" for="beschreibungInput" />
 							<rich:autocomplete id="beschreibungInput"
 								value="#{pc.suchFilter.beschreibung}" mode="ajax" minChars="1"
-								autocompleteMethod="#{pc.findeBeschreibungByPrefix}" />
+								autocompleteMethod="#{pc.findeBeschreibungByPrefix}" 
+								autofill="false" selectFirst="false"/>
 
 							<!-- HERSTELLER -->
 							<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"

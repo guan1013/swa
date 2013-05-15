@@ -8,9 +8,6 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.enterprise.inject.Produces;
-import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
@@ -24,7 +21,6 @@ import de.shop.produktverwaltung.domain.Produktdaten;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.ProduktdatenService;
 import de.shop.produktverwaltung.service.util.SuchFilter;
-import de.shop.util.Client;
 import de.shop.util.Log;
 import de.shop.util.Transactional;
 
@@ -137,10 +133,6 @@ public class ProduktController implements Serializable {
 	@Transactional
 	public void createEmptySuchfilter() {
 
-		// Suchfilter ggf initialisieren
-		if (suchFilter != null) {
-			return;
-		}
 		suchFilter = new SuchFilter();
 	}
 
