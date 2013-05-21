@@ -62,7 +62,7 @@
 	</rich:toolbar>
 	<p>
 		<h:outputLink value="#{request.contextPath}/index.jsf">
-			<h:graphicImage id="hsLogoImage" name="logo3.png"
+			<h:graphicImage id="hsLogoImage" name="logo.png"
 				library="images" alt="#{msg['header.logo.alt']}" />
 		</h:outputLink>
 	</p>

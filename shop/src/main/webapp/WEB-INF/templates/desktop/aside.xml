@@ -2,8 +2,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core">
 
-	<rich:dataTable id="alleProdukte" var="produkt" value="#{pc.produkte}"
-		rendered="#{not empty pc.produkte}">
+	<rich:dataTable id="alleProdukte" var="produkt" value="#{pc.produkteKomplett}"
+		rendered="#{not empty pc.produkteKomplett}">
 
 		<f:facet name="header">#{msg['index.angebot']}</f:facet>
 		

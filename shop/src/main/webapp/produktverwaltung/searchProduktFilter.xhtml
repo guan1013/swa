@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:define name="metadata">
+		<f:event type="preRenderView" listener="#{pc.createEmptySuchfilter}" />
+	</ui:define>
+
+	<ui:param name="pageTitle" value="#{msgPv['produkt.search.title']}" />
+
+	<ui:define name="article">
+
+		<!-- PRODUKT NACH FILTER SUCHEN -->
+		<h:form id="sucheFormFilter">
+			<rich:panel id="filtersuchePanel"
+				header="#{msgPv['produkt.search.title.filter']}">
+				<h:panelGrid id="filtersuchePanelGrid" columns="2">
+
+					<!-- BESCHREIBUNG -->
+					<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
+						id="beschreibungInputLabel" for="beschreibungInput" />
+					<rich:autocomplete id="beschreibungInput"
+						value="#{pc.suchFilter.beschreibung}" mode="ajax" minChars="1"
+						autocompleteMethod="#{pc.findeBeschreibungByPrefix}"
+						autofill="false" selectFirst="false" />
+
+					<!-- HERSTELLER -->
+					<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
+						id="herstellerInputLabel" for="herstellerInput" />
+					<rich:autocomplete id="herstellerInput"
+						value="#{pc.suchFilter.hersteller}" mode="ajax" minChars="1"
+						autocompleteMethod="#{pc.findeHerstellerByPrefix}" />
+
+					<!-- FARBE -->
+					<h:outputLabel value="#{msgPv['produkt.label.farbe']}"
+						id="farbeInputLabel" for="farbeInput" />
+					<h:inputText value="#{pc.suchFilter.farbe}" id="farbeInput" />
+
+					<!-- GROESSE -->
+					<h:outputLabel value="#{msgPv['produkt.label.groesse']}"
+						id="groesseInputLabel" for="groesseInput" />
+					<rich:autocomplete id="groesseInput"
+						value="#{pc.suchFilter.groesse}" mode="ajax" minChars="1"
+						autocompleteMethod="#{pc.findeGroessenByPrefix}" />
+
+					<!-- PREIS MAX -->
+					<h:outputLabel value="#{msgPv['produkt.search.label.preis.max']}"
+						id="preisMaxInputLabel" for="preisMaxInput" />
+					<h:inputText value="#{pc.suchFilter.preisOben}" id="preisMaxInput" />
+
+					<f:verbatim />
+				</h:panelGrid>
+
+				<!-- SUBMIT BUTTON -->
+				<a4j:commandButton id="filtersucheButton"
+					action="#{pc.sucheByFilter}"
+					value="#{msgPv['produkt.search.submit']}"
+					render="produktSucheErgebnis" />
+
+				<!-- RESET BUTTON -->
+				<h:commandButton value="#{msgPv['produkt.search.reset']}"
+					type="reset" />
+
+			</rich:panel>
+		</h:form>
+		
+		<p />
+
+		<!-- SUCHERGEBNISSE ANZEIGEN -->
+		<a4j:outputPanel id="produktSucheErgebnis">
+
+			<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
+				value="#{pc.produktdatenSuche}" rowClasses="odd-row, even-row"
+				styleClass="tabelleMitZebrastil" rendered="#{not empty pc.produktdatenSuche}">
+
+				<!-- PRODUKT BESCHREIBUNG -->
+				<rich:column>
+					<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>
+					<h:link id="produktlink"
+						outcome="/produktverwaltung/viewProdukt?produktId=#{produktdaten.produkt.produktId}"
+						value="#{produktdaten.produkt.beschreibung}" />
+				</rich:column>
+
+				<!-- HERSTELLER -->
+				<rich:column>
+					<f:facet name="header">#{msgPv['produkt.label.hersteller']}</f:facet>#{produktdaten.produkt.hersteller}
+						</rich:column>
+
+				<!-- FARBE -->
+				<rich:column>
+					<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>#{produktdaten.farbe}
+						</rich:column>
+
+				<!-- GROESSE -->
+				<rich:column>
+					<f:facet name="header">#{msgPv['produkt.label.groesse']}</f:facet>#{produktdaten.groesse}
+						</rich:column>
+
+				<!-- PREIS -->
+				<rich:column>
+					<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>
+					<h:outputText id="outputTextPreis" value="#{produktdaten.preis}">
+						<f:convertNumber type="currency" currencyCode="EUR" />
+					</h:outputText>
+				</rich:column>
+
+			</rich:dataTable>
+		</a4j:outputPanel>
+
+	</ui:define>
+
+</ui:composition>
+
+</html>

@@ -12,11 +12,19 @@
 			</h:outputLink>
 		</p>
 
-		<!-- LINK: PRODUKT.SUCHE -->
+		<!-- LINK: PRODUKT.SUCHE.ID -->
 		<p id="seachProdukt">
 			<h:outputLink id="menuSearchProdukt"
 				value="#{request.contextPath}/produktverwaltung/searchProdukt.jsf">
-				#{msg['nav.produkt.suche']}
+				#{msg['nav.produkt.suche.id']}
+			</h:outputLink>
+		</p>
+		
+		<!-- LINK: PRODUKT.SUCHE.FILTER -->
+		<p id="seachProduktFilter">
+			<h:outputLink id="menuSearchProduktFilter"
+				value="#{request.contextPath}/produktverwaltung/searchProduktFilter.jsf">
+				#{msg['nav.produkt.suche.filter']}
 			</h:outputLink>
 		</p>
 	</rich:panel>

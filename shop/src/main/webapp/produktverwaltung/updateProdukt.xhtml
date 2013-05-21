@@ -23,7 +23,7 @@
 
 					<!-- ID -->
 					<h:outputLabel value="#{msgPv['produkt.label.id']}" for="inputID" />
-					<h:inputText id="inputID" value="#{pc.viewProdukt.produktId}"
+					<h:inputText id="inputID" value="#{pc.produktUpdate.produktId}"
 						disabled="true">
 					</h:inputText>
 
@@ -31,7 +31,7 @@
 					<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
 						for="inputHersteller" />
 					<h:inputText id="inputHersteller"
-						value="#{pc.viewProdukt.hersteller}"
+						value="#{pc.produktUpdate.hersteller}"
 						valueChangeListener="#{pc.geaendert}">
 						<rich:validator />
 					</h:inputText>
@@ -40,7 +40,7 @@
 					<h:outputLabel value="#{msgPv['produkt.label.beschreibung']}"
 						for="inputBeschreibung" />
 					<h:inputTextarea id="inputBeschreibung"
-						value="#{pc.viewProdukt.beschreibung}"
+						value="#{pc.produktUpdate.beschreibung}"
 						valueChangeListener="#{pc.geaendert}">
 						<rich:validator />
 					</h:inputTextarea>
@@ -52,16 +52,11 @@
 				<rich:panel header="#{msgPv['produkt.search.produktdaten']}">
 
 					<rich:dataTable id="alleProduktdaten" var="pdata"
-						value="#{pc.viewProdukt.produktdaten}"
-						rendered="#{not empty pc.viewProdukt.produktdaten}"
+						value="#{pc.produktUpdate.produktdaten}"
+						rendered="#{not empty pc.produktUpdate.produktdaten}"
 						rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
 						width="500">
 
-						<!-- 
-						<rich:column id="pDataId">
-							<f:facet name="header">#{msgPv['produkt.label.idProduktdaten']}</f:facet>#{pdata.produktdatenID}
-						</rich:column>
-						 -->
 						<rich:column id="pDataFarbe">
 							<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>
 							<h:inputText value="#{pdata.farbe}" id="farbeInput" size="10"
@@ -95,8 +90,6 @@
 
 				</rich:panel>
 
-				<p />
-				<p />
 				<p />
 
 				<h:commandButton value="#{msgPv['produkt.update.addProduktdaten']}"
