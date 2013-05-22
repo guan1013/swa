@@ -48,14 +48,14 @@ public class Warenkorb implements Serializable {
 		positionen.clear();
 	}
 
-	public int size() {
-		return positionen.size();
-	}
-
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// GETTER & SETTER
 
 	public List<Bestellposten> getPositionen() {
 		return positionen;
+	}
+
+	public int getSize() {
+		return positionen.size();
 	}
 }

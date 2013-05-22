@@ -27,7 +27,7 @@
 			<h:form id="warenkorbForm">
 				<rich:dropDownMenu id="dropDownWarenkorb">
 					<f:facet name="label">
-						#{msgBv['warenkorb.header']}
+						#{msgBv['warenkorb.header']} (#{wk.size})
 					</f:facet>
 					<rich:menuItem id="warenkorbItem" rendered="#{not empty wk.positionen}">
 						<rich:dataTable id="warenkorbTabelle" value="#{wk.positionen}"
@@ -46,6 +46,9 @@
 								#{position.anzahl}
 							</rich:column>
 						</rich:dataTable>
+					</rich:menuItem>
+					<rich:menuItem id="warenkorbReset" rendered="#{not empty wk.positionen}"
+						label="#{msgBv['warenkorb.reset']}" action="#{wk.reset}">
 					</rich:menuItem>
 				</rich:dropDownMenu>
 			</h:form>

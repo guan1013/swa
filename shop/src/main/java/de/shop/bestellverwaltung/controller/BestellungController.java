@@ -31,9 +31,6 @@ public class BestellungController {
 	@Inject
 	private BestellungService bestellungService;
 
-	@Inject
-	private transient HttpServletRequest request;
-
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 
@@ -44,7 +41,7 @@ public class BestellungController {
 		}
 
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
-				warenkorb.size());
+				warenkorb.getSize());
 
 		Bestellung bestellung = new Bestellung();
 		for (Bestellposten p : warenkorb.getPositionen()) {
