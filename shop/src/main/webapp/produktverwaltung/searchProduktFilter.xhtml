@@ -71,48 +71,60 @@
 
 			</rich:panel>
 		</h:form>
-		
+
 		<p />
 
 		<!-- SUCHERGEBNISSE ANZEIGEN -->
 		<a4j:outputPanel id="produktSucheErgebnis">
 
-			<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
-				value="#{pc.produktdatenSuche}" rowClasses="odd-row, even-row"
-				styleClass="tabelleMitZebrastil" rendered="#{not empty pc.produktdatenSuche}">
+			<h:form id="selectProduktdaten">
 
-				<!-- PRODUKT BESCHREIBUNG -->
-				<rich:column>
-					<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>
-					<h:link id="produktlink"
-						outcome="/produktverwaltung/viewProdukt?produktId=#{produktdaten.produkt.produktId}"
-						value="#{produktdaten.produkt.beschreibung}" />
-				</rich:column>
+				<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
+					value="#{pc.produktdatenSuche}" rowClasses="odd-row, even-row"
+					styleClass="tabelleMitZebrastil"
+					rendered="#{not empty pc.produktdatenSuche}">
 
-				<!-- HERSTELLER -->
-				<rich:column>
-					<f:facet name="header">#{msgPv['produkt.label.hersteller']}</f:facet>#{produktdaten.produkt.hersteller}
+					<!-- PRODUKT BESCHREIBUNG -->
+					<rich:column>
+						<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>
+						<h:link id="produktlink"
+							outcome="/produktverwaltung/viewProdukt?produktId=#{produktdaten.produkt.produktId}"
+							value="#{produktdaten.produkt.beschreibung}" />
+					</rich:column>
+
+					<!-- HERSTELLER -->
+					<rich:column>
+						<f:facet name="header">#{msgPv['produkt.label.hersteller']}</f:facet>#{produktdaten.produkt.hersteller}
 						</rich:column>
 
-				<!-- FARBE -->
-				<rich:column>
-					<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>#{produktdaten.farbe}
+					<!-- FARBE -->
+					<rich:column>
+						<f:facet name="header">#{msgPv['produkt.label.farbe']}</f:facet>#{produktdaten.farbe}
 						</rich:column>
 
-				<!-- GROESSE -->
-				<rich:column>
-					<f:facet name="header">#{msgPv['produkt.label.groesse']}</f:facet>#{produktdaten.groesse}
+					<!-- GROESSE -->
+					<rich:column>
+						<f:facet name="header">#{msgPv['produkt.label.groesse']}</f:facet>#{produktdaten.groesse}
 						</rich:column>
 
-				<!-- PREIS -->
-				<rich:column>
-					<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>
-					<h:outputText id="outputTextPreis" value="#{produktdaten.preis}">
-						<f:convertNumber type="currency" currencyCode="EUR" />
-					</h:outputText>
-				</rich:column>
+					<!-- PREIS -->
+					<rich:column>
+						<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>
+						<h:outputText id="outputTextPreis" value="#{produktdaten.preis}">
+							<f:convertNumber type="currency" currencyCode="EUR" />
+						</h:outputText>
+					</rich:column>
 
-			</rich:dataTable>
+					<!-- WARENKORB AKTION -->
+					<rich:column>
+						<h:commandButton id="warenkorbButton"
+							image="#{resource['images:warenkorb.gif']}"
+							action="#{wk.add(produktdaten)}"
+							alt="#{msgBv['warenkorb.title']}" />
+					</rich:column>
+
+				</rich:dataTable>
+			</h:form>
 		</a4j:outputPanel>
 
 	</ui:define>

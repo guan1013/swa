@@ -25,5 +25,10 @@
    <var>msgKv</var>
   </resource-bundle>
   
+  <resource-bundle>
+   <base-name>de.shop.bestellverwaltung.messages</base-name>
+   <var>msgBv</var>
+  </resource-bundle>
+  
  </application>
 </faces-config>

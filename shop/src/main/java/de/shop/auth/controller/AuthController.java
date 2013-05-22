@@ -46,7 +46,7 @@ public class AuthController implements Serializable {
 
 	@Inject
 	private transient HttpSession session;
-	
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 
@@ -60,34 +60,33 @@ public class AuthController implements Serializable {
 			return null;
 		}
 
-		// TODO: Es sollte keine Liste sein, sondern nur ein einziger Kunde
-		// gefunden werden
-		user = ks.findKundeByMail(
-				KundeService.FetchType.JUST_KUNDE, username, null);
-		
-		System.out.println("LOGIN:" + user);
+		user = ks.findKundeByMail(KundeService.FetchType.JUST_KUNDE, username,
+				null);
 
 		String path = facesCtx.getViewRoot().getViewId();
 		return path;
 	}
-	
+
 	/**
-	 * Nachtraegliche Einloggen eines registrierten Kunden mit Benutzername und Password.
+	 * Nachtraegliche Einloggen eines registrierten Kunden mit Benutzername und
+	 * Password.
 	 */
 	@Transactional
 	public void preserveLogin() {
 		if (username != null && user != null) {
 			return;
 		}
-		
+
 		// Benutzername beim Login ermitteln
 		username = request.getRemoteUser();
 
 		user = ks.findKundeByUsername(username);
 		if (user == null) {
-			// Darf nicht passieren, wenn unmittelbar zuvor das Login erfolgreich war
+			// Darf nicht passieren, wenn unmittelbar zuvor das Login
+			// erfolgreich war
 			logout();
-			throw new InternalError("Kein Kunde mit dem Loginnamen \"" + username + "\" gefunden");
+			throw new InternalError("Kein Kunde mit dem Loginnamen \""
+					+ username + "\" gefunden");
 		}
 	}
 
@@ -106,12 +105,11 @@ public class AuthController implements Serializable {
 	}
 
 	public String logout() {
-		try
-		{
+		try {
 			request.logout();
-			
-		} catch(ServletException e)
-		{
+
+		}
+		catch (ServletException e) {
 			user = null;
 			username = null;
 			password = null;
@@ -119,14 +117,14 @@ public class AuthController implements Serializable {
 			reset();
 			return null;
 		}
-	
+
 		user = null;
 		username = null;
 		password = null;
 		session.invalidate();
 		return "/index?faces-redirect=true";
 	}
-	
+
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// GETTER & SETTER
 

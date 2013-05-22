@@ -21,6 +21,36 @@
 			</h:form>
 		</rich:toolbarGroup>
 
+		<!-- WARENKORB -->
+		<rich:toolbarGroup id="toolbarGroupWarenkorb"
+			location="right">
+			<h:form id="warenkorbForm">
+				<rich:dropDownMenu id="dropDownWarenkorb">
+					<f:facet name="label">
+						#{msgBv['warenkorb.header']}
+					</f:facet>
+					<rich:menuItem id="warenkorbItem" rendered="#{not empty wk.positionen}">
+						<rich:dataTable id="warenkorbTabelle" value="#{wk.positionen}"
+							var="position" rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil">
+
+							<rich:column id="spalteProduktBeschreibung">
+								<f:facet name="header">
+									#{msgPv['produkt.label.beschreibung']}
+								</f:facet>
+								#{position.produktdaten.produkt.beschreibung}
+							</rich:column>
+							<rich:column id="spalteProduktAnzahl">
+								<f:facet name="header">
+									#{msgBv['warenkorb.anzahl']}
+								</f:facet>
+								#{position.anzahl}
+							</rich:column>
+						</rich:dataTable>
+					</rich:menuItem>
+				</rich:dropDownMenu>
+			</h:form>
+		</rich:toolbarGroup>
+
 		<!-- SPRACHE ÄNDERN -->
 		<rich:toolbarGroup id="toolbarGroupLanguage"
 			location="right">

@@ -2,13 +2,10 @@ package de.shop.produktverwaltung.controller;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.Flash;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -148,11 +145,11 @@ public class ProduktController implements Serializable {
 
 		if (!geaendert) {
 			LOGGER.debug("Es fanden keine Veränderungen statt!");
-			System.out.println("viewProdukt.jsf?produktId=" + produktUpdate.getProduktId());
 			return "viewProdukt.jsf?produktId=" + produktUpdate.getProduktId();
 		}
 
 		produktService.updateProdukt(produktUpdate, null);
+		produktView = produktUpdate;
 
 		return "viewProdukt.jsf?produktId=" + produktUpdate.getProduktId();
 	}
@@ -176,7 +173,6 @@ public class ProduktController implements Serializable {
 					.getProduktdaten().size());
 		}
 		catch (NumberFormatException e) {
-			produktView = null;
 			LOGGER.debugf("ProduktId=%s ist keine ZahL", produktIdStr);
 		}
 		finally {
@@ -233,8 +229,6 @@ public class ProduktController implements Serializable {
 	}
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
-
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PRIVATE METHODS
 
 	@PostConstruct
@@ -243,8 +237,6 @@ public class ProduktController implements Serializable {
 
 		produkteKomplett = produktService.findProdukte();
 	}
-
-	// ////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// GETTER & SETTER

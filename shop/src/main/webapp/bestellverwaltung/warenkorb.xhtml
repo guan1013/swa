@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:param name="pageTitle" value="#{msgBv['warenkorb.title']}" />
+
+	<ui:define name="article">
+		
+		<rich:panel header="#{msgBv['warenkorb.header']}">
+		
+		</rich:panel>
+
+	</ui:define>
+</ui:composition>
+</html>
