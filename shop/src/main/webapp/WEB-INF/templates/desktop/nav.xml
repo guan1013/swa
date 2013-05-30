@@ -20,6 +20,14 @@
 			</h:outputLink>
 		</p>
 		
+		<!-- LINK: BESTELLUNG.SUCHE.ID -->
+		<p id="seachBestellung">
+			<h:outputLink id="menuSearchBestellung"
+				value="#{request.contextPath}/bestellverwaltung/searchBestellung.jsf">
+				#{msg['nav.bestellung.suche.id']}
+			</h:outputLink>
+		</p>
+		
 		<!-- LINK: PRODUKT.SUCHE.FILTER -->
 		<p id="seachProduktFilter">
 			<h:outputLink id="menuSearchProduktFilter"
