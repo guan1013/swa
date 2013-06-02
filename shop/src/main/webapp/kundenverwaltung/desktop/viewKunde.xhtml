@@ -10,33 +10,33 @@
 	  xmlns:a4j="http://richfaces.org/a4j">
 
 	<ui:composition template="/WEB-INF/templates/desktop/main.xml">
-		<ui:param name="pageTitle" value="#{msgKv['viewKunde.title']}"/>
+		<ui:param name="pageTitle" value="#{msgKv['kv.titel.view']}"/>
 	
-		<ui:define name="article">
+		<ui:define name="kunde">
 			<h:form id="form">
 				<rich:focus id="formFocus"/>
 				
-				<rich:panel id="suchePanel" header="#{msgKv['viewKunde.sucheNeu']}">
+				<rich:panel id="suchePanel" header="#{msgKv['kv.suche']}">
 					<h:panelGrid id="suchePanelGrid" columns="4">
 						<h:outputLabel id="kundeIdInputLabel"
-						               value="#{msgKv['viewKunde.kundenr']}"
+						               value="#{msgKv['kv.label.kid']}"
 						               for="kundeIdInput"/>
-						             
-						<rich:autocomplete id="kundeIdInput"
+						            
+						<!--  <rich:autocomplete id="kundeIdInput"
 						                   value="#{kc.kundeId}"
 						                   mode="ajax"
 						                   minChars="1"
-						                   autocompleteMethod="#{kc.findKundenByIdPrefix}"
+						                   autocompleteMethod="#{kc.findKundeById}"
 						                   var="kunde"
-						                   fetchValue="#{kunde.id}"
-						                   converter="javax.faces.Number"
+						                   fetchValue="#{kunde.kunde_ID}"
+						                   converter="javax.faces.Integer"
 						                   converterMessage="#{msgKv['viewKunde.kundenr.converterError']}">
 							#{kunde.id} : #{kunde.nachname}, #{kunde.vorname}
-						</rich:autocomplete> 
+						</rich:autocomplete> -->
 	
 						<a4j:commandButton id="findButton"
 						                   action="#{kc.findKundeById}"
-						                   value="#{msgKv['viewKunde.submit']}"
+						                   value="#{msgKv['kv.button.submit']}"
 						                   render="gesuchterKundePanel fehlermeldungKundeId"/>
 						
 						<a4j:status id="statusWaiting">
