@@ -7,10 +7,10 @@
 	  xmlns:f="http://java.sun.com/jsf/core">
 
 <ui:composition template="/WEB-INF/templates/desktop/main.xml">
-	<ui:param name="pageTitle" value="#{msgKv['okDelete.title']}"/>
+	<ui:param name="pageTitle" value="#{msgKv['kv.titel.delete']}"/>
 
 	<ui:define name="article">
-		<h:outputFormat id="text" value="#{msgKv['okDelete.text']}">
+		<h:outputFormat id="text" value="#{msgKv['kv.delete']}">
 			<f:param id="kundeId" value="#{requestScope['kundeId']}"/>
 		</h:outputFormat>
 	</ui:define>

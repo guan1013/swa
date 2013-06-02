@@ -75,7 +75,7 @@
 		<!-- LINK: KUNDE.UPDATE -->
 		<p id="updateKunde">
 			<h:outputLink id="menuUpdateKunde"
-				value="#{request.contextPath}/produktverwaltung/updateKunde.jsf">
+				value="#{request.contextPath}/kundenverwaltung/updateKunde.jsf">
 				#{msg['nav.kunde.update']}
 			</h:outputLink>
 		</p>
