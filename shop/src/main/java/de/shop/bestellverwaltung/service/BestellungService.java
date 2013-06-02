@@ -98,7 +98,7 @@ public class BestellungService implements Serializable {
 		 * Gefundene Bestellung speichern
 		 */
 
-		List<Bestellung> be = em.createNamedQuery(Bestellung.ALL_BESTELLUNGEN)
+		final List<Bestellung> be = em.createNamedQuery(Bestellung.ALL_BESTELLUNGEN)
 				.getResultList();
 
 		LOGGER.log(FINER, "SERVICE END: findAllBestellungen");
@@ -246,7 +246,7 @@ public class BestellungService implements Serializable {
 		/**
 		 * Gefundene Bestellung speichern
 		 */
-		List<Bestellung> be = em
+		final List<Bestellung> be = em
 				.createNamedQuery(Bestellung.BESTELLUNG_BY_KUNDE_ID)
 				.setParameter("kid", pKID).getResultList();
 		LOGGER.log(FINEST, "SERVICE: {0} Bestellungen gefunden.", be.size());
@@ -290,7 +290,7 @@ public class BestellungService implements Serializable {
 				em.detach(pBD);
 
 		// Prüfen ob übergebener Kunde konkurrierend gelöscht wurde
-		Bestellung existingBestellung = findBestellungById(pBD.getBestellungID(), pLocale);
+		final Bestellung existingBestellung = findBestellungById(pBD.getBestellungID(), pLocale);
 		if (existingBestellung == null) {
 			throw new ConcurrentDeletedException(pBD.getBestellungID());
 		}

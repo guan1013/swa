@@ -34,7 +34,7 @@ public class Warenkorb implements Serializable {
 		}
 
 		// Neuen Bestellposten mit Produktdaten und Anzahl=1 anlegen
-		Bestellposten neuerBestellposten = new Bestellposten();
+		final Bestellposten neuerBestellposten = new Bestellposten();
 		neuerBestellposten.setAnzahl(Integer.valueOf(1));
 		neuerBestellposten.setProduktdaten(produktdaten);
 		positionen.add(neuerBestellposten);

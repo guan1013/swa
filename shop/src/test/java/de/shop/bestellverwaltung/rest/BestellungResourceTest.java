@@ -30,32 +30,39 @@ import org.junit.FixMethodOrder;
 @RunWith(Arquillian.class)
 @FixMethodOrder(NAME_ASCENDING)
 public class BestellungResourceTest extends AbstractResourceTest {
+	
+	private static final int BEISPIEL_ID = 501;
+	private static final int EINS_ZWEI_DREI = 123;
+	private static final int INVALID_ID = 65365754;
+	private static final int VALID_KUNDE_ID = 100;
+	private static final int INVALID_KUNDE_ID = 900;
+	private static final int VALID_BESTELLUNG_ID = 501;
+	private static final double PREIS = 666.0;
+	private static final String USERNAME = USERNAME_ADMIN;
+	private static final String PASSWORD = PASSWORD_ADMIN;
 	//@Ignore
 	@Test
 	public void findBestellungById() {
-		int bId = 501;
-
-		Response response = given().auth()
+		
+		final Response response = given().auth()
 				.basic(USERNAME, PASSWORD).header(ACCEPT, APPLICATION_JSON)
-				.pathParameter("id", bId).get("/bestellung/{id}");
+				.pathParameter("id", BEISPIEL_ID).get("/bestellung/{id}");
 
 		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_OK));
 
 		try (JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
-			JsonObject jsonObject = jsonReader.readObject();
+			final JsonObject jsonObject = jsonReader.readObject();
 			assertThat(jsonObject.getJsonNumber("bestellungID").intValue(),
-					is(bId));
+					is(BEISPIEL_ID));
 		}
 	}
 	
 	@Test
 	public void dontfindBestellungById() {
-		int bId = 65365754;
-
 		Response response = given().auth()
 				.basic(USERNAME, PASSWORD).header(ACCEPT, APPLICATION_JSON)
-				.pathParameter("id", bId).get("/bestellung/{id}");
+				.pathParameter("id", INVALID_ID).get("/bestellung/{id}");
 
 		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_NOT_FOUND));
 	}
@@ -63,15 +70,15 @@ public class BestellungResourceTest extends AbstractResourceTest {
 	//@Ignore
 	@Test
 	public void createBestellung() {
-		final int kundeId = 100;
+
 		final String username = USERNAME_ADMIN;
 		final String password = PASSWORD_ADMIN;
 		
 		
 		final JsonObject jsonObject = getJsonBuilderFactory()
 				.createObjectBuilder()
-				.add("kundeUri", KUNDEN_URI + "/" + kundeId)
-				.add("gesamtpreis", 123)
+				.add("kundeUri", KUNDEN_URI + "/" + VALID_KUNDE_ID)
+				.add("gesamtpreis", EINS_ZWEI_DREI)
 //				.add("bestellposten",
 //						getJsonBuilderFactory()
 //								.createArrayBuilder()
@@ -97,15 +104,11 @@ public class BestellungResourceTest extends AbstractResourceTest {
 	
 	@Test
 	public void dontcreateBestellung() {
-		final int kundeId = 900;
-		final String username = USERNAME_ADMIN;
-		final String password = PASSWORD_ADMIN;
-		
 		
 		final JsonObject jsonObject = getJsonBuilderFactory()
 				.createObjectBuilder()
-				.add("kundeUri", KUNDEN_URI + "/" + kundeId)
-				.add("gesamtpreis", 123)
+				.add("kundeUri", KUNDEN_URI + "/" + INVALID_KUNDE_ID)
+				.add("gesamtpreis", EINS_ZWEI_DREI)
 //				.add("bestellposten",
 //						getJsonBuilderFactory()
 //								.createArrayBuilder()
@@ -117,7 +120,7 @@ public class BestellungResourceTest extends AbstractResourceTest {
 				.build();
 
 		final Response response = given().auth()
-				.basic(username, password).contentType(APPLICATION_JSON)
+				.basic(USERNAME, PASSWORD).contentType(APPLICATION_JSON)
 				.body(jsonObject.toString())
 				.post(BESTELLUNGEN_PATH);
 
@@ -128,18 +131,17 @@ public class BestellungResourceTest extends AbstractResourceTest {
 	//@Ignore
 	@Test
 	public void findBestellpostenByBestellungId() {
-		int bId = 501;
 
-		Response response = given().auth()
+		final Response response = given().auth()
 				.basic(USERNAME, PASSWORD).header("Accept", APPLICATION_JSON)
-				.pathParameter("bestellungFk", bId)
+				.pathParameter("bestellungFk", VALID_BESTELLUNG_ID)
 				.get("/bestellung/{bestellungFk}/bestellposten");
 
 		assertThat(response.getStatusCode(), is(HttpURLConnection.HTTP_OK));
 
 		try (JsonReader jsonReader = getJsonReaderFactory().createReader(
 				new StringReader(response.asString()))) {
-			JsonArray jsonObject = jsonReader.readArray();
+			final JsonArray jsonObject = jsonReader.readArray();
 			assertThat(jsonObject.size(), is(2));
 		}
 	}
@@ -158,29 +160,27 @@ public class BestellungResourceTest extends AbstractResourceTest {
 
 	 @Test
 	 public void updateBestellung() {
-		 final int bestellungId = 501;
-			final double neuerPreis = 666.0;
 			final String username = USERNAME_ADMIN;
 			final String password = PASSWORD_ADMIN;
 			
 			// When
 			Response response = given().auth()
 					.basic(username, username).header(ACCEPT, APPLICATION_JSON)
-					.pathParameter("id", bestellungId).get("/bestellung/{id}");
+					.pathParameter("id", VALID_BESTELLUNG_ID).get("/bestellung/{id}");
 			
 			JsonObject jsonObject;
 			try (final JsonReader jsonReader =
 					              getJsonReaderFactory().createReader(new StringReader(response.asString()))) {
 				jsonObject = jsonReader.readObject();
 			}
-	    	assertThat(jsonObject.getJsonNumber("bestellungID").intValue(), is(bestellungId));
+	    	assertThat(jsonObject.getJsonNumber("bestellungID").intValue(), is(VALID_BESTELLUNG_ID));
 	    	
 	    	// Aus den gelesenen JSON-Werten ein neues JSON-Objekt mit neuem Nachnamen bauen
 	    	final JsonObjectBuilder job = getJsonBuilderFactory().createObjectBuilder();
 	    	final Set<String> keys = jsonObject.keySet();
 	    	for (String k : keys) {
 	    		if ("gesamtpreis".equals(k)) {
-	    			job.add("gesamtpreis", neuerPreis);
+	    			job.add("gesamtpreis", PREIS);
 	    		}
 	    		else {
 	    			job.add(k, jsonObject.get(k));

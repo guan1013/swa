@@ -102,8 +102,8 @@ public class BestellungResource {
 //		catch (NumberFormatException e) {
 //			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr, e);
 //		}
-//		Locale LOCALE_DEFAULT = localeHelper.getLocale(headers);
-//		Kunde k = ks.findKundeById(kundeId, LOCALE_DEFAULT);
+//		Locale localeDefault = localeHelper.getLocale(headers);
+//		Kunde k = ks.findKundeById(kundeId, localeDefault);
 //		
 //		if(k == null)
 //		{
@@ -137,8 +137,8 @@ public class BestellungResource {
 //	@Consumes({ APPLICATION_XML, TEXT_XML, APPLICATION_JSON })
 //	@Produces
 //	public Response addBestellung(Bestellung pBE) {
-//		Locale LOCALE_DEFAULT = localeHelper.getLocale(headers);
-//		bs.addBestellung(pBE, LOCALE_DEFAULT);
+//		Locale localeDefault = localeHelper.getLocale(headers);
+//		bs.addBestellung(pBE, localeDefault);
 //		final URI beUri = uriHelperBestellung.getUriBestellung(pBE, uriInfo);
 //		return Response.created(beUri).build();
 //	}
@@ -156,7 +156,7 @@ public class BestellungResource {
 		catch (NumberFormatException e) {
 			throw new NotFoundException("Kein Kunde vorhanden mit der ID " + kundeIdStr, e);
 		}
-		Locale localeDefault = localeHelper.getLocale(headers);
+		final Locale localeDefault = localeHelper.getLocale(headers);
 		final Kunde k = ks.findKundeById(kundeId, localeDefault);
 		
 		if (k == null) {
@@ -208,8 +208,8 @@ public class BestellungResource {
 	@GET
 	@Path("{id:[1-9][0-9]*}")
 	public Bestellung findBestellungById(@PathParam("id") Integer pID) {
-		Locale locale_default = localeHelper.getLocale(headers);
-		final Bestellung be = bs.findBestellungById(pID, locale_default);
+		final Locale localeDefault = localeHelper.getLocale(headers);
+		final Bestellung be = bs.findBestellungById(pID, localeDefault);
 		if (be == null) {
 			final String msg = "Kein Bestellung gefunden mit der ID" + pID;
 
@@ -227,7 +227,7 @@ public class BestellungResource {
 			@QueryParam("min") Double pMin, @QueryParam("max") Double pMax,
 			@Context UriInfo uriInfo) {
 		List<Bestellung> be = null;
-		Locale localeDefault = localeHelper.getLocale(headers);
+		final Locale localeDefault = localeHelper.getLocale(headers);
 		be = bs.findBestellungByPreisspanne(FetchType.JUST_BESTELLUNG, pMin,
 				pMax, localeDefault);
 		if (be.isEmpty()) {
@@ -278,7 +278,7 @@ public class BestellungResource {
 	public List<Bestellposten> findBestellpostenByBestellungId(
 			@PathParam("bestellungFk") Integer bestellungFk,
 			@Context UriInfo uriInfo) {
-		Locale localeDefault = localeHelper.getLocale(headers);
+		final Locale localeDefault = localeHelper.getLocale(headers);
 		List<Bestellposten> bestellposten = null;
 
 		bestellposten = bps

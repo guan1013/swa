@@ -1,6 +1,5 @@
 package de.shop.bestellverwaltung.controller;
 
-import static de.shop.util.Messages.MessagesType.KUNDENVERWALTUNG;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 
 import java.lang.invoke.MethodHandles;
@@ -8,7 +7,6 @@ import java.util.Locale;
 
 import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +19,6 @@ import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.controller.KundeController;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.produktverwaltung.service.ProduktService;
-import de.shop.produktverwaltung.service.ProduktService.FetchType;
 import de.shop.produktverwaltung.service.util.SuchFilter;
 import de.shop.util.Client;
 import de.shop.util.Log;
@@ -41,7 +38,6 @@ public class BestellungController {
 
 	@Inject
 	private Warenkorb warenkorb;
-	
 	
 	@Inject
 	private KundeController kc;
@@ -83,13 +79,14 @@ public class BestellungController {
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
 				warenkorb.getSize());
 
-		Bestellung bestellung = new Bestellung();
+		final Bestellung bestellung = new Bestellung();
 		for (Bestellposten p : warenkorb.getPositionen()) {
 			bestellung.addBestellposten(p);
 		}
-		Kunde k = kc.getKunde();
+		final Kunde k = kc.getKunde();
 		k.addBestellung(bestellung);
 		bs.addBestellung(bestellung, null);
+		bestellung.setGesamtpreis(bestellung.errechneGesamtpreis());
 	}
 	
 	public void warenkorbLeeren() {
