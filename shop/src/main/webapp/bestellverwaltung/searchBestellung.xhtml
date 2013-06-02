@@ -14,9 +14,9 @@
 		<f:event type="preRenderView" listener="#{bc.createEmptySuchfilter}" />
 	</ui:define>
 
-	<ui:param name="pageTitle" value="#{msgPv['bestellung.search.title']}" />
+	<ui:param name="pageTitle" value="#{msgBv['bestellung.search.title']}" />
 
-	<ui:define name="bestellung">
+	<ui:define name="article">
 
 		<!-- SUCHMASKEN ANZEIGEN -->
 		<h:panelGroup>
@@ -24,14 +24,14 @@
 			<!-- PRODUKT NACH ID SUCHEN -->
 			<h:form id="sucheFormId">
 				<rich:panel id="suchePanel"
-					header="#{msgPv['bestellung.search.title']}">
+					header="#{msgBv['bestellung.search.title']}">
 					<h:panelGrid id="suchePanelGrid" columns="2">
-						<h:outputLabel value="#{msgPv['bestellung.label.id']}"
+						<h:outputLabel value="#{msgBv['bestellung.label.id']}"
 							id="idInputLabel" for="idInput" />
 						<h:inputText value="#{bc.bestellungId}" id="idInput" />
 						<f:verbatim />
 						<a4j:commandButton id="sucheButton" action="#{bc.sucheById}"
-							value="#{msgPv['bestellung.search.submit']}"
+							value="#{msgBv['bestellung.search.submit']}"
 							render="bestellungSucheErgebnis" />
 					</h:panelGrid>
 				</rich:panel>
@@ -47,8 +47,8 @@
 
 				<!-- ID HERSTELLER ERSTELLUNGSDATUM -->
 				<h:panelGrid columns="3" border="0">
-					<rich:panel header="#{msgPv['bestellung.label.id']}">#{bc.bestellungSearch.bestellungId}</rich:panel>
-					<rich:panel header="#{msgPv['bestellung.label.erstellt']}">
+					<rich:panel header="#{msgBv['bestellung.label.id']}">#{bc.bestellungSearch.bestellungID}</rich:panel>
+					<rich:panel header="#{msgBv['bestellung.label.erstellt']}">
 						<h:outputText value="#{bc.bestellungSearch.erstellt}">
 							<f:convertDateTime type="date" dateStyle="long"
 								timezone="Europe/Berlin" />
@@ -60,23 +60,23 @@
 
 				<!-- PRODUKTDATEN ANZEIGEN -->
 				<h:panelGrid columns="1" border="0">
-					<rich:panel header="#{msgPv['bestellung.search.bestellposten']}">
+					<rich:panel header="#{msgBv['bestellung.search.bestellposten']}">
 						<rich:dataTable id="alleBestellpostenn" var="bpdata"
 							value="#{bc.bestellungSearch.bestellposten}"
 							rendered="#{not empty bc.bestellungSearch.bestellposten}"
 							rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
-							width="500">
+							>
 
 							<rich:column id="pBeschreibung">
-								<f:facet name="header">#{msgPv['bestellposten.produkt.beschreibung']}</f:facet>#{bpdata.produktdaten.produkt.beschreibung}</rich:column>
+								<f:facet name="header">#{msgBv['bestellposten.produkt.beschreibung']}</f:facet>#{bpdata.produktdaten.produkt.beschreibung}</rich:column>
 							<rich:column id="pPreis">
-								<f:facet name="header">#{msgPv['bestellposten.produkt.preis']}</f:facet>#{bpdata.produktdaten.produkt.preis}
+								<f:facet name="header">#{msgBv['bestellposten.produkt.preis']}</f:facet>#{bpdata.produktdaten.preis}
 								<h:outputText id="outputTextPreis" value="#{pdata.preis}">
 									<f:convertNumber type="currency" currencyCode="EUR" />
 								</h:outputText>
 								</rich:column>
 							<rich:column id="pDataAnzahl">
-								<f:facet name="header">#{msgPv['bestellposten.produkt.anzahl']}</f:facet>#{bpdata.anzahl}</rich:column>
+								<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>#{bpdata.anzahl}</rich:column>
 						</rich:dataTable>
 					</rich:panel>
 				</h:panelGrid>
@@ -86,7 +86,7 @@
 					rendered="#{rich:isUserInRole('admin')}">
 					<h:link id="updateProduktLink"
 						outcome="/produktverwaltung/updateProdukt.jsf"
-						value="#{msgPv['produkt.update.title']}"></h:link>
+						value="#{msgBv['produkt.update.title']}"></h:link>
 				</h:panelGrid>
 			</h:panelGroup>
 

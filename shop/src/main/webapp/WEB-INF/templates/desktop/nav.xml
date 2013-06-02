@@ -28,6 +28,8 @@
 			</h:outputLink>
 		</p>
 		
+		
+		
 		<!-- LINK: PRODUKT.SUCHE.FILTER -->
 		<p id="seachProduktFilter">
 			<h:outputLink id="menuSearchProduktFilter"
@@ -37,6 +39,20 @@
 		</p>
 	</rich:panel>
 
+	<p />
+	<rich:panel header="#{msg['nav.kunde']}" border="1"
+		rendered="#{rich:isUserInRole('kunde')}">
+		
+	    <!-- LINK: BESTELLUNG.BESTELLEN -->
+		<p id="bestellen">
+			<h:outputLink id="menuBestellBestellung"
+				value="#{request.contextPath}/bestellverwaltung/bestellen.jsf">
+				#{msg['nav.bestellung.bestellen']}
+			</h:outputLink>
+		</p>
+	    
+	</rich:panel>
+	
 	<p />
 	<rich:panel header="#{msg['nav.admin']}" border="1"
 		rendered="#{rich:isUserInRole('admin')}">
