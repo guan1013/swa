@@ -18,7 +18,10 @@ import org.jboss.logging.Logger;
 import de.shop.bestellverwaltung.domain.Bestellposten;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
+import de.shop.kundenverwaltung.controller.KundeController;
+import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.produktverwaltung.service.ProduktService;
+import de.shop.produktverwaltung.service.ProduktService.FetchType;
 import de.shop.produktverwaltung.service.util.SuchFilter;
 import de.shop.util.Client;
 import de.shop.util.Log;
@@ -38,10 +41,15 @@ public class BestellungController {
 
 	@Inject
 	private Warenkorb warenkorb;
-
+	
+	
+	@Inject
+	private KundeController kc;
+	
 	@Inject
 	private BestellungService bs;
-	
+	@Inject
+	private ProduktService ps;
 	@Inject
 	private transient HttpServletRequest request;
 	
@@ -53,7 +61,6 @@ public class BestellungController {
 	private Locale locale;
 	
 	private Integer bestellungId;
-	private Bestellung bestellung;
 	private Bestellung bestellungSearch;
 	
 	private static final String ERROR = "funzt ned";
@@ -80,7 +87,8 @@ public class BestellungController {
 		for (Bestellposten p : warenkorb.getPositionen()) {
 			bestellung.addBestellposten(p);
 		}
-
+		Kunde k = kc.getKunde();
+		k.addBestellung(bestellung);
 		bs.addBestellung(bestellung, null);
 	}
 	
@@ -95,7 +103,7 @@ public class BestellungController {
 
 		bestellungSearch = bs.findBestellungById(bestellungId, locale);
 		
-		if (bestellung == null) {
+		if (bestellungSearch == null) {
 			// Kein Kunde zu gegebener ID gefunden
 			return ERROR;
 		}
