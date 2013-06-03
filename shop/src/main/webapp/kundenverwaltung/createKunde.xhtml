@@ -8,24 +8,18 @@
 	xmlns:rich="http://richfaces.org/rich">
 
 <ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
 	<ui:define name="metadata">
 		<f:event type="preRenderView" listener="#{kc.createEmptyKunde}" />
 	</ui:define>
 
 	<ui:param name="pageTitle" value="#{msgKv['kv.titel.create']}" />
 
-	<ui:define name="kunde">
+	<ui:define name="article">
 
 		<h:form id="createKundeForm">
 			<rich:jQuery id="nachnameFocus" selector="#nachname" query="focus()" />
-			<!-- fokussiert auf id="kategorie" statt auf id="nachname" WARUM?
-				<rich:focus id="createKundeFormFocus"/>
-				-->
-
-			<!--
-					https://issues.jboss.org/browse/AS7-1348
-					http://community.jboss.org/thread/169487 
-				-->
+			
 			<rich:graphValidator id="kundeValidator" value="#{kc.newKunde}"
 				groups="#{kc.passwordGroup}">
 				<rich:messages for="kundeValidator" />
@@ -61,7 +55,7 @@
 						<rich:placeholder id="geburtsdatumPlaceholder"
 							value="#{msg['calendar.placeholder']}" />
 					</rich:calendar>
-					<rich:messages id="fehlermeldungenErstellt" for="erstellt" />
+					<rich:messages id="fehlermeldungenGeburtsdatum" for="geburtsdatum" />
 
 
 					<h:outputLabel id="emailLabel" for="email"

@@ -117,13 +117,6 @@
 								</rich:columnGroup>
 							</f:facet>
 
-							<rich:column id="togglerSpalte" colspan="3">
-								<rich:collapsibleSubTableToggler id="subTableToggler"
-									for="positionenSubtable"
-									collapsedLabel="#{msgKv['kv.bid']} #{bestellung.bestellungID} : #{bestellung.getErzeugt('yyyy-MM-dd')}"
-									expandedLabel="#{msgKv['kv.bid']} #{bestellung.bestellungID} : #{bestellung.getErzeugt('yyyy-MM-dd')}" />
-							</rich:column>
-
 							<rich:collapsibleSubTable id="positionenSubtable"
 								value="#{bestellung.bestellposten}" var="pos"
 								rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
@@ -157,13 +150,6 @@
 						</rich:dataTable>
 					</rich:tab>
 				</rich:tabPanel>
-
-				<p id="button">
-					<h:commandButton id="updateButtonKunde"
-							image="#{resource['images:edit.gif']}"
-							action="/kundenverwaltung/updatePrivatkunde"
-							alt="#{msgKv['kv.load']}"/>
-				</p>
 			</a4j:outputPanel>
 		</h:form>
 
