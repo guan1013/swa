@@ -11,6 +11,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import de.shop.kundenverwaltung.controller.KundeController;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.util.Log;
@@ -39,6 +40,8 @@ public class AuthController implements Serializable {
 	private KundeService ks;
 
 	@Inject
+	private KundeController kc;
+	@Inject
 	private transient HttpServletRequest request;
 
 	@Inject
@@ -62,7 +65,8 @@ public class AuthController implements Serializable {
 
 		user = ks.findKundeByMail(KundeService.FetchType.JUST_KUNDE, username,
 				null);
-
+		kc.setKundeId(user.getKundeID());
+		kc.findKundeById();
 		String path = facesCtx.getViewRoot().getViewId();
 		return path;
 	}

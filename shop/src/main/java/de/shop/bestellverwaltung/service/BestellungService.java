@@ -17,6 +17,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.groups.Default;
 
+import de.shop.bestellverwaltung.domain.Bestellposten;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.util.IdGroup;
 import de.shop.util.ValidatorProvider;
@@ -56,8 +57,9 @@ public class BestellungService implements Serializable {
 	 * 
 	 * @param pBD
 	 * @return
+	 * @throws Exception 
 	 */
-	public Bestellung addBestellung(Bestellung pBD, Locale pLocale) {
+	public Bestellung addBestellung(Bestellung pBD, Locale pLocale) throws Exception {
 
 		if (pBD == null)
 			return pBD;
@@ -73,8 +75,14 @@ public class BestellungService implements Serializable {
 		/**
 		 * Die Bestellung wird an die Datenbank übergeben
 		 */
+		
 		em.persist(pBD);
-
+		if (pBD.getBestellungID() == null) throw new Exception("blublublub");
+		for (Bestellposten posten : pBD.getBestellposten()) {
+			posten.setBestellung(pBD);
+		}
+		
+		em.merge(pBD);
 		/**
 		 * Datenbank synchronisieren
 		 */
