@@ -136,7 +136,7 @@ public class Bestellung implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "Kunde_FK")
 	@Valid
-	@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}")
+	//@NotNull(message = "{bestellverwaltung.bestellung.kunde.notNull}")
 	@JsonIgnore
 	private Kunde kunde;
 	
