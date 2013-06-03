@@ -17,7 +17,6 @@ import java.util.Locale;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.event.Event;
@@ -59,7 +58,6 @@ import de.shop.util.FileHelper;
  */
 @Named("kc")
 @SessionScoped
-@Stateful
 @TransactionAttribute(SUPPORTS)
 public class KundeController implements Serializable {
 	private static final long serialVersionUID = -8817180909526894740L;
