@@ -10,152 +10,54 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 <ui:composition template="/WEB-INF/templates/desktop/main.xml">
+	<ui:define name="metadata">
+		<f:event type="preRenderView" listener="#{kc.createEmptyKunde}" />
+	</ui:define>
+
 	<ui:param name="pageTitle" value="#{msgKv['kv.titel.view']}" />
+	
 
-	<ui:define name="kunde">
-		<h:form id="form">
-			<rich:focus id="formFocus" />
+	<ui:define name="article">
+	
+		<!-- SUCHMASKEN ANZEIGEN -->
+		<h:panelGroup>
 
-			<rich:panel id="suchePanel" header="#{msgKv['kv.suche']}">
-				<h:panelGrid id="suchePanelGrid" columns="4">
-					<h:outputLabel id="kundeIdInputLabel"
-						value="#{msgKv['kv.label.kid']}" for="kundeIdInput" />
+			<!-- searchKundeByID -->
+			<h:form id="sucheFormId">
+				<rich:panel id="suchePanel"
+					header="#{msgKv['kv.titel.view']}">
+					<h:panelGrid id="suchePanelGrid" columns="2">
+						<h:outputLabel value="#{msgKv['kv.label.kid']}"
+							id="idInputLabel" for="idInput" />
+						<h:inputText value="#{kc.kundeId}" id="idInput" />
+						<f:verbatim />
+						<a4j:commandButton id="sucheButton" action="#{kc.findKundeById}"
+							value="#{msgKv['kv.button.submit']}"
+							render="viewKundeResult" />
+					</h:panelGrid>
+				</rich:panel>
+			</h:form>		
+		</h:panelGroup>
+		
+		<p />
 
-					<!--  <rich:autocomplete id="kundeIdInput"
-						                   value="#{kc.kundeId}"
-						                   mode="ajax"
-						                   minChars="1"
-						                   autocompleteMethod="#{kc.findKundeById}"
-						                   var="kunde"
-						                   fetchValue="#{kunde.kunde_ID}"
-						                   converter="javax.faces.Integer"
-						                   converterMessage="#{msgKv['viewKunde.kundenr.converterError']}">
-							#{kunde.id} : #{kunde.nachname}, #{kunde.vorname}
-						</rich:autocomplete> -->
+		<!-- RESULT -->
+		<a4j:outputPanel id="viewKundeResult">
 
-					<a4j:commandButton id="findButton" action="#{kc.findKundeById}"
-						value="#{msgKv['kv.button.submit']}"
-						render="gesuchterKundePanel fehlermeldungKundeId" />
-
-					<a4j:status id="statusWaiting">
-						<f:facet name="start">
-							<h:panelGroup id="waitingGroup">
-								<h:graphicImage id="waitingGif" name="waiting.gif"
-									library="images" />
-									#{msgKv['kv.load']}
-								</h:panelGroup>
-						</f:facet>
-					</a4j:status>
+			<h:panelGroup rendered="#{not empty kc.kunde}">
+				<h:panelGrid colums="3" border="0">
+					<rich:panel header="#{msgKv['kv.label.kid']}">#{kc.kunde.kundeID}</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.nachname']}">#{kc.kunde.nachname}</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.erstellt']}">
+						<h:outputText value="#{kc.kunde.erstellt}">
+							<f:convertDateTime type="date" dateStyle="long" timezone="Europe/Berlin" />
+						</h:outputText>
+					</rich:panel>
 				</h:panelGrid>
+			</h:panelGroup>
 
-				<rich:messages id="fehlermeldungKundeId" for="kundeIdInput" />
-			</rich:panel>
+		</a4j:outputPanel>
 
-			<a4j:outputPanel id="gesuchterKundePanel">
-				<rich:tabPanel id="tabPanel" switchType="client"
-					rendered="#{not empty kc.kunde}">
-					<rich:tab id="stammdatenTab">
-						<f:facet name="header">
-							<h:panelGroup id="stammdatenLabel">
-								<h:graphicImage id="stammdatenGif" name="stammdaten.gif"
-									library="images" />
-									#{' '}
-									#{msgKv['kv.label.stammdaten']}
-								</h:panelGroup>
-						</f:facet>
-
-						<rich:panel id="stammdatenPanel">
-							<h:panelGrid id="stammdatenGrid" columns="2">
-								<h:outputText id="kundeIdLabel" value="#{msgKv['kv.label.kid']}" />
-								<h:outputText id="kundeId" value="#{kc.kunde.kundeID}" />
-
-								<h:outputText id="nachnameLabel"
-									value="#{msgKv['kv.label.nachname']}" />
-								<h:outputText id="nachname" value="#{kc.kunde.nachname}" />
-
-								<h:outputText id="vornameLabel"
-									value="#{msgKv['kv.label.vorname']}" />
-								<h:outputText id="vorname" value="#{kc.kunde.vorname}" />
-
-								<h:outputText id="erstelltLabel"
-									value="#{msgKv['kv.label.erstellt']}" />
-								<h:outputText id="erstellt" value="#{kc.kunde.erstellt}">
-									<f:convertDateTime type="date" dateStyle="long" />
-								</h:outputText>
-
-								<h:outputText id="emailLabel" value="#{msgKv['kv.label.email']}" />
-								<h:outputText id="email" value="#{kc.kunde.email}" />
-
-							</h:panelGrid>
-						</rich:panel>
-					</rich:tab>
-
-					<rich:tab id="bestellungenTab"
-						rendered="#{not empty kc.kunde.bestellungen}">
-						<f:facet name="header">
-							<h:panelGroup id="bestellungenLabel">
-								<h:graphicImage id="bestellungenGif" name="bestellungen.gif"
-									library="images" />
-									#{' '}
-									#{msgKv['kv.bestellungen']}
-								</h:panelGroup>
-						</f:facet>
-
-						<rich:dataTable id="bestellungenTabelle"
-							value="#{kc.kunde.bestellungen}" var="bestellung">
-							<f:facet name="header">
-								<rich:columnGroup id="positionenSpalten">
-									<rich:column id="artikelIdSpalte">
-											#{msgKv['kv.titel.aid']}
-										</rich:column>
-									<rich:column id="bezeichnungSpalte">
-											#{msgKv['kv.titel.bezeichnung']}
-										</rich:column>
-									<rich:column id="anzahlSpalte">
-											#{msgKv['kv.titel.anzahl']}
-										</rich:column>
-								</rich:columnGroup>
-							</f:facet>
-
-							<rich:collapsibleSubTable id="positionenSubtable"
-								value="#{bestellung.bestellposten}" var="pos"
-								rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
-								expandMode="client" expanded="#{false}">
-								<!-- https://issues.jboss.org/browse/RF-10715 -->
-								<rich:column id="artikelIdSpalteSub">
-										#{pos.produktdaten.produktdatenID}
-									</rich:column>
-
-								<rich:column id="beschreibungSpalteSub">
-										#{pos.produktdaten.produkt.beschreibung}
-									</rich:column>
-
-								<rich:column id="anzahlSpalteSub">
-										#{pos.anzahl}
-									</rich:column>
-							</rich:collapsibleSubTable>
-
-							<a4j:outputPanel id="outputPanelZebra" ajaxRendered="true">
-								<rich:jQuery id="odd" selector=".tabelleMitZebrastil tr:odd"
-									query="addClass('odd-row')" timing="domready" />
-								<rich:jQuery id="even" selector=".tabelleMitZebrastil tr:even"
-									query="addClass('even-row')" timing="domready" />
-								<rich:jQuery id="mouseover" selector=".tabelleMitZebrastil tr"
-									event="mouseover" query="jQuery(this).addClass('active-row')"
-									timing="domready" />
-								<rich:jQuery id="mouseout" selector=".tabelleMitZebrastil tr"
-									event="mouseout" query="jQuery(this).removeClass('active-row')"
-									timing="domready" />
-							</a4j:outputPanel>
-						</rich:dataTable>
-					</rich:tab>
-				</rich:tabPanel>
-			</a4j:outputPanel>
-		</h:form>
-
-		<!--
-			<a4j:log id="log"/>
-			-->
 	</ui:define>
 </ui:composition>
 </html>

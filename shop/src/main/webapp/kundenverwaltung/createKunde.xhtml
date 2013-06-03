@@ -19,7 +19,7 @@
 
 		<h:form id="createKundeForm">
 			<rich:jQuery id="nachnameFocus" selector="#nachname" query="focus()" />
-			
+
 			<rich:graphValidator id="kundeValidator" value="#{kc.newKunde}"
 				groups="#{kc.passwordGroup}">
 				<rich:messages for="kundeValidator" />
@@ -42,20 +42,16 @@
 					<h:inputText id="vorname" value="#{kc.newKunde.vorname}" />
 					<f:verbatim />
 
-					<f:verbatim />
 
-					<h:outputLabel id="geburtsdatumLabel" for="geburtsdatum"
+					<!-- <h:outputLabel id="geburtsdatumLabel" for="geburtsdatum"
 						value="#{msgKv['kv.label.geburtsdatum']}" />
 					<rich:calendar id="geburtsdatum"
 						datePattern="#{msg['calendar.pattern']}"
 						value="#{kc.newKunde.geburtsdatum}" timezone="CET">
-						<!-- https://issues.jboss.org/browse/RF-10224
-							<rich:validator/>
-							-->
 						<rich:placeholder id="geburtsdatumPlaceholder"
 							value="#{msg['calendar.placeholder']}" />
 					</rich:calendar>
-					<rich:messages id="fehlermeldungenGeburtsdatum" for="geburtsdatum" />
+					<rich:messages id="fehlermeldungenGeburtsdatum" for="geburtsdatum" /> -->
 
 
 					<h:outputLabel id="emailLabel" for="email"
@@ -79,7 +75,7 @@
 						redisplay="true" />
 					<f:verbatim />
 
-					<h:outputLabel id="plzLabel" for="plz"
+					<!--<h:outputLabel id="plzLabel" for="plz"
 						value="#{msgKv['kv.label.plz']}" />
 					<h:inputText id="plz" value="#{kc.newKunde.adressen[0].plz}">
 						<rich:validator
@@ -106,15 +102,13 @@
 							onvalid="$(#{rich:element('strasse')}).removeClass('invalid')" />
 					</h:inputText>
 					<rich:messages id="fehlermeldungStrasse" for="strasse" />
-					<f:verbatim />
+					-->
 
-					<p id="buttons">
-						<h:commandButton id="createSubmit" action="#{kc.createKunde}"
-							value="#{msgKv['kv.button.submit']}" />
-						#{' '}
-						<h:commandButton id="reset" type="reset"
-							value="#{msgKv['kv.button.reset']}" />
-					</p>
+					<h:commandButton id="createSubmit" action="#{kc.createKunde}"
+						value="#{msgKv['kv.button.submit']}" />
+					<h:commandButton id="reset" type="reset"
+						value="#{msgKv['kv.button.reset']}" />
+					<f:verbatim />
 				</h:panelGrid>
 			</rich:graphValidator>
 		</h:form>
