@@ -17,6 +17,7 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -215,8 +216,8 @@ public class Kunde implements Serializable, Cloneable {
 	 * Liste aller Bestellung des Kunden
 	 */
 	@OneToMany(mappedBy = "kunde", fetch = EAGER)
-	@JsonIgnore
 	@OrderColumn(name = "idx")
+	@JsonIgnore
 	private List<Bestellung> bestellungen;
 
 	/**

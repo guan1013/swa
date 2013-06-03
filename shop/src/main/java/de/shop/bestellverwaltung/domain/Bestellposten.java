@@ -61,7 +61,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 			query = "from Bestellposten where anzahl = :anzahl"),
 	@NamedQuery(
 			name = Bestellposten.BESTELLPOSTEN_UPDATE_FK,
-			query = "UPDATE Bestellposten SET bestellungFk = :bestellungfk WHERE bestellpostenID = :id")
+			query = "UPDATE Bestellposten SET bestellung_fk = :bestellungfk WHERE bestellposten_id = :id")
 })
 public class Bestellposten implements Serializable {
 	

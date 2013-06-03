@@ -303,6 +303,13 @@ public class BestellpostenService implements Serializable {
 		return bp;
 	}	
 	
+	
+	public void updateAfterCreateBestellung(int bpId, int bId) {
+		em.createNamedQuery(Bestellposten.BESTELLPOSTEN_UPDATE_FK).setParameter("bestellungfk",bpId).setParameter("id", bId).executeUpdate();
+	}
+	
+	
+	
 	/**
 	 * Update einen Bestellposten
 	 * 

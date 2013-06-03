@@ -73,7 +73,7 @@ public class BestellungController implements Serializable{
 	private SuchFilter suchFilter;
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
-	@Transactional
+	
 	public void bestellen() throws Exception {
 
 		if (warenkorb.isEmpty()) {
@@ -85,6 +85,7 @@ public class BestellungController implements Serializable{
 		Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getKunde());
 		kunde.getKunde().addBestellung(bestellung);
 		bs.addBestellung(bestellung, locale);
+		bs.addBestellposten(bestellung);
 		bestellung.setGesamtpreis(bestellung.errechneGesamtpreis());
 		warenkorb.reset();
 	}
