@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:rich="http://richfaces.org/rich">
+
+<ui:composition template="/WEB-INF/templates/desktop/main.xml">
+
+	<ui:define name="metadata">
+		<f:event type="preRenderView" listener="#{pc.createEmptyProdukt}" />
+	</ui:define>
+
+	<ui:param name="pageTitle" value="#{msgBv['bestellung.create.titel']}" />
+
+	<ui:define name="article">
+
+		<h:form id="erstelleNeueBestellung">
+
+			<rich:panel id="createBestellungPanel"
+				header="#{msgBv['bestellung.create.titel']}">
+
+				<h:panelGrid columns="1">
+
+					<rich:panel header="#{msgBv['bestellung.search.warenkorb']}">
+						<rich:dataTable id="alleBestellposten" var="bpdata"
+							value="#{bc.warenkorb.positionen}"
+							rendered="#{not empty bc.warenkorb.positionen}"
+							rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
+							>
+
+							<rich:column id="pBeschreibung">
+								<f:facet name="header">#{msgBv['bestellposten.produkt.beschreibung']}</f:facet>#{bpdata.produktdaten.produkt.beschreibung}</rich:column>
+							<rich:column id="pPreis">
+								<f:facet name="header">#{msgBv['bestellposten.produkt.preis']}</f:facet>#{bpdata.produktdaten.preis}
+								<h:outputText id="outputTextPreis" value="#{pdata.preis}">
+									<f:convertNumber type="currency" currencyCode="EUR" />
+								</h:outputText>
+								</rich:column>
+							<rich:column id="pDataAnzahl">
+								<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>#{bpdata.anzahl}</rich:column>
+						</rich:dataTable>
+					</rich:panel>
+
+				</h:panelGrid>
+
+				<h:commandButton action="#{bc.bestellen}"
+					value="#{msgBv['bestellung.create.submit']}" 
+					rendered="#{not empty bc.warenkorb.positionen}" />
+
+			</rich:panel>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>
