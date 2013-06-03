@@ -52,6 +52,7 @@ import de.shop.util.exceptions.ConcurrentDeletedException;
 import de.shop.util.Messages;
 import de.shop.util.File;
 import de.shop.util.FileHelper;
+import de.shop.util.Transactional;
 
 /**
  * Dialogsteuerung fuer die Kundenverwaltung
@@ -107,7 +108,7 @@ public class KundeController implements Serializable {
 
 	@Inject
 	private Messages messages;
-
+	
 	@Inject
 	@Push(topic = "updateKunde")
 	private transient Event<String> updateKundeEvent;
@@ -150,7 +151,7 @@ public class KundeController implements Serializable {
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// METHODS
 
-	@TransactionAttribute(REQUIRED)
+	@Transactional
 	public String createKunde() {
 
 		try {
@@ -287,7 +288,7 @@ public class KundeController implements Serializable {
 		}
 	}
 
-	@TransactionAttribute(REQUIRED)
+	@Transactional
 	public String updateKunde() {
 		auth.preserveLogin();
 

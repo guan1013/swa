@@ -36,6 +36,8 @@
 				-->
 
 			<h:panelGrid id="updateKundeTabelle" columns="3">
+
+				<!-- Nachname -->
 				<h:outputLabel id="nachnameLabel" for="nachname"
 					value="#{msgKv['kv.label.nachname']}" />
 				<h:inputText id="nachname" value="#{kc.kunde.nachname}"
@@ -46,26 +48,23 @@
 				</h:inputText>
 				<rich:messages id="fehlermeldungenNachname" for="nachname" />
 
+				<!-- Vorname -->
 				<h:outputLabel id="vornameLabel" for="vorname"
 					value="#{msgKv['kv.label.vorname']}" />
 				<h:inputText id="vorname" value="#{kc.kunde.vorname}"
 					valueChangeListener="#{kc.geaendert}" />
 				<f:verbatim />
-				<f:verbatim />
 
-				<h:outputLabel id="erstelltLabel" for="erstellt"
-					value="#{msgKv['kv.label.erstellt']}" escape="false" />
-				<rich:calendar id="erstellt"
+				<!-- Geburtstag -->
+				<h:outputLabel id="geburtsdatumLabel" for="geburtsdatum"
+					value="#{msgKv['kv.label.geburtsdatum']}" escape="false" />
+				<rich:calendar id="geburtsdatum"
 					datePattern="#{msg['calendar.pattern']}"
-					value="#{kc.kunde.erstellt}" timezone="CET">
-					<!--
-						<rich:validator/>
-						-->
+					value="#{kc.kunde.geburtsdatum}" timezone="CET">
 				</rich:calendar>
-				<rich:messages id="fehlermeldungErstellt" for="erstellt" />
+				<rich:messages id="fehlermeldungGeburtsdatum" for="geburtsdatum" />
 
-				<f:verbatim />
-
+				<!-- E-Mail -->
 				<h:outputLabel id="emailLabel" for="email"
 					value="#{msgKv['kv.label.email']}" />
 				<h:inputText id="email" value="#{kc.kunde.email}"
