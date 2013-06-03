@@ -214,7 +214,7 @@ public class Kunde implements Serializable, Cloneable {
 	/**
 	 * Liste aller Bestellung des Kunden
 	 */
-	@OneToMany(mappedBy = "kunde")
+	@OneToMany(mappedBy = "kunde", fetch = EAGER)
 	@JsonIgnore
 	@OrderColumn(name = "idx")
 	private List<Bestellung> bestellungen;
