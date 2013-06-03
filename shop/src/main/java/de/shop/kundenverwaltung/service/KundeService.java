@@ -13,6 +13,7 @@ import javax.annotation.PreDestroy;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -266,34 +267,40 @@ public class KundeService implements Serializable {
 		 */
 		Kunde kd = null;
 
-		switch (pFe) {
-
-		case JUST_KUNDE:
-			/**
-			 * Gefundenen Kunde in eine Liste speichern
-			 */
-			kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
-					.setParameter("mail", pMail).getSingleResult();
-			break;
-
-		case WITH_BESTELLUNGEN:
-			/**
-			 * Gefundenen Kunde in eine Liste speichern
-			 */
-
-			kd = (Kunde) em
-					.createNamedQuery(Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG)
-					.setParameter("mail", pMail).getSingleResult();
-			break;
-
-		default:
-			/**
-			 * Gefundenen Kunde in eine Liste speichern
-			 */
-			kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
-					.setParameter("mail", pMail).getSingleResult();
-			break;
-
+		try{
+			switch (pFe) {
+	
+			case JUST_KUNDE:
+				/**
+				 * Gefundenen Kunde speichern
+				 */
+				kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
+						.setParameter("mail", pMail).getSingleResult();
+				break;
+	
+			case WITH_BESTELLUNGEN:
+				/**
+				 * Gefundenen Kunde speichern
+				 */
+	
+				kd = (Kunde) em
+						.createNamedQuery(Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG)
+						.setParameter("mail", pMail).getSingleResult();
+				break;
+	
+			default:
+				/**
+				 * Gefundenen Kunde speichern
+				 */
+				kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
+						.setParameter("mail", pMail).getSingleResult();
+				break;
+	
+			}
+		}
+		
+		catch(NoResultException e){
+			return null;
 		}
 
 		return kd;

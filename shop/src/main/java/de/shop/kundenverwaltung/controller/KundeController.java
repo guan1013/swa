@@ -188,10 +188,9 @@ public class KundeController implements Serializable {
 		}
 
 		newKunde = new Kunde();
-		kunde = new Kunde();
-		//final Adresse adresse = new Adresse();
-		//adresse.setKunde(newKunde);
-		//newKunde.addAdresse(adresse);
+		final Adresse adresse = new Adresse();
+		adresse.setKunde(newKunde);
+		newKunde.addAdresse(adresse);
 	}
 
 	/**
@@ -200,15 +199,15 @@ public class KundeController implements Serializable {
 	 * @return URL fuer Anzeige des gefundenen Kunden; sonst null
 	 */
 	@TransactionAttribute(REQUIRED)
-	public void findKundeById() {
+	public String findKundeById() {
 		kunde = ks.findKundeById(kundeId, locale);
 
 		if (kunde == null) {
-			// Kein Kunde zu gegebener ID gefunden
-			//return findKundeByIdErrorMsg(kundeId.toString());
+			//Kein Kunde zu gegebener ID gefunden
+			return findKundeByIdErrorMsg(kundeId.toString());
 		}
 
-		//return JSF_VIEW_KUNDE;
+		return JSF_VIEW_KUNDE;
 	}
 
 	private String findKundeByIdErrorMsg(String id) {

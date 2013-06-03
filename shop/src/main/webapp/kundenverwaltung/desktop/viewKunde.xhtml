@@ -10,35 +10,27 @@
 	xmlns:a4j="http://richfaces.org/a4j">
 
 <ui:composition template="/WEB-INF/templates/desktop/main.xml">
-	<ui:define name="metadata">
-		<f:event type="preRenderView" listener="#{kc.createEmptyKunde}" />
-	</ui:define>
 
 	<ui:param name="pageTitle" value="#{msgKv['kv.titel.view']}" />
-	
 
 	<ui:define name="article">
-	
 		<!-- SUCHMASKEN ANZEIGEN -->
 		<h:panelGroup>
-
 			<!-- searchKundeByID -->
 			<h:form id="sucheFormId">
-				<rich:panel id="suchePanel"
-					header="#{msgKv['kv.titel.view']}">
+				<rich:panel id="suchePanel" header="#{msgKv['kv.titel.view']}">
 					<h:panelGrid id="suchePanelGrid" columns="2">
-						<h:outputLabel value="#{msgKv['kv.label.kid']}"
-							id="idInputLabel" for="idInput" />
+						<h:outputLabel value="#{msgKv['kv.label.kid']}" id="idInputLabel"
+							for="idInput" />
 						<h:inputText value="#{kc.kundeId}" id="idInput" />
 						<f:verbatim />
 						<a4j:commandButton id="sucheButton" action="#{kc.findKundeById}"
-							value="#{msgKv['kv.button.submit']}"
-							render="viewKundeResult" />
+							value="#{msgKv['kv.button.submit']}" render="viewKundeResult" />
 					</h:panelGrid>
 				</rich:panel>
-			</h:form>		
+			</h:form>
 		</h:panelGroup>
-		
+
 		<p />
 
 		<!-- RESULT -->
@@ -50,7 +42,8 @@
 					<rich:panel header="#{msgKv['kv.label.nachname']}">#{kc.kunde.nachname}</rich:panel>
 					<rich:panel header="#{msgKv['kv.label.erstellt']}">
 						<h:outputText value="#{kc.kunde.erstellt}">
-							<f:convertDateTime type="date" dateStyle="long" timezone="Europe/Berlin" />
+							<f:convertDateTime type="date" dateStyle="long"
+								timezone="Europe/Berlin" />
 						</h:outputText>
 					</rich:panel>
 				</h:panelGrid>
