@@ -46,10 +46,10 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 			query = "FROM Bestellposten"),
 	@NamedQuery(
 			name = Bestellposten.NUR_BESTELLPOSTEN_NACH_ID,
-			query = "from Bestellposten where bestellposten_ID = :id"),
+			query = "from Bestellposten where bestellpostenID = :id"),
 	@NamedQuery(
 			name = Bestellposten.BESTELLPOSTEN_MIT_BESTELLUNG,
-			query = "SELECT distinct b, bs FROM Bestellposten b JOIN b.bestellung bs where bestellposten_Id = :id"),
+			query = "SELECT distinct b, bs FROM Bestellposten b JOIN b.bestellung bs where bestellpostenID = :id"),
 	@NamedQuery(
 			name = Bestellposten.BESTELLPOSTEN_NACH_BESTELLUNG,
 			query = "from Bestellposten b where b.bestellung.bestellungID = :bestellungFk"),
@@ -61,7 +61,7 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 			query = "from Bestellposten where anzahl = :anzahl"),
 	@NamedQuery(
 			name = Bestellposten.BESTELLPOSTEN_UPDATE_FK,
-			query = "update Bestellposten set bestellung_fk = :bestellungfk where bestellposten_id = :id")
+			query = "UPDATE Bestellposten SET bestellungFk = :bestellungfk WHERE bestellpostenID = :id")
 })
 public class Bestellposten implements Serializable {
 	
