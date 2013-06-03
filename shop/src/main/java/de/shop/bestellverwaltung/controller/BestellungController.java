@@ -1,12 +1,16 @@
 package de.shop.bestellverwaltung.controller;
 
 import static javax.ejb.TransactionAttributeType.REQUIRED;
+import static javax.ejb.TransactionAttributeType.SUPPORTS;
 
+import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
 
+import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
@@ -28,8 +32,8 @@ import de.shop.util.Transactional;
 @Named("bc")
 @Log
 @RequestScoped
-public class BestellungController {
-
+public class BestellungController implements Serializable{
+	
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
 
@@ -40,7 +44,7 @@ public class BestellungController {
 	private Warenkorb warenkorb;
 	
 	@Inject
-	private KundeController kc;
+	private KundeController kunde;
 	
 	@Inject
 	private BestellungService bs;
@@ -69,8 +73,8 @@ public class BestellungController {
 	private SuchFilter suchFilter;
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
-
-	public void bestellen() {
+	@Transactional
+	public void bestellen() throws Exception {
 
 		if (warenkorb.isEmpty()) {
 			return;
@@ -78,19 +82,15 @@ public class BestellungController {
 
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
 				warenkorb.getSize());
-
-		final Bestellung bestellung = new Bestellung();
-		for (Bestellposten p : warenkorb.getPositionen()) {
-			bestellung.addBestellposten(p);
-		}
-		final Kunde k = kc.getKunde();
-		k.addBestellung(bestellung);
-		bs.addBestellung(bestellung, null);
+		Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getKunde());
+		kunde.getKunde().addBestellung(bestellung);
+		bs.addBestellung(bestellung, locale);
 		bestellung.setGesamtpreis(bestellung.errechneGesamtpreis());
+		warenkorb.reset();
 	}
 	
 	public void warenkorbLeeren() {
-		warenkorb = null;
+		warenkorb.reset();
 	}
 	
 	@TransactionAttribute(REQUIRED)

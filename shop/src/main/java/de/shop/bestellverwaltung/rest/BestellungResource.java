@@ -144,7 +144,7 @@ public class BestellungResource {
 //	}
 	@POST
 	@Consumes(APPLICATION_JSON)
-	public Response createBestellung(Bestellung bestellung) {
+	public Response createBestellung(Bestellung bestellung) throws Exception {
 		// Schluessel des Kunden extrahieren
 		final String kundeUriStr = bestellung.getKundeUri().toString();
 		final int startPos = kundeUriStr.lastIndexOf('/') + 1;
