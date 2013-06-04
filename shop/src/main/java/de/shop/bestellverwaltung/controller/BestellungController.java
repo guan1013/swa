@@ -1,27 +1,21 @@
 package de.shop.bestellverwaltung.controller;
 
 import static javax.ejb.TransactionAttributeType.REQUIRED;
-import static javax.ejb.TransactionAttributeType.SUPPORTS;
-
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
 
-import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 
-import de.shop.bestellverwaltung.domain.Bestellposten;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.controller.KundeController;
-import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.util.SuchFilter;
@@ -33,7 +27,7 @@ import de.shop.util.Transactional;
 @Named("bc")
 @Log
 @RequestScoped
-public class BestellungController implements Serializable{
+public class BestellungController implements Serializable {
 	
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
@@ -86,7 +80,7 @@ public class BestellungController implements Serializable{
 
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
 				warenkorb.getSize());
-		Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getKunde());
+		final Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getKunde());
 		kunde.getKunde().addBestellung(bestellung);
 		ks.updateKunde(kunde.getKunde(), locale, false);
 		
