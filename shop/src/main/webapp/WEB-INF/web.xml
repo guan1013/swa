@@ -281,6 +281,7 @@
 			<url-pattern>/produktverwaltung/updateProdukt.jsf</url-pattern>
 			<url-pattern>/bestellverwaltung/searchBestellung.jsf</url-pattern>
 			<url-pattern>/kundenverwaltung/updateKunde.jsf</url-pattern>
+			<url-pattern>/kundenverwaltung/viewKunde.jsf</url-pattern>
 			<http-method>POST</http-method>
 			<http-method>GET</http-method>
 		</web-resource-collection>

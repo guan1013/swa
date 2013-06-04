@@ -67,7 +67,7 @@ public class AuthController implements Serializable {
 				null);
 		kc.setKundeId(user.getKundeID());
 		kc.findKundeById();
-		String path = facesCtx.getViewRoot().getViewId();
+		final String path = facesCtx.getViewRoot().getViewId();
 		return path;
 	}
 

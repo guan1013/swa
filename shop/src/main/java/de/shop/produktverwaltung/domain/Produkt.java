@@ -80,7 +80,7 @@ import de.shop.util.IdGroup;
 						+ "LIKE UPPER(CONCAT(:prefix,'%')) ORDER BY p.beschreibung ASC"),
 		@NamedQuery(
 				name = Produkt.PRODUKT_ALLE_HERSTELLER,
-				query = "SELECT DISTINCT p.hersteller FROM Produkt p ORDER BY hersteller ASC")})
+				query = "SELECT DISTINCT p.hersteller FROM Produkt p ORDER BY hersteller ASC") })
 // @formatter:on
 public class Produkt implements Serializable {
 

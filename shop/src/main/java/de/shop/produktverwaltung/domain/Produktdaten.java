@@ -28,7 +28,6 @@ import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.shop.util.DateFormatter;
-import de.shop.util.IdGroup;
 import de.shop.util.ProduktdatenIdGroup;
 
 /**

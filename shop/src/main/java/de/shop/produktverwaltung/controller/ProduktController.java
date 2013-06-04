@@ -173,13 +173,12 @@ public class ProduktController implements Serializable {
 		geaendert = false;
 
 		// Query-Parameter auslesen
-		String produktIdStr = request.getParameter("produktId");
-		Integer produktId;
+		final String produktIdStr = request.getParameter("produktId");
 
 		try {
 			// ID in int umwandeln und Produkt laden, Produktdaten nachladen
-			produktId = Integer.valueOf(produktIdStr);
-			produktView = produktService.findProduktByID(produktId,
+			Integer produktIdInt = Integer.valueOf(produktIdStr);
+			produktView = produktService.findProduktByID(produktIdInt,
 					ProduktService.FetchType.NUR_PRODUKTE, null);
 			request.setAttribute("anzahlProduktdaten", produktView
 					.getProduktdaten().size());
@@ -216,7 +215,7 @@ public class ProduktController implements Serializable {
 	@Transactional
 	public List<String> findeGroessenByPrefix(String prefix) {
 
-		List<String> result = produktService.findGroessenByPrefix(prefix);
+		final List<String> result = produktService.findGroessenByPrefix(prefix);
 
 		return result;
 
@@ -225,7 +224,7 @@ public class ProduktController implements Serializable {
 	@Transactional
 	public List<String> findeHerstellerByPrefix(String prefix) {
 
-		List<String> result = produktService.findHerstellerPrefix(prefix);
+		final List<String> result = produktService.findHerstellerPrefix(prefix);
 
 		return result;
 
@@ -234,7 +233,7 @@ public class ProduktController implements Serializable {
 	@Transactional
 	public List<String> findeBeschreibungByPrefix(String prefix) {
 
-		List<String> result = produktService.findBeschreibungPrefix(prefix);
+		final List<String> result = produktService.findBeschreibungPrefix(prefix);
 
 		return result;
 
