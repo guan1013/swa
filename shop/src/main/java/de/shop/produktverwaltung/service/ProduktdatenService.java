@@ -128,8 +128,8 @@ public class ProduktdatenService implements Serializable {
 				IdGroup.class));
 
 		// Suche in DB
-		final Produktdaten produktdaten = entityManager.find(Produktdaten.class,
-				produktdatenID);
+		final Produktdaten produktdaten = entityManager.find(
+				Produktdaten.class, produktdatenID);
 
 		// Log
 		LOGGER.log(FINER, "ENDE: Suche nach Produktdaten. Ergebnis={0}",
@@ -183,9 +183,11 @@ public class ProduktdatenService implements Serializable {
 		}
 
 		// PREIS
-		if (filter.getPreisOben() != null && filter.getPreisUnten() != null && filter.getPreisOben().doubleValue() != 0.0) {
-			final Predicate predPreis = builder.between(pd.get(Produktdaten_.preis),
-					filter.getPreisUnten(), filter.getPreisOben());
+		if (filter.getPreisOben() != null && filter.getPreisUnten() != null
+				&& filter.getPreisOben().doubleValue() != 0.0) {
+			final Predicate predPreis = builder.between(
+					pd.get(Produktdaten_.preis), filter.getPreisUnten(),
+					filter.getPreisOben());
 			predicates.add(predPreis);
 		}
 
@@ -196,7 +198,6 @@ public class ProduktdatenService implements Serializable {
 							+ filter.getFarbe().toLowerCase() + "%");
 			predicates.add(predFarbe);
 		}
-		
 
 		// GROESSE
 		if (filter.getGroesse() != null && !filter.getGroesse().isEmpty()) {
@@ -215,7 +216,8 @@ public class ProduktdatenService implements Serializable {
 		}
 
 		// BESCHREIBUNG
-		if (filter.getBeschreibung() != null && !filter.getBeschreibung().isEmpty()) {
+		if (filter.getBeschreibung() != null
+				&& !filter.getBeschreibung().isEmpty()) {
 			final Predicate predBeschreibung = builder.like(
 					builder.lower(join.get(Produkt_.beschreibung)), "%"
 							+ filter.getBeschreibung().toLowerCase() + "%");
@@ -226,8 +228,8 @@ public class ProduktdatenService implements Serializable {
 		query.where(builder.and(predicates.toArray(predArray)));
 
 		// Suche in DB
-		final List<Produktdaten> gefundeneProduktdaten = entityManager.createQuery(
-				query).getResultList();
+		final List<Produktdaten> gefundeneProduktdaten = entityManager
+				.createQuery(query).getResultList();
 
 		// Log
 		LOGGER.log(
@@ -251,8 +253,9 @@ public class ProduktdatenService implements Serializable {
 
 		// Log
 		LOGGER.log(FINER,
-				"ENDE: Suche nach Produktdaten by ProduktID. Gefunden: {0}", results.size());
-		
+				"ENDE: Suche nach Produktdaten by ProduktID. Gefunden: {0}",
+				results.size());
+
 		return results;
 	}
 
