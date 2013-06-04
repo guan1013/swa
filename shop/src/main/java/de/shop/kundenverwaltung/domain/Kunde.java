@@ -18,7 +18,6 @@ import java.util.Set;
 
 import javax.persistence.Basic;
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -30,7 +29,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.OrderColumn;
 import javax.persistence.PostLoad;
 import javax.persistence.PostPersist;
 import javax.persistence.PostUpdate;
@@ -218,7 +216,6 @@ public class Kunde implements Serializable, Cloneable {
 	 * Liste aller Bestellung des Kunden
 	 */
 	@OneToMany(mappedBy = "kunde", fetch = EAGER, cascade = { ALL })
-	@OrderColumn(name = "idx")
 	@JsonIgnore
 	private List<Bestellung> bestellungen;
 
