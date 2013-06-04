@@ -34,6 +34,7 @@ public class Warenkorb implements Serializable {
 		if (produktdaten == null) {
 			return;
 		}
+		
 
 		// Neuen Bestellposten mit Produktdaten und Anzahl=1 anlegen
 		final Bestellposten neuerBestellposten = new Bestellposten();
@@ -57,6 +58,12 @@ public class Warenkorb implements Serializable {
 
 	public void reset() {
 		positionen.clear();
+	}
+
+	public void delete(Bestellposten bestellposten) {
+		
+		System.out.println("Delete from Warenkorb: " + bestellposten);
+		positionen.remove(bestellposten);
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////
