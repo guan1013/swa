@@ -87,6 +87,17 @@
 									<f:convertNumber type="currency" currencyCode="EUR" />
 								</h:outputText>
 							</rich:column>
+							
+							<!-- WARENKORB AKTION -->
+					<rich:column>
+					<h:form id="Bestellbutton">
+						<h:commandButton id="warenkorbButton"
+							image="#{resource['images:warenkorb.gif']}"
+							action="#{wk.add(pdata)}"
+							alt="#{msgBv['warenkorb.title']}" />
+					</h:form>
+					</rich:column>
+					
 						</rich:dataTable>
 					</rich:panel>
 				</h:panelGrid>
