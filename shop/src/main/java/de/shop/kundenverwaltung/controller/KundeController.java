@@ -122,6 +122,7 @@ public class KundeController implements Serializable {
 	private String nachname;
 
 	private List<Kunde> kunden = Collections.emptyList();
+	private List<Adresse> adresse;
 
 	private SortOrder vornameSortOrder = SortOrder.unsorted;
 	private String vornameFilter = "";
@@ -202,6 +203,21 @@ public class KundeController implements Serializable {
 	@TransactionAttribute(REQUIRED)
 	public String findKundeById() {
 		kunde = ks.findKundeById(kundeId, locale);
+		adresse = ks.findAdressenByKundeId(kunde.getKundeID());
+
+		if (adresse.isEmpty()) {
+			kunde.addAdresse(new Adresse());
+		}
+
+		else {
+			for (Adresse a : adresse) {
+				a.setKunde(kunde);
+			}
+
+			for (Adresse a : adresse) {
+				kunde.addAdresse(a);
+			}
+		}
 
 		if (kunde == null) {
 			// Kein Kunde zu gegebener ID gefunden

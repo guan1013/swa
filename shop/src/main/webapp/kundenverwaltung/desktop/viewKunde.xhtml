@@ -31,12 +31,10 @@
 			</h:form>
 		</h:panelGroup>
 
-		<p />
-
 		<!-- RESULT -->
 		<a4j:outputPanel id="viewKundeResult">
-
 			<h:panelGroup rendered="#{not empty kc.kunde}">
+				<!-- Kundendaten -->
 				<h:panelGrid colums="3" border="0">
 					<rich:panel header="#{msgKv['kv.label.kid']}">#{kc.kunde.kundeID}</rich:panel>
 					<rich:panel header="#{msgKv['kv.label.nachname']}">#{kc.kunde.nachname}</rich:panel>
@@ -47,19 +45,40 @@
 						</h:outputText>
 					</rich:panel>
 				</h:panelGrid>
-				
+
+				<!-- Adressdaten -->
 				<h:panelGrid colums="3" border="0">
 					<rich:panel header="#{msgKv['kv.label.aid']}">#{kc.kunde.adressen[0].adresseID}</rich:panel>
 					<rich:panel header="#{msgKv['kv.label.strasse']}">#{kc.kunde.adressen[0].strasse}</rich:panel>
-					<rich:panel header="#{msgKv['kv.label.plz']}">#kc.kunde.adressen[0].plz</rich:panel>
-					<rich:panel header="#{msgKv['kv.label.ort']}">#kc.kunde.adressen[0].ort</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.plz']}">#{kc.kunde.adressen[0].plz}</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.ort']}">#{kc.kunde.adressen[0].ort}</rich:panel>
+				</h:panelGrid>
+
+				<!-- Bestelldaten 
+				
+				<h:panelGrid colums="1" border="0">
+					<rich:panel header="#{msgKv['kv.label.stammdaten']}">
+						<rich:dataTable id="adresse" var="adresse"
+							value="#{kc.kunde.adressen}"
+							rendered="#{not empty kc.kunde.adressen}"
+							rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
+							width="500">
+
+							<rich:column id="adresseID">
+								<f:facet name="header">#{msgKv['kv.label.aid']}</f:facet>#{adresse.adresseID}</rich:column>
+							<rich:column id="adresseStrasse">
+								<f:facet name="header">#{msgKv['kv.label.strasse']}</f:facet>#{adresse.strasse}</rich:column>
+							<rich:column id="adressePLZ">
+								<f:facet name="header">#{msgKv['kv.label.plz']}</f:facet>#{adresse.plz}</rich:column>
+							<rich:column id="adresseOrt">
+								<f:facet name="header">#{msgKv['kv.label.ort']}</f:facet>#{adresse.ort}</rich:column>
+						</rich:dataTable>
+					</rich:panel>
 				</h:panelGrid>
 				
-			</h:panelGroup>
-			
-			
-				
+				-->
 
+			</h:panelGroup>
 		</a4j:outputPanel>
 
 	</ui:define>
