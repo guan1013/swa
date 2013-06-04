@@ -45,13 +45,20 @@
 
 			<h:panelGroup rendered="#{not empty bc.bestellungSearch}">
 
-				<!-- ID HERSTELLER ERSTELLUNGSDATUM -->
-				<h:panelGrid columns="3" border="0">
+				<!-- ID HERSTELLER ERSTELLUNGSDATUM GESAMTPREIS-->
+				<h:panelGrid columns="4" border="0">
 					<rich:panel header="#{msgBv['bestellung.label.id']}">#{bc.bestellungSearch.bestellungID}</rich:panel>
+					
 					<rich:panel header="#{msgBv['bestellung.label.erstellt']}">
 						<h:outputText value="#{bc.bestellungSearch.erstellt}">
 							<f:convertDateTime type="date" dateStyle="long"
 								timezone="Europe/Berlin" />
+						</h:outputText>
+					</rich:panel>
+					
+					<rich:panel header="#{msgBv['bestellung.label.gesamtpreis']}">
+						<h:outputText id="outputTextGesamtPreis" value="#{bc.bestellungSearch.gesamtpreis}">
+							<f:convertNumber type="currency" currencyCode="EUR" />
 						</h:outputText>
 					</rich:panel>
 				</h:panelGrid>
