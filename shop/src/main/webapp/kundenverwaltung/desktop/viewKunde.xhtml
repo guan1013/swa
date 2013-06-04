@@ -47,7 +47,18 @@
 						</h:outputText>
 					</rich:panel>
 				</h:panelGrid>
+				
+				<h:panelGrid colums="3" border="0">
+					<rich:panel header="#{msgKv['kv.label.aid']}">#{kc.kunde.adressen[0].adresseID}</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.strasse']}">#{kc.kunde.adressen[0].strasse}</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.plz']}">#kc.kunde.adressen[0].plz</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.ort']}">#kc.kunde.adressen[0].ort</rich:panel>
+				</h:panelGrid>
+				
 			</h:panelGroup>
+			
+			
+				
 
 		</a4j:outputPanel>
 

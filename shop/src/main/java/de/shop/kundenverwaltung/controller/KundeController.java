@@ -1,6 +1,5 @@
 package de.shop.kundenverwaltung.controller;
 
-import static de.shop.util.Constants.JSF_INDEX;
 import static de.shop.util.Constants.JSF_REDIRECT_SUFFIX;
 import static de.shop.util.Messages.MessagesType.KUNDENVERWALTUNG;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
@@ -71,6 +70,7 @@ public class KundeController implements Serializable {
 			+ "viewKunde";
 	private static final String JSF_LIST_KUNDEN = JSF_KUNDENVERWALTUNG
 			+ "listKunden";
+	private static final String JSF_INDEX = "/index";
 
 	private static final String CLIENT_ID_KUNDEID = "form:kundeIdInput";
 	private static final String MSG_KEY_KUNDE_NOT_FOUND_BY_ID = "viewKunde.notFound";
@@ -108,7 +108,7 @@ public class KundeController implements Serializable {
 
 	@Inject
 	private Messages messages;
-	
+
 	@Inject
 	@Push(topic = "updateKunde")
 	private transient Event<String> updateKundeEvent;
@@ -166,7 +166,7 @@ public class KundeController implements Serializable {
 		kunde = newKunde;
 		newKunde = null; // zuruecksetzen
 
-		return JSF_VIEW_KUNDE + JSF_REDIRECT_SUFFIX;
+		return JSF_INDEX;
 	}
 
 	private String createKundeErrorMsg(AbstractShopException e) {
@@ -204,7 +204,7 @@ public class KundeController implements Serializable {
 		kunde = ks.findKundeById(kundeId, locale);
 
 		if (kunde == null) {
-			//Kein Kunde zu gegebener ID gefunden
+			// Kein Kunde zu gegebener ID gefunden
 			return findKundeByIdErrorMsg(kundeId.toString());
 		}
 
