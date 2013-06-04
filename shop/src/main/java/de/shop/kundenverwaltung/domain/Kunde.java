@@ -191,7 +191,7 @@ public class Kunde implements Serializable, Cloneable {
 	 */
 	@Column(name = "Geburtsdatum")
 	@Temporal(TemporalType.DATE)
-	@Past
+	@Past(message = "kundeverwaltung.kunde.geburtsdatum.past")
 	private Date geburtsdatum;
 
 	/**
