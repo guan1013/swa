@@ -61,8 +61,6 @@ public class Warenkorb implements Serializable {
 	}
 
 	public void delete(Bestellposten bestellposten) {
-		
-		System.out.println("Delete from Warenkorb: " + bestellposten);
 		positionen.remove(bestellposten);
 	}
 

@@ -41,6 +41,13 @@
 				#{msg['nav.bestellung.bestellen']}
 			</h:outputLink>
 		</p>
+		
+		<p id="warenkorb">
+			<h:outputLink id="menuViewWarenkorb"
+				value="#{request.contextPath}/bestellverwaltung/warenkorb.jsf">
+				#{msg['nav.warenkorb.view']}
+			</h:outputLink>
+		</p>
 	</rich:panel>
 
 	<p />

@@ -37,7 +37,7 @@
 		</h:panelGrid>
 
 		<p id="abstand" />
-
+<h:form id="sucheFormFilter">
 		<h:panelGrid columns="1" border="0">
 			<rich:panel header="#{msgPv['produkt.search.produktdaten']}">
 				<rich:dataTable id="alleProduktdaten" var="pdata"
@@ -70,7 +70,7 @@
 				</rich:dataTable>
 			</rich:panel>
 		</h:panelGrid>
-
+</h:form>
 		<h:panelGrid columns="1" border="0"
 			rendered="#{rich:isUserInRole('admin')}">
 
