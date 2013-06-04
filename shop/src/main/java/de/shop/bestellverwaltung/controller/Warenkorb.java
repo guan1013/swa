@@ -39,7 +39,16 @@ public class Warenkorb implements Serializable {
 		final Bestellposten neuerBestellposten = new Bestellposten();
 		neuerBestellposten.setAnzahl(Integer.valueOf(1));
 		neuerBestellposten.setProduktdaten(produktdaten);
-		positionen.add(neuerBestellposten);
+		boolean x = false;
+		for (Bestellposten posten : positionen) {
+			if (posten.getProduktdaten() == neuerBestellposten.getProduktdaten()) {
+				posten.setAnzahl(posten.getAnzahl() + 1);
+				x = true;
+				break;
+			}
+		}
+		if (x == false)
+			positionen.add(neuerBestellposten);
 	}
 
 	public boolean isEmpty() {
