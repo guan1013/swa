@@ -77,7 +77,10 @@ import de.shop.util.IdGroup;
 		@NamedQuery(
 				name = Produkt.PRODUKT_LISTE_PRODUKTE, 
 				query = "SELECT DISTINCT p.beschreibung FROM Produkt p WHERE UPPER(p.beschreibung) "
-						+ "LIKE UPPER(CONCAT(:prefix,'%')) ORDER BY p.beschreibung ASC")})
+						+ "LIKE UPPER(CONCAT(:prefix,'%')) ORDER BY p.beschreibung ASC"),
+		@NamedQuery(
+				name = Produkt.PRODUKT_ALLE_HERSTELLER,
+				query = "SELECT DISTINCT p.hersteller FROM Produkt p ORDER BY hersteller ASC")})
 // @formatter:on
 public class Produkt implements Serializable {
 
@@ -118,13 +121,16 @@ public class Produkt implements Serializable {
 	public static final String PRODUKT_KOMPLETT = PREFIX + "SucheAlleProdukte";
 
 	public static final String PRODUKT_LISTE_GROESSEN = PREFIX
-			+ "listeAlleGroessen";
-	
+			+ "listeAlleGroessenByPrefix";
+
 	public static final String PRODUKT_LISTE_HERSTELLER = PREFIX
-			+ "listeAlleHersteller";
-	
+			+ "listeAlleHerstellerByPrefix";
+
 	public static final String PRODUKT_LISTE_PRODUKTE = PREFIX
-			+ "listeAlleProdukte";
+			+ "listeAlleProdukteByPrefix";
+
+	public static final String PRODUKT_ALLE_HERSTELLER = PREFIX
+			+ "listeAlleHersteller";
 
 	/**
 	 * Die ID des Produktes. Wird von Hibernate automatisch generiert

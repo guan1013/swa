@@ -33,11 +33,23 @@
 						autofill="false" selectFirst="false" />
 
 					<!-- HERSTELLER -->
-					<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
-						id="herstellerInputLabel" for="herstellerInput" />
+					<!-- DEPRECATED: HERSTELLER PER INPUTFELD EINGEBEN -->
+					<!--  
 					<rich:autocomplete id="herstellerInput"
 						value="#{pc.suchFilter.hersteller}" mode="ajax" minChars="1"
 						autocompleteMethod="#{pc.findeHerstellerByPrefix}" />
+						-->
+
+					<h:outputLabel value="#{msgPv['produkt.label.hersteller']}"
+						id="herstellerInputLabel" for="herstellerInput" />
+					<rich:select id="herstellerInput"
+						defaultLabel="#{msgPv['produkt.label.hersteller']}"
+						value="#{pc.suchFilter.hersteller}">
+						<f:selectItem itemLabel="" itemValue="" />
+						<c:forEach var="hersteller" items="#{pc.hersteller}">
+							<f:selectItem itemLabel="#{hersteller}" itemValue="#{hersteller}" />
+						</c:forEach>
+					</rich:select>
 
 					<!-- FARBE -->
 					<h:outputLabel value="#{msgPv['produkt.label.farbe']}"
@@ -82,7 +94,7 @@
 				<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
 					value="#{pc.produktdatenSuche}" rowClasses="odd-row, even-row"
 					styleClass="tabelleMitZebrastil"
-					rendered="#{not empty pc.produktdatenSuche}">
+					noDataLabel="#{msgPv['produkt.search.noresult']}" rows="10">
 
 					<!-- PRODUKT BESCHREIBUNG -->
 					<rich:column>
@@ -124,6 +136,23 @@
 					</rich:column>
 
 				</rich:dataTable>
+				<p />
+				<h:panelGroup>
+					<rich:dataScroller id="datascroller" for="ergebnisFilterSuche"
+						maxPages="10" />
+					<a4j:outputPanel id="outputPanelZebra" ajaxRendered="true">
+						<rich:jQuery id="odd" selector=".tabelleMitZebrastil tr:odd"
+							query="addClass('odd-row')" timing="domready" />
+						<rich:jQuery id="even" selector=".tabelleMitZebrastil tr:even"
+							query="addClass('even-row')" timing="domready" />
+						<rich:jQuery id="mouseover" selector=".tabelleMitZebrastil tr"
+							event="mouseover" query="jQuery(this).addClass('active-row')"
+							timing="domready" />
+						<rich:jQuery id="mouseout" selector=".tabelleMitZebrastil tr"
+							event="mouseout" query="jQuery(this).removeClass('active-row')"
+							timing="domready" />
+					</a4j:outputPanel>
+				</h:panelGroup>
 			</h:form>
 		</a4j:outputPanel>
 

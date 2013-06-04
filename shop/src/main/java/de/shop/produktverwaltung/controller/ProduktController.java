@@ -65,6 +65,12 @@ public class ProduktController implements Serializable {
 
 	private SuchFilter suchFilter;
 
+	private List<String> hersteller;
+
+	public List<String> getHersteller() {
+		return hersteller;
+	}
+
 	private boolean geaendert = false;
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,6 +117,12 @@ public class ProduktController implements Serializable {
 
 	@Transactional
 	public void createEmptySuchfilter() {
+		
+		hersteller = produktService.findAlleHersteller();
+
+		if (suchFilter != null) {
+			return;
+		}
 
 		suchFilter = new SuchFilter();
 	}

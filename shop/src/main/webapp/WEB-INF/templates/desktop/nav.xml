@@ -12,6 +12,14 @@
 			</h:outputLink>
 		</p>
 
+		<!-- LINK: KUNDE.CREATE -->
+		<p id="createKunde">
+			<h:outputLink id="menuCreateKunde"
+				value="#{request.contextPath}/kundenverwaltung/createKunde.jsf">
+				#{msg['nav.kunde.create']}
+			</h:outputLink>
+		</p>
+
 		<!-- LINK: PRODUKT.SUCHE.ID -->
 		<p id="seachProdukt">
 			<h:outputLink id="menuSearchProdukt"
@@ -19,17 +27,7 @@
 				#{msg['nav.produkt.suche.id']}
 			</h:outputLink>
 		</p>
-		
-		<!-- LINK: BESTELLUNG.SUCHE.ID -->
-		<p id="seachBestellung">
-			<h:outputLink id="menuSearchBestellung"
-				value="#{request.contextPath}/bestellverwaltung/searchBestellung.jsf">
-				#{msg['nav.bestellung.suche.id']}
-			</h:outputLink>
-		</p>
-		
-		
-		
+
 		<!-- LINK: PRODUKT.SUCHE.FILTER -->
 		<p id="seachProduktFilter">
 			<h:outputLink id="menuSearchProduktFilter"
@@ -42,17 +40,17 @@
 	<p />
 	<rich:panel header="#{msg['nav.kunde']}" border="1"
 		rendered="#{rich:isUserInRole('kunde')}">
-		
-	    <!-- LINK: BESTELLUNG.BESTELLEN -->
+
+		<!-- LINK: BESTELLUNG.BESTELLEN -->
 		<p id="bestellen">
 			<h:outputLink id="menuBestellBestellung"
 				value="#{request.contextPath}/bestellverwaltung/bestellen.jsf">
 				#{msg['nav.bestellung.bestellen']}
 			</h:outputLink>
 		</p>
-	    
+
 	</rich:panel>
-	
+
 	<p />
 	<rich:panel header="#{msg['nav.admin']}" border="1"
 		rendered="#{rich:isUserInRole('admin')}">
@@ -64,11 +62,11 @@
 			</h:outputLink>
 		</p>
 
-		<!-- LINK: KUNDE.CREATE -->
-		<p id="createKunde">
-			<h:outputLink id="menuCreateKunde"
-				value="#{request.contextPath}/kundenverwaltung/createKunde.jsf">
-				#{msg['nav.kunde.create']}
+		<!-- LINK: BESTELLUNG.SUCHE.ID -->
+		<p id="seachBestellung">
+			<h:outputLink id="menuSearchBestellung"
+				value="#{request.contextPath}/bestellverwaltung/searchBestellung.jsf">
+				#{msg['nav.bestellung.suche.id']}
 			</h:outputLink>
 		</p>
 

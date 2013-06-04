@@ -279,6 +279,8 @@
 			<web-resource-name>shopMitarbeiterTaetigkeiten</web-resource-name>
 			<url-pattern>/produktverwaltung/createProdukt.jsf</url-pattern>
 			<url-pattern>/produktverwaltung/updateProdukt.jsf</url-pattern>
+			<url-pattern>/bestellverwaltung/searchBestellung.jsf</url-pattern>
+			<url-pattern>/kundenverwaltung/updateKunde.jsf</url-pattern>
 			<http-method>POST</http-method>
 			<http-method>GET</http-method>
 		</web-resource-collection>

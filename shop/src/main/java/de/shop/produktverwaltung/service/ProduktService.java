@@ -90,7 +90,7 @@ public class ProduktService implements Serializable {
 		return results;
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String> findBeschreibungPrefix(String prefix) {
 
@@ -281,6 +281,12 @@ public class ProduktService implements Serializable {
 			}
 			throw new ProduktValidationException(buffer.toString());
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> findAlleHersteller() {
+		return entityManager.createNamedQuery(Produkt.PRODUKT_ALLE_HERSTELLER)
+				.getResultList();
 	}
 
 	// /////////////////////////////////////////////////////////////////////
