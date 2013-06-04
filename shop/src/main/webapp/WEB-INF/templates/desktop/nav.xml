@@ -39,7 +39,7 @@
 
 	<p />
 	<rich:panel header="#{msg['nav.kunde']}" border="1"
-		rendered="#{rich:isUserInRole('kunde')}">
+		rendered="#{rich:isUserInRole('kunde') or rich:isUserInRole('admin')}">
 
 		<!-- LINK: BESTELLUNG.BESTELLEN -->
 		<p id="bestellen">

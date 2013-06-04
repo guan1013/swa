@@ -22,6 +22,7 @@ import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.controller.KundeController;
 import de.shop.kundenverwaltung.domain.Kunde;
+import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.util.SuchFilter;
 import de.shop.util.Client;
@@ -51,6 +52,8 @@ public class BestellungController implements Serializable{
 	@Inject
 	private ProduktService ps;
 	@Inject
+	private KundeService ks;
+	@Inject
 	private transient HttpServletRequest request;
 	
 	@Inject
@@ -74,6 +77,7 @@ public class BestellungController implements Serializable{
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
 	
+	@Transactional
 	public void bestellen() throws Exception {
 
 		if (warenkorb.isEmpty()) {
@@ -84,8 +88,10 @@ public class BestellungController implements Serializable{
 				warenkorb.getSize());
 		Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getKunde());
 		kunde.getKunde().addBestellung(bestellung);
-		bs.addBestellung(bestellung, locale);
-		bs.addBestellposten(bestellung);
+		ks.updateKunde(kunde.getKunde(), locale, false);
+		
+//		bs.addBestellung(bestellung, locale);
+//		bs.addBestellposten(bestellung);
 		bestellung.setGesamtpreis(bestellung.errechneGesamtpreis());
 		warenkorb.reset();
 	}

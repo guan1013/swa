@@ -27,6 +27,8 @@ public class Warenkorb implements Serializable {
 	// PUBLIC METHODS
 
 	public void add(Produktdaten produktdaten) {
+		
+		System.out.println("Add: " + produktdaten);
 
 		// Parametertest
 		if (produktdaten == null) {
