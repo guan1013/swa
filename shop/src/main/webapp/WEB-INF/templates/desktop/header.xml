@@ -30,6 +30,7 @@
 						#{msgBv['warenkorb.header']} (#{wk.size})
 					</f:facet>
 					<rich:menuItem id="warenkorbItem" rendered="#{not empty wk.positionen}">
+					    <h:outputLink value="#{request.contextPath}/bestellverwaltung/warenkorb.jsf">
 						<rich:dataTable id="warenkorbTabelle" value="#{wk.positionen}"
 							var="position" rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil">
 
@@ -46,6 +47,7 @@
 								#{position.anzahl}
 							</rich:column>
 						</rich:dataTable>
+						</h:outputLink>
 					</rich:menuItem>
 					<rich:menuItem id="warenkorbReset" rendered="#{not empty wk.positionen}"
 						label="#{msgBv['warenkorb.reset']}" action="#{wk.reset}">
