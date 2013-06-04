@@ -60,7 +60,7 @@ public class BestellungResourceTest extends AbstractResourceTest {
 	
 	@Test
 	public void dontfindBestellungById() {
-		Response response = given().auth()
+		final Response response = given().auth()
 				.basic(USERNAME, PASSWORD).header(ACCEPT, APPLICATION_JSON)
 				.pathParameter("id", INVALID_ID).get("/bestellung/{id}");
 

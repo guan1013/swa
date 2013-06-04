@@ -305,7 +305,8 @@ public class BestellpostenService implements Serializable {
 	
 	
 	public void updateAfterCreateBestellung(int bpId, int bId) {
-		em.createNamedQuery(Bestellposten.BESTELLPOSTEN_UPDATE_FK).setParameter("bestellungfk",bpId).setParameter("id", bId).executeUpdate();
+		em.createNamedQuery(Bestellposten.BESTELLPOSTEN_UPDATE_FK).setParameter("bestellungfk", bpId).setParameter
+		("id", bId).executeUpdate();
 	}
 	
 	
