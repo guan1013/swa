@@ -2,6 +2,7 @@ package de.shop.kundenverwaltung.domain;
 
 import static de.shop.util.Constants.ERSTE_VERSION;
 import static de.shop.util.Constants.KEINE_ID;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
@@ -160,7 +161,8 @@ public class Kunde implements Serializable, Cloneable {
 	/**
 	 * E-Mail Adresse des Kunden
 	 */
-	@Email(message = "{kundenverwaltung.kunde.email}")
+	@Email(message = "{kundenverwaltung.kunde.email.pattern}")
+	@NotNull(message = "kundeverwaltung.kunde.email.notNull")
 	@Column(name = "Email")
 	private String email;
 
@@ -215,7 +217,7 @@ public class Kunde implements Serializable, Cloneable {
 	/**
 	 * Liste aller Bestellung des Kunden
 	 */
-	@OneToMany(mappedBy = "kunde", fetch = EAGER)
+	@OneToMany(mappedBy = "kunde", fetch = EAGER, cascade = { ALL })
 	@OrderColumn(name = "idx")
 	@JsonIgnore
 	private List<Bestellung> bestellungen;
