@@ -41,7 +41,7 @@
 					<h:outputLabel id="vornameLabel" for="vorname"
 						value="#{msgKv['kv.label.vorname']}" />
 					<h:inputText id="vorname" value="#{kc.newKunde.vorname}" />
-					<f:verbatim />
+					<rich:messages id="fehlermeldungenVorname" for="vorname" />
 
 					<!-- Geburtstag  -->
 					<h:outputLabel id="geburtsdatumLabel" for="geburtsdatum"
@@ -69,7 +69,7 @@
 						value="#{msgKv['kv.label.password']}" />
 					<h:inputSecret id="password" value="#{kc.newKunde.password}"
 						redisplay="true" />
-					<f:verbatim />
+					<rich:messages id="fehlermeldungenPassword" for="password" />
 
 					<!-- PassowordWdh -->
 					<h:outputLabel id="passwordWdhLabel" for="passwordWdh"

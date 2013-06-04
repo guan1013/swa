@@ -164,7 +164,7 @@ public class Adresse implements Serializable {
 	/**
 	 * Die ID der Adresse. Wird von Hibernate automatisch generiert
 	 */
-	@NotNull(groups = IdGroup.class, message = "{kundenverwaltung.adresseID.NotNull}")
+	@NotNull(groups = IdGroup.class, message = "{kundenverwaltung.adresse.id.NotNull}")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "adresse_id")
@@ -178,7 +178,7 @@ public class Adresse implements Serializable {
 	/**
 	 * Erstelldatum der Adresse
 	 */
-	@Past(message = "{kundenverwaltung.erstellt.Past}")
+	@Past(message = "{kundenverwaltung.adresse.erstellt.past}")
 	@Column(name = "Erstellt", length = 32)
 	@JsonIgnore
 	private Date erstellt;
@@ -186,7 +186,7 @@ public class Adresse implements Serializable {
 	/**
 	 * Datum der letzten Änderung der Adresse
 	 */
-	@Past(message = "{kundenverwaltung.geaendert.Past}")
+	@Past(message = "{kundenverwaltung.adresse.geaendert.past}")
 	@Column(name = "Geaendert", length = 32)
 	@JsonIgnore
 	private Date geaendert;
@@ -194,24 +194,22 @@ public class Adresse implements Serializable {
 	/**
 	 * Ort der Adresse
 	 */
-	@NotEmpty(message = "{kundenverwaltung.ort.NotEmpty}")
+	@NotEmpty(message = "{kundenverwaltung.adresse.ort.NotNull}")
 	@Column(name = "Ort", length = 32)
-	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöüß]+(-[A-ZÄÖÜ][a-zäöüß]+)?", message = "{kundenverwaltung.ort.pattern}")
+	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöüß]+(-[A-ZÄÖÜ][a-zäöüß]+)?", message = "{kundenverwaltung.adresse.ort.pattern}")
 	private String ort;
-
-	// TODO kein Integer, sondern als String implementieren!t
 
 	/**
 	 * PLZ der Adresse
 	 */
-	@Min(value = 10000, message = "{kundenverwaltung.plz.min}")
+	@Min(value = 10000, message = "{kundenverwaltung.adresse.plz.min}")
 	@Column(name = "PLZ")
 	private int plz;
 
 	/**
 	 * Strasse der Adresse
 	 */
-	@NotEmpty(message = "{kundenverwaltung.strasse.NotEmpty}")
+	@NotEmpty(message = "{kundenverwaltung.adresse.strasse.NotNull}")
 	@Column(name = "Strasse", length = 32)
 	private String strasse;
 
