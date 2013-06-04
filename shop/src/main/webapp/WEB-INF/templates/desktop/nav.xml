@@ -35,20 +35,12 @@
 				#{msg['nav.produkt.suche.filter']}
 			</h:outputLink>
 		</p>
-	</rich:panel>
-
-	<p />
-	<rich:panel header="#{msg['nav.kunde']}" border="1"
-		rendered="#{rich:isUserInRole('kunde') or rich:isUserInRole('admin')}">
-
-		<!-- LINK: BESTELLUNG.BESTELLEN -->
 		<p id="bestellen">
 			<h:outputLink id="menuBestellBestellung"
 				value="#{request.contextPath}/bestellverwaltung/bestellen.jsf">
 				#{msg['nav.bestellung.bestellen']}
 			</h:outputLink>
 		</p>
-
 	</rich:panel>
 
 	<p />

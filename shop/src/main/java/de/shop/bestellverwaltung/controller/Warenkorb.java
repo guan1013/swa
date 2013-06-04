@@ -34,12 +34,22 @@ public class Warenkorb implements Serializable {
 		if (produktdaten == null) {
 			return;
 		}
+		
 
 		// Neuen Bestellposten mit Produktdaten und Anzahl=1 anlegen
 		final Bestellposten neuerBestellposten = new Bestellposten();
 		neuerBestellposten.setAnzahl(Integer.valueOf(1));
 		neuerBestellposten.setProduktdaten(produktdaten);
-		positionen.add(neuerBestellposten);
+		boolean x = false;
+		for (Bestellposten posten : positionen) {
+			if (posten.getProduktdaten() == neuerBestellposten.getProduktdaten()) {
+				posten.setAnzahl(posten.getAnzahl() + 1);
+				x = true;
+				break;
+			}
+		}
+		if (x == false)
+			positionen.add(neuerBestellposten);
 	}
 
 	public boolean isEmpty() {
@@ -48,6 +58,12 @@ public class Warenkorb implements Serializable {
 
 	public void reset() {
 		positionen.clear();
+	}
+
+	public void delete(Bestellposten bestellposten) {
+		
+		System.out.println("Delete from Warenkorb: " + bestellposten);
+		positionen.remove(bestellposten);
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////
