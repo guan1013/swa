@@ -15,8 +15,13 @@
 	<ui:define name="article">
 		<h:form id="sucheFormFilter">
 
+
+
+
+				<h:outputText value="Warenkorb ist leer" rendered="#{empty wk.positionen}"/>
 		<!-- PRODUKTDATEN ANZEIGEN -->
-				<h:panelGrid columns="1" border="0" columnClasses="leftallign">
+				<h:panelGrid columns="1" border="0" columnClasses="leftallign" 
+				rendered="#{not empty wk.positionen}">
 					
 						<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
 					value="#{wk.positionen}" rowClasses="odd-row, even-row"
@@ -87,16 +92,22 @@
 							timing="domready" />
 					</a4j:outputPanel>
 				</h:panelGroup>
-				<rich:panel  id="ergebnisGesamtpreis" header="#{msgPv['warenkorb.gesamtpreis']}">
+				<rich:panel  id="ergebnisGesamtpreis" header="#{msgBv['warenkorb.gesamtpreis']}">
 						<h:outputText id="outputTextGesamtPreis" value="#{wk.gesamtpreis}">
 							<f:convertNumber type="currency" currencyCode="EUR" />
 						</h:outputText></rich:panel>
 						</h:panelGrid>
 				
-				<h:panelGroup id="buttons">
+				<h:panelGroup id="buttons" >
 							<h:commandButton id="updateButton"
 							                 action="/bestellverwaltung/warenkorb?init=true"
 									         value="#{msgBv['warenkorb.update']}"/>
+							<h:commandButton  id="bestellenButton"
+							                 action="/bestellverwaltung/bestellen.jsf"
+									         value="#{msg['nav.bestellung.bestellen']}"/>
+							<h:commandButton id="deleteButton" 
+							                 action="#{wk.reset}"
+									         value="#{msgBv['warenkorb.reset']}"/>
 					</h:panelGroup>
 				</h:panelGrid>
 		

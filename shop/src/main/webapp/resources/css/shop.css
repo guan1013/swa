@@ -13,9 +13,7 @@ html,body {
 	 margin-top: 20px;
 	 text-align: center;
 }
-.leftallign {
-    horizontal-align: right;
-}
+
 #nav {
 	background-color: #BED6F8; /* blueSky */
 	float: left;
