@@ -24,7 +24,7 @@
 
 				<h:panelGrid columns="1">
 
-					<rich:panel header="#{msgBv['bestellung.search.warenkorb']}">
+					
 						<rich:dataTable id="alleBestellposten" var="bpdata"
 							value="#{bc.warenkorb.positionen}"
 							rendered="#{not empty bc.warenkorb.positionen}"
@@ -42,7 +42,7 @@
 							<rich:column id="pDataAnzahl">
 								<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>#{bpdata.anzahl}</rich:column>
 						</rich:dataTable>
-					</rich:panel>
+					
 
 				</h:panelGrid>
 

@@ -80,6 +80,7 @@ public class BestellungController implements Serializable {
 
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
 				warenkorb.getSize());
+		if (kunde.getKunde() == null ) throw new Exception ("kein Kunde");
 		final Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getKunde());
 		kunde.getKunde().addBestellung(bestellung);
 		ks.updateKunde(kunde.getKunde(), locale, false);

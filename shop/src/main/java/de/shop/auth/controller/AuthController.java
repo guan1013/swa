@@ -52,7 +52,7 @@ public class AuthController implements Serializable {
 
 	// ////////////////////////////////////////////////////////////////////////////////////////////////
 	// PUBLIC METHODS
-
+	@Transactional
 	public String login() {
 
 		try {
@@ -67,6 +67,7 @@ public class AuthController implements Serializable {
 				null);
 		kc.setKundeId(user.getKundeID());
 		kc.loadKundeById();
+		kc.findKundeById();
 		final String path = facesCtx.getViewRoot().getViewId();
 		return path;
 	}
