@@ -49,6 +49,11 @@
 				<h:commandButton action="#{bc.bestellen}"
 					value="#{msgBv['bestellung.create.submit']}" 
 					rendered="#{not empty bc.warenkorb.positionen}" />
+					
+				<h:commandButton action="/bestellverwaltung/warenkorb.jsf"
+					value="#{msgBv['bestellung.create.backtobasket']}" 
+					rendered="#{not empty bc.warenkorb.positionen}" />	
+					
 
 			</rich:panel>
 		</h:form>
