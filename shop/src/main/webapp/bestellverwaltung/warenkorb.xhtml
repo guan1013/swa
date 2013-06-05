@@ -16,7 +16,7 @@
 		<h:form id="sucheFormFilter">
 
 		<!-- PRODUKTDATEN ANZEIGEN -->
-				<h:panelGrid columns="1" border="0">
+				<h:panelGrid columns="1" border="0" columnClasses="leftallign">
 					
 						<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
 					value="#{wk.positionen}" rowClasses="odd-row, even-row"
@@ -69,6 +69,8 @@
 							action="#{wk.delete(produktdaten)}"/>
 					</rich:column>
 						</rich:dataTable>
+						
+						<h:panelGrid columns="2" border="0" columnClasses="leftallign">
 						<h:panelGroup>
 					<rich:dataScroller id="datascroller" for="ergebnisFilterSuche"
 						maxPages="10" />
@@ -85,6 +87,12 @@
 							timing="domready" />
 					</a4j:outputPanel>
 				</h:panelGroup>
+				<rich:panel  id="ergebnisGesamtpreis" header="#{msgPv['warenkorb.gesamtpreis']}">
+						<h:outputText id="outputTextGesamtPreis" value="#{wk.gesamtpreis}">
+							<f:convertNumber type="currency" currencyCode="EUR" />
+						</h:outputText></rich:panel>
+						</h:panelGrid>
+				
 				<h:panelGroup id="buttons">
 							<h:commandButton id="updateButton"
 							                 action="/bestellverwaltung/warenkorb?init=true"

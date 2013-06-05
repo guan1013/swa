@@ -83,7 +83,13 @@ public class Warenkorb implements Serializable {
 	public List<Bestellposten> getPositionen() {
 		return positionen;
 	}
-
+	public double getGesamtpreis() {
+		double x = 0;
+		for (Bestellposten posten : positionen) {
+			x += posten.getAnzahl() * posten.getProduktdaten().getPreis();
+		}
+		return x;
+	}
 	public int getSize() {
 		return positionen.size();
 	}
