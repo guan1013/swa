@@ -74,14 +74,14 @@
 									<rich:column id="bpID">
 										<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>#{bp.produktdaten.produkt.beschreibung}</rich:column>
 									<rich:column id="bpPreis">
-										<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{bp.produktdaten.preis}</rich:column>
+										<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{bp.produktdaten.preis}€</rich:column>
 									<rich:column id="bpAnzahl">
-										<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>#[#{bp.anzahl}]</rich:column>
+										<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>#{bp.anzahl}</rich:column>
 								</rich:dataTable>
 							</rich:column>
 							<!-- Gesammtpreis -->
 							<rich:column id="bestellungGesamtpreis">
-								<f:facet name="header">#{msgBv['Total']}</f:facet>#{bestellung.gesamtpreis}</rich:column>
+								<f:facet name="header">#{msgBv['Total']}</f:facet>#{bestellung.gesamtpreis}€</rich:column>
 
 						</rich:dataTable>
 					</rich:panel>
