@@ -14,10 +14,10 @@
 
 	<ui:define name="article">
 		<h:form id="sucheFormFilter">
-		<rich:panel header="#{msgBv['warenkorb.header']}">
+
 		<!-- PRODUKTDATEN ANZEIGEN -->
 				<h:panelGrid columns="1" border="0">
-					<rich:panel header="#{msgBv['bestellung.search.bestellposten']}">
+					
 						<rich:dataTable id="ergebnisFilterSuche" var="produktdaten"
 					value="#{wk.positionen}" rowClasses="odd-row, even-row"
 					styleClass="tabelleMitZebrastil" rows="10">
@@ -52,9 +52,16 @@
 							<f:convertNumber type="currency" currencyCode="EUR" />
 						</h:outputText>
 					</rich:column>
-							<rich:column id="pDataAnzahl">
-								<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>
-								#{produktdaten.anzahl}
+							<rich:column id="pDataDataAnzahl">
+							<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>
+							
+								<rich:inputNumberSpinner id="spinnerAnzahl"
+									value="#{produktdaten.anzahl}"
+									minValue="1"
+									maxValue="#{produktdaten.produktdaten.anzahlVerfuegbar}"
+									inputSize="2"
+									/>
+									
 								</rich:column>
 								<rich:column>
 						<h:commandButton id="loeschenButton"
@@ -62,9 +69,29 @@
 							action="#{wk.delete(produktdaten)}"/>
 					</rich:column>
 						</rich:dataTable>
-					</rich:panel>
+						<h:panelGroup>
+					<rich:dataScroller id="datascroller" for="ergebnisFilterSuche"
+						maxPages="10" />
+					<a4j:outputPanel id="outputPanelZebra" ajaxRendered="true">
+						<rich:jQuery id="odd" selector=".tabelleMitZebrastil tr:odd"
+							query="addClass('odd-row')" timing="domready" />
+						<rich:jQuery id="even" selector=".tabelleMitZebrastil tr:even"
+							query="addClass('even-row')" timing="domready" />
+						<rich:jQuery id="mouseover" selector=".tabelleMitZebrastil tr"
+							event="mouseover" query="jQuery(this).addClass('active-row')"
+							timing="domready" />
+						<rich:jQuery id="mouseout" selector=".tabelleMitZebrastil tr"
+							event="mouseout" query="jQuery(this).removeClass('active-row')"
+							timing="domready" />
+					</a4j:outputPanel>
+				</h:panelGroup>
+				<h:panelGroup id="buttons">
+							<h:commandButton id="updateButton"
+							                 action="/bestellverwaltung/warenkorb?init=true"
+									         value="#{msgBv['warenkorb.update']}"/>
+					</h:panelGroup>
 				</h:panelGrid>
-		</rich:panel>
+		
 </h:form>
 	</ui:define>
 </ui:composition>

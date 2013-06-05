@@ -295,8 +295,10 @@ public class Bestellposten implements Serializable {
 		final Bestellposten other = (Bestellposten) obj;
 		if (anzahl != other.anzahl)
 			return false;
-		if (!bestellpostenID.equals(other.bestellpostenID))
+		if (bestellpostenID != null && other.bestellpostenID != null) {
+			if(!bestellpostenID.equals(other.bestellpostenID))
 			return false;
+		}
 		if (erstellt == null) {
 			if (other.erstellt != null)
 				return false;

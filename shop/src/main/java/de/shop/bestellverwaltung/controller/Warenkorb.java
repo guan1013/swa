@@ -1,6 +1,7 @@
 package de.shop.bestellverwaltung.controller;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
 
 import de.shop.bestellverwaltung.domain.Bestellposten;
@@ -51,6 +52,17 @@ public class Warenkorb implements Serializable {
 		if (x == false)
 			positionen.add(neuerBestellposten);
 	}
+	
+	public void spinner (ValueChangeEvent e) { //Bestellposten neuerBestellposten) {
+//		for (Bestellposten posten : positionen) {
+//			if (posten.getProduktdaten() == neuerBestellposten.getProduktdaten()) {
+//				posten.setAnzahl(neuerBestellposten.getAnzahl());
+//			}
+//		}
+		
+		
+	}
+	
 
 	public boolean isEmpty() {
 		return positionen.isEmpty();
@@ -61,6 +73,7 @@ public class Warenkorb implements Serializable {
 	}
 
 	public void delete(Bestellposten bestellposten) {
+		System.out.println(positionen.size());
 		positionen.remove(bestellposten);
 	}
 
