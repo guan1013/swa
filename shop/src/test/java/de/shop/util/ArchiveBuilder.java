@@ -76,8 +76,8 @@ public enum ArchiveBuilder {
 		// http://exitcondition.alrubinger.com/2012/09/13/shrinkwrap-resolver-new-api
 		final PomEquippedResolveStage pomResolver = Maven.resolver().offline().loadPomFromFile("pom.xml");
 		archive.addAsLibraries(pomResolver.resolve("org.richfaces.ui:richfaces-components-ui")
-				.withTransitivity().asFile()).addAsLibraries(pomResolver.resolve
-						("org.richfaces.core:richfaces-core-impl").withTransitivity().asFile());
+				.withTransitivity().asFile()).addAsLibraries(pomResolver.resolve(
+						"org.richfaces.core:richfaces-core-impl").withTransitivity().asFile());
 	}
 	
 	private void addKlassen() {
