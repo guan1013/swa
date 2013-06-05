@@ -71,7 +71,8 @@
 								<rich:column>
 						<h:commandButton id="loeschenButton"
 							image="#{resource['images:delete.gif']}"
-							action="#{wk.delete(produktdaten)}"/>
+							action="#{wk.delete(produktdaten)}"
+							alt="Posten Loeschen"/>
 					</rich:column>
 						</rich:dataTable>
 						
@@ -102,7 +103,8 @@
 							<h:commandButton id="updateButton"
 							                 action="/bestellverwaltung/warenkorb?init=true"
 									         value="#{msgBv['warenkorb.update']}"/>
-							<h:commandButton  id="bestellenButton"
+							<h:commandButton  
+											 id="bestellenButton"
 							                 action="/bestellverwaltung/bestellen.jsf"
 									         value="#{msg['nav.bestellung.bestellen']}"/>
 							<h:commandButton id="deleteButton" 

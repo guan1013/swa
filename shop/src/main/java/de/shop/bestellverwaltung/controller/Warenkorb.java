@@ -53,7 +53,7 @@ public class Warenkorb implements Serializable {
 			positionen.add(neuerBestellposten);
 	}
 	
-	public void spinner (ValueChangeEvent e) { //Bestellposten neuerBestellposten) {
+	public void spinner(ValueChangeEvent e) { //Bestellposten neuerBestellposten) {
 //		for (Bestellposten posten : positionen) {
 //			if (posten.getProduktdaten() == neuerBestellposten.getProduktdaten()) {
 //				posten.setAnzahl(neuerBestellposten.getAnzahl());

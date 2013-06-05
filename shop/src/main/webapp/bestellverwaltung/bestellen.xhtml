@@ -48,11 +48,14 @@
 
 				<h:commandButton action="#{bc.bestellen}"
 					value="#{msgBv['bestellung.create.submit']}" 
-					rendered="#{not empty bc.warenkorb.positionen}" />
+					rendered="#{not empty bc.warenkorb.positionen and not empty auth.user}" />
+					
 					
 				<h:commandButton action="/bestellverwaltung/warenkorb.jsf"
 					value="#{msgBv['bestellung.create.backtobasket']}" 
 					rendered="#{not empty bc.warenkorb.positionen}" />	
+					
+				<h:outputText value=" Loggen Sie sich zum Bestellen ein!" />
 					
 
 			</rich:panel>
