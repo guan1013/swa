@@ -296,7 +296,7 @@ public class Bestellposten implements Serializable {
 		if (anzahl != other.anzahl)
 			return false;
 		if (bestellpostenID != null && other.bestellpostenID != null) {
-			if(!bestellpostenID.equals(other.bestellpostenID))
+			if (!bestellpostenID.equals(other.bestellpostenID))
 			return false;
 		}
 		if (erstellt == null) {

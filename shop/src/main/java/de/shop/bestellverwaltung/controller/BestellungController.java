@@ -17,7 +17,6 @@ import org.jboss.logging.Logger;
 import de.shop.auth.controller.AuthController;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
-import de.shop.kundenverwaltung.controller.KundeController;
 import de.shop.kundenverwaltung.service.KundeService;
 import de.shop.produktverwaltung.service.ProduktService;
 import de.shop.produktverwaltung.service.util.SuchFilter;
@@ -80,7 +79,7 @@ public class BestellungController implements Serializable {
 
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
 				warenkorb.getSize());
-		if (kunde.getUser() == null ) throw new Exception ("kein Kunde");
+		if (kunde.getUser() == null) throw new Exception("kein Kunde");
 		final Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getUser());
 		kunde.getUser().addBestellung(bestellung);
 		ks.updateKunde(kunde.getUser(), locale, false);
