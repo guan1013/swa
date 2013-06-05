@@ -72,10 +72,10 @@ public class BestellungController implements Serializable {
 	// PUBLIC METHODS
 	
 	@Transactional
-	public void bestellen() throws Exception {
+	public String bestellen() throws Exception {
 
 		if (warenkorb.isEmpty()) {
-			return;
+			return null;
 		}
 
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
@@ -89,6 +89,7 @@ public class BestellungController implements Serializable {
 //		bs.addBestellposten(bestellung);
 		bestellung.setGesamtpreis(bestellung.errechneGesamtpreis());
 		warenkorb.reset();
+		return "/index";
 	}
 	
 	public void warenkorbLeeren() {
