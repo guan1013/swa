@@ -38,45 +38,56 @@
 				<h:panelGrid colums="3" border="0">
 					<rich:panel header="#{msgKv['kv.label.kid']}">#{kc.kunde.kundeID}</rich:panel>
 					<rich:panel header="#{msgKv['kv.label.nachname']}">#{kc.kunde.nachname}</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.vorname']}">#{kc.kunde.vorname}</rich:panel>
 					<rich:panel header="#{msgKv['kv.label.erstellt']}">
 						<h:outputText value="#{kc.kunde.erstellt}">
 							<f:convertDateTime type="date" dateStyle="long"
 								timezone="Europe/Berlin" />
 						</h:outputText>
 					</rich:panel>
-				</h:panelGrid>
-
-				<!-- Adressdaten -->
-				<h:panelGrid colums="3" border="0">
-					<rich:panel header="#{msgKv['kv.label.aid']}">#{kc.kunde.adressen[0].adresseID}</rich:panel>
+					<!-- Adressdaten 
 					<rich:panel header="#{msgKv['kv.label.strasse']}">#{kc.kunde.adressen[0].strasse}</rich:panel>
 					<rich:panel header="#{msgKv['kv.label.plz']}">#{kc.kunde.adressen[0].plz}</rich:panel>
-					<rich:panel header="#{msgKv['kv.label.ort']}">#{kc.kunde.adressen[0].ort}</rich:panel>
+					<rich:panel header="#{msgKv['kv.label.ort']}">#{kc.kunde.adressen[0].ort}</rich:panel>-->
 				</h:panelGrid>
 
-				<!-- Bestelldaten 
-				
+				<!-- Bestelldaten -->
+
 				<h:panelGrid colums="1" border="0">
-					<rich:panel header="#{msgKv['kv.label.stammdaten']}">
-						<rich:dataTable id="adresse" var="adresse"
-							value="#{kc.kunde.adressen}"
-							rendered="#{not empty kc.kunde.adressen}"
+					<rich:panel header="#{msgKv['kv.titel.bestellungen']}">
+						<rich:dataTable id="bestellungen" var="bestellung"
+							value="#{kc.kunde.bestellungen}"
+							rendered="#{not empty kc.kunde.bestellungen}"
 							rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
 							width="500">
 
-							<rich:column id="adresseID">
-								<f:facet name="header">#{msgKv['kv.label.aid']}</f:facet>#{adresse.adresseID}</rich:column>
-							<rich:column id="adresseStrasse">
-								<f:facet name="header">#{msgKv['kv.label.strasse']}</f:facet>#{adresse.strasse}</rich:column>
-							<rich:column id="adressePLZ">
-								<f:facet name="header">#{msgKv['kv.label.plz']}</f:facet>#{adresse.plz}</rich:column>
-							<rich:column id="adresseOrt">
-								<f:facet name="header">#{msgKv['kv.label.ort']}</f:facet>#{adresse.ort}</rich:column>
+							<rich:column id="bestellungID">
+								<f:facet name="header">#{msgBv['bestellung.label.id']}</f:facet>#{bestellung.bestellungID}</rich:column>
+
+
+							<!-- Postendaten -->
+							<rich:column id="bestellpostenCl">
+								<rich:dataTable id="bestellposten" var="bp"
+									value="#{bestellung.bestellposten}"
+									rowClasses="odd-row, even-row" styleClass="tabelleMitZebrastil"
+									width="500">
+									<rich:column id="bpID">
+										<f:facet name="header">#{msgPv['produkt.label.beschreibung']}</f:facet>#{bp.produktdaten.produkt.beschreibung}</rich:column>
+									<rich:column id="bpPreis">
+										<f:facet name="header">#{msgPv['produkt.label.preis']}</f:facet>#{bp.produktdaten.preis}</rich:column>
+									<rich:column id="bpAnzahl">
+										<f:facet name="header">#{msgBv['bestellposten.produkt.anzahl']}</f:facet>#[#{bp.anzahl}]</rich:column>
+								</rich:dataTable>
+							</rich:column>
+							<!-- Gesammtpreis -->
+							<rich:column id="bestellungGesamtpreis">
+								<f:facet name="header">#{msgBv['Total']}</f:facet>#{bestellung.gesamtpreis}</rich:column>
+
 						</rich:dataTable>
 					</rich:panel>
 				</h:panelGrid>
-				
-				-->
+
+
 
 			</h:panelGroup>
 		</a4j:outputPanel>

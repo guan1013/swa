@@ -36,6 +36,8 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
 import de.shop.auth.controller.AuthController;
+import de.shop.bestellverwaltung.domain.Bestellung;
+import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.PasswordGroup;
@@ -97,6 +99,9 @@ public class KundeController implements Serializable {
 	private KundeService ks;
 
 	@Inject
+	private BestellungService bs;
+
+	@Inject
 	private transient HttpServletRequest request;
 
 	@Inject
@@ -123,6 +128,7 @@ public class KundeController implements Serializable {
 
 	private List<Kunde> kunden = Collections.emptyList();
 	private List<Adresse> adresse;
+	private List<Bestellung> bestellungen;
 
 	private SortOrder vornameSortOrder = SortOrder.unsorted;
 	private String vornameFilter = "";
@@ -200,11 +206,19 @@ public class KundeController implements Serializable {
 	 * 
 	 * @return URL fuer Anzeige des gefundenen Kunden; sonst null
 	 */
-	@TransactionAttribute(REQUIRED)
+	// @TransactionAttribute(REQUIRED)
+	@Transactional
 	public String findKundeById() {
-		kunde = ks.findKundeById(kundeId, locale);
-		adresse = ks.findAdressenByKundeId(kunde.getKundeID());
 
+		/* Kunde laden */
+		kunde = ks.findKundeById(kundeId, locale);
+		if (kunde == null) {
+			// Kein Kunde zu gegebener ID gefunden
+			return findKundeByIdErrorMsg(kundeId.toString());
+		}
+
+		/* Adresse nachladen */
+		adresse = ks.findAdressenByKundeId(kunde.getKundeID());
 		if (adresse.isEmpty()) {
 			kunde.addAdresse(new Adresse());
 		}
@@ -219,9 +233,20 @@ public class KundeController implements Serializable {
 			}
 		}
 
-		if (kunde == null) {
-			// Kein Kunde zu gegebener ID gefunden
-			return findKundeByIdErrorMsg(kundeId.toString());
+		/* Bestellungen nachladen */
+		bestellungen = bs.findBestellungenByKundeId(kunde.getKundeID());
+		if (bestellungen.isEmpty()) {
+			kunde.addBestellung(new Bestellung());
+		}
+
+		else {
+			for (Bestellung b : bestellungen) {
+				b.setKunde(kunde);
+			}
+
+			for (Bestellung b : bestellungen) {
+				kunde.addBestellung(b);
+			}
 		}
 
 		return JSF_VIEW_KUNDE;
