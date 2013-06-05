@@ -1,6 +1,7 @@
 package de.shop.bestellverwaltung.controller;
 
 import static javax.ejb.TransactionAttributeType.REQUIRED;
+
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.util.Locale;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jboss.logging.Logger;
 
+import de.shop.auth.controller.AuthController;
 import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.controller.KundeController;
@@ -37,10 +39,8 @@ public class BestellungController implements Serializable {
 
 	@Inject
 	private Warenkorb warenkorb;
-	
 	@Inject
-	private KundeController kunde;
-	
+	private AuthController kunde;
 	@Inject
 	private BestellungService bs;
 	@Inject
@@ -80,10 +80,10 @@ public class BestellungController implements Serializable {
 
 		LOGGER.debugf("Neue Bestellung mit insgesamt %s Positionen",
 				warenkorb.getSize());
-		if (kunde.getKunde() == null ) throw new Exception ("kein Kunde");
-		final Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getKunde());
-		kunde.getKunde().addBestellung(bestellung);
-		ks.updateKunde(kunde.getKunde(), locale, false);
+		if (kunde.getUser() == null ) throw new Exception ("kein Kunde");
+		final Bestellung bestellung = new Bestellung(warenkorb.getPositionen(), kunde.getUser());
+		kunde.getUser().addBestellung(bestellung);
+		ks.updateKunde(kunde.getUser(), locale, false);
 		
 //		bs.addBestellung(bestellung, locale);
 //		bs.addBestellposten(bestellung);
