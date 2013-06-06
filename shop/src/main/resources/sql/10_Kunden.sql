@@ -22,6 +22,7 @@ insert into kunde (Kunde_id, nachname, vorname, email, geburtsdatum, erstellt, g
 
 -- Alle Kunden haben dasselbe Passwort: abc
 
+update kunde set password = 'jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg=' where Kunde_id = 99;
 update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 100;
 update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 101;
 update kunde set password = 'ungWv48Bz+pBQUDeXa4iI7ADYaOWF3qctBD/YfIAFa0=' where Kunde_id = 102;
