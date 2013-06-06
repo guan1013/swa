@@ -42,7 +42,6 @@ import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.PasswordGroup;
 import de.shop.util.exceptions.InvalidKundeException;
 import de.shop.util.exceptions.EmailExistsException;
-import de.shop.util.exceptions.KundeValidationException;
 import de.shop.util.exceptions.InvalidNachnameException;
 import de.shop.util.exceptions.KundeDeleteBestellungException;
 import de.shop.kundenverwaltung.service.KundeService;
@@ -127,7 +126,6 @@ public class KundeController implements Serializable {
 	private String nachname;
 
 	private List<Kunde> kunden = Collections.emptyList();
-	private List<Adresse> adresse;
 
 	private SortOrder vornameSortOrder = SortOrder.unsorted;
 	private String vornameFilter = "";
@@ -309,7 +307,7 @@ public class KundeController implements Serializable {
 		try {
 			kunde = ks.updateKunde(kunde, locale, false);
 			request.setAttribute("adresse", kunde.getAdressen().size());
-		} catch (EmailExistsException | KundeValidationException
+		} catch (EmailExistsException | InvalidKundeException
 				| OptimisticLockException | ConcurrentDeletedException e) {
 			final String outcome = updateErrorMsg(e);
 			return outcome;
@@ -329,9 +327,9 @@ public class KundeController implements Serializable {
 
 	private String updateErrorMsg(RuntimeException e) {
 		final Class<? extends RuntimeException> exceptionClass = e.getClass();
-		if (exceptionClass.equals(KundeValidationException.class)) {
+		if (exceptionClass.equals(InvalidKundeException.class)) {
 			// Ungueltiges Password: Attribute wurden bereits von JSF validiert
-			final KundeValidationException orig = (KundeValidationException) e;
+			final InvalidKundeException orig = (InvalidKundeException) e;
 			final Collection<ConstraintViolation<Kunde>> violations = orig
 					.getViolations();
 			messages.error(violations, CLIENT_ID_UPDATE_PASSWORD);

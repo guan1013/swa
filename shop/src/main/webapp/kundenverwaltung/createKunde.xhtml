@@ -16,9 +16,10 @@
 	<ui:param name="pageTitle" value="#{msgKv['kv.titel.create']}" />
 
 	<ui:define name="article">
+		<h1>#{msgKv['kv.titel.create']}</h1>
 
 		<h:form id="createKundeForm">
-
+			<rich:jQuery id="nachnameFocus" selector="#nachname" query="focus()" />
 			<rich:graphValidator id="kundeValidator" value="#{kc.newKunde}"
 				groups="#{kc.passwordGroup}">
 				<rich:messages for="kundeValidator" />
@@ -41,18 +42,17 @@
 					<h:outputLabel id="vornameLabel" for="vorname"
 						value="#{msgKv['kv.label.vorname']}" />
 					<h:inputText id="vorname" value="#{kc.newKunde.vorname}" />
-					<rich:messages id="fehlermeldungenVorname" for="vorname" />
-
+					<!--  <rich:messages id="fehlermeldungenVorname" for="vorname" /> -->
+					<f:verbatim />
+					
 					<!-- Geburtstag  -->
 					<h:outputLabel id="geburtsdatumLabel" for="geburtsdatum"
-						value="#{msgKv['kv.label.geburtsdatum']}" />
+						value="#{msgKv['kv.label.geburtsdatum']}" escape="false" />
 					<rich:calendar id="geburtsdatum"
 						datePattern="#{msg['calendar.pattern']}"
 						value="#{kc.newKunde.geburtsdatum}" timezone="CET">
-						<rich:placeholder id="geburtsdatumPlaceholder"
-							value="#{msg['calendar.placeholder']}" />
 					</rich:calendar>
-					<rich:messages id="fehlermeldungenGeburtsdatum" for="geburtsdatum" />
+					<rich:messages id="fehlermeldungGeburtsdatum" for="geburtsdatum" />
 
 					<!-- E-Mail  -->
 					<h:outputLabel id="emailLabel" for="email"
@@ -69,7 +69,7 @@
 						value="#{msgKv['kv.label.password']}" />
 					<h:inputSecret id="password" value="#{kc.newKunde.password}"
 						redisplay="true" />
-					<rich:messages id="fehlermeldungenPassword" for="password"/>
+					<rich:messages id="fehlermeldungenPassword" for="password" />
 
 					<!-- PassowordWdh -->
 					<h:outputLabel id="passwordWdhLabel" for="passwordWdh"
@@ -78,6 +78,7 @@
 						redisplay="true" />
 					<f:verbatim />
 
+					<!-- ADRESSE -->
 					<!-- Plz -->
 					<h:outputLabel id="plzLabel" for="plz"
 						value="#{msgKv['kv.label.plz']}" />
