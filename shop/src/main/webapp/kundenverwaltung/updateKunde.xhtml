@@ -34,7 +34,7 @@
 			<!--
 				<rich:focus id="formFocus"/>
 				-->
-
+			<!-- Formular -->
 			<h:panelGrid id="updateKundeTabelle" columns="3">
 
 				<!-- Nachname -->
@@ -74,8 +74,42 @@
 						onvalid="$(#{rich:element('email')}).removeClass('invalid')" />
 				</h:inputText>
 				<rich:messages id="fehlermeldungenEmail" for="email" />
+
+				<!-- Plz -->
+				<h:outputLabel id="plzLabel" for="plz"
+					value="#{msgKv['kv.label.plz']}" />
+				<h:inputText id="plz" value="#{kc.kunde.adressen[0].plz}"
+					valueChangeListener="#{kc.geaendert}">
+					<rich:validator
+						oninvalid="$(#{rich:element('plz')}).addClass('invalid')"
+						onvalid="$(#{rich:element('plz')}).removeClass('invalid')" />
+				</h:inputText>
+				<rich:messages id="fehlermeldungPlz" for="plz" />
+
+				<!-- Ort -->
+				<h:outputLabel id="ortLabel" for="ort"
+					value="#{msgKv['kv.label.ort']}" />
+				<h:inputText id="ort" value="#{kc.kunde.adressen[0].ort}"
+					valueChangeListener="#{kc.geaendert}">
+					<rich:validator
+						oninvalid="$(#{rich:element('ort')}).addClass('invalid')"
+						onvalid="$(#{rich:element('ort')}).removeClass('invalid')" />
+				</h:inputText>
+				<rich:messages id="fehlermeldungOrt" for="ort" />
+
+				<!-- Straße -->
+				<h:outputLabel id="strasseLabel" for="strasse"
+					value="#{msgKv['kv.label.strasse']}" />
+				<h:inputText id="strasse" value="#{kc.kunde.adressen[0].strasse}"
+					valueChangeListener="#{kc.geaendert}">
+					<rich:validator
+						oninvalid="$(#{rich:element('strasse')}).addClass('invalid')"
+						onvalid="$(#{rich:element('strasse')}).removeClass('invalid')" />
+				</h:inputText>
+				<rich:messages id="fehlermeldungStrasse" for="strasse" />
 			</h:panelGrid>
 
+			<!-- Buttons -->
 			<p id="buttons">
 				<h:commandButton id="button" action="#{kc.updateKunde}"
 					value="#{msgKv['kv.button.submit']}" />

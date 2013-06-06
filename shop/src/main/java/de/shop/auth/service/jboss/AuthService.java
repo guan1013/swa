@@ -53,7 +53,7 @@ public class AuthService implements Serializable {
 	private static final int MANAGEMENT_PORT = 9999;
 
 	public enum RolleType {
-		ADMIN(0), MITARBEITER(1), ABTEILUNGSLEITER(3), KUNDE(2);
+		ADMIN(0), MITARBEITER(1), KUNDE(2), ABTEILUNGSLEITER(3);
 
 		private int value;
 

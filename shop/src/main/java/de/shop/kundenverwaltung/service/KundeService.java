@@ -1,6 +1,7 @@
 package de.shop.kundenverwaltung.service;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +21,7 @@ import javax.validation.Validator;
 import javax.validation.groups.Default;
 
 import de.shop.auth.service.jboss.AuthService;
+import de.shop.auth.service.jboss.AuthService.RolleType;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.Adresse_;
 import de.shop.kundenverwaltung.domain.Kunde;
@@ -109,7 +111,9 @@ public class KundeService implements Serializable {
 		final Kunde kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
 				pLocale);
 		if (kd == null) {
-
+			Set<RolleType> rollen = new HashSet<RolleType>();
+			rollen.add(RolleType.KUNDE);
+			pKD.setRollen(rollen);
 			salting(pKD);
 			em.persist(pKD);
 			event.fire(pKD);
@@ -267,9 +271,9 @@ public class KundeService implements Serializable {
 		 */
 		Kunde kd = null;
 
-		try{
+		try {
 			switch (pFe) {
-	
+
 			case JUST_KUNDE:
 				/**
 				 * Gefundenen Kunde speichern
@@ -277,17 +281,17 @@ public class KundeService implements Serializable {
 				kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
 						.setParameter("mail", pMail).getSingleResult();
 				break;
-	
+
 			case WITH_BESTELLUNGEN:
 				/**
 				 * Gefundenen Kunde speichern
 				 */
-	
+
 				kd = (Kunde) em
 						.createNamedQuery(Kunde.KUNDE_BY_EMAIL_JOIN_BESTELLUNG)
 						.setParameter("mail", pMail).getSingleResult();
 				break;
-	
+
 			default:
 				/**
 				 * Gefundenen Kunde speichern
@@ -295,11 +299,11 @@ public class KundeService implements Serializable {
 				kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
 						.setParameter("mail", pMail).getSingleResult();
 				break;
-	
+
 			}
 		}
-		
-		catch(NoResultException e){
+
+		catch (NoResultException e) {
 			return null;
 		}
 

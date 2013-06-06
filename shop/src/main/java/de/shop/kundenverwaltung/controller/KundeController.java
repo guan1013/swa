@@ -205,7 +205,7 @@ public class KundeController implements Serializable {
 	 * 
 	 * @return URL fuer Anzeige des gefundenen Kunden; sonst null
 	 */
-	@TransactionAttribute(REQUIRED)
+	@Transactional
 	public String findKundeById() {
 
 		/* Kunde laden */
@@ -215,21 +215,8 @@ public class KundeController implements Serializable {
 			return findKundeByIdErrorMsg(kundeId.toString());
 		}
 
-		/* Adresse nachladen */
-		adresse = ks.findAdressenByKundeId(kunde.getKundeID());
-		if (adresse.isEmpty()) {
-			kunde.addAdresse(new Adresse());
-		}
+		request.setAttribute("adresse", kunde.getAdressen().size());
 
-		else {
-			for (Adresse a : adresse) {
-				a.setKunde(kunde);
-			}
-
-			for (Adresse a : adresse) {
-				kunde.addAdresse(a);
-			}
-		}
 		return JSF_VIEW_KUNDE;
 	}
 
@@ -321,6 +308,7 @@ public class KundeController implements Serializable {
 		LOGGER.tracef("Aktualisierter Kunde: %s", kunde);
 		try {
 			kunde = ks.updateKunde(kunde, locale, false);
+			request.setAttribute("adresse", kunde.getAdressen().size());
 		} catch (EmailExistsException | KundeValidationException
 				| OptimisticLockException | ConcurrentDeletedException e) {
 			final String outcome = updateErrorMsg(e);
