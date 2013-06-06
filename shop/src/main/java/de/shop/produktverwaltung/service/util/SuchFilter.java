@@ -1,6 +1,10 @@
 package de.shop.produktverwaltung.service.util;
 
-public class SuchFilter {
+import java.io.Serializable;
+
+public class SuchFilter implements Serializable {
+
+	private static final long serialVersionUID = 8947790766585826410L;
 
 	private Integer anzahl;
 	

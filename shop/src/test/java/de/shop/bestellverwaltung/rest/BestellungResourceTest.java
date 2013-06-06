@@ -1,16 +1,14 @@
 package de.shop.bestellverwaltung.rest;
 
-import org.jboss.arquillian.junit.Arquillian;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
-
-import com.jayway.restassured.response.Response;
-
-import static de.shop.util.TestConstants.*;
-import de.shop.util.AbstractResourceTest;
 import static com.jayway.restassured.RestAssured.given;
+import static de.shop.util.TestConstants.ACCEPT;
+import static de.shop.util.TestConstants.BESTELLUNGEN_PATH;
+import static de.shop.util.TestConstants.LOCATION;
+import static de.shop.util.TestConstants.KUNDEN_URI;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 import java.io.StringReader;
 import java.net.HttpURLConnection;
@@ -21,11 +19,14 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.runners.MethodSorters.NAME_ASCENDING;
-
+import org.jboss.arquillian.junit.Arquillian;
 import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.jayway.restassured.response.Response;
+
+import de.shop.util.AbstractResourceTest;
 
 @RunWith(Arquillian.class)
 @FixMethodOrder(NAME_ASCENDING)

@@ -177,7 +177,7 @@ public class ProduktController implements Serializable {
 
 		try {
 			// ID in int umwandeln und Produkt laden, Produktdaten nachladen
-			Integer produktIdInt = Integer.valueOf(produktIdStr);
+			final Integer produktIdInt = Integer.valueOf(produktIdStr);
 			produktView = produktService.findProduktByID(produktIdInt,
 					ProduktService.FetchType.NUR_PRODUKTE, null);
 			request.setAttribute("anzahlProduktdaten", produktView

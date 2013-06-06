@@ -33,6 +33,8 @@ public class BestellungController implements Serializable {
 	// //////////////////////////////////////////////////////////////////////////////////////////////
 	// ATTRIBUTES
 
+	private static final long serialVersionUID = -4172696238266273075L;
+
 	private static final Logger LOGGER = Logger.getLogger(MethodHandles
 			.lookup().lookupClass().getName());
 
