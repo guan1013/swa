@@ -32,9 +32,9 @@ import de.shop.util.ValidatorProvider;
 import de.shop.util.exceptions.AdresseValidationException;
 import de.shop.util.exceptions.ConcurrentDeletedException;
 import de.shop.util.exceptions.InvalidEmailException;
+import de.shop.util.exceptions.InvalidKundeException;
 import de.shop.util.exceptions.InvalidKundeIdException;
 import de.shop.util.exceptions.InvalidNachnameException;
-import de.shop.util.exceptions.KundeValidationException;
 import de.shop.util.exceptions.EmailExistsException;
 import de.shop.util.exceptions.KundeDeleteBestellungException;
 import de.shop.util.exceptions.NoMimeTypeException;
@@ -568,7 +568,7 @@ public class KundeService implements Serializable {
 				pKD, pGroups);
 
 		if (!violations.isEmpty()) {
-			throw new KundeValidationException(pKD, violations);
+			throw new InvalidKundeException(pKD, violations);
 		}
 
 	}

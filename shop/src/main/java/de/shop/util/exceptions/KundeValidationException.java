@@ -19,19 +19,16 @@ public class KundeValidationException extends AbstractKundeServiceException {
 
 	private static final long serialVersionUID = -9184767805417976154L;
 
-	private final Kunde kunde;
 	private final Collection<ConstraintViolation<Kunde>> violations;
 
-	public KundeValidationException(Kunde pKD,
-			Collection<ConstraintViolation<Kunde>> pVio) {
-		super("Ungueltiger Kunde: " + pKD + ", Violations: " + pVio);
-		this.kunde = pKD;
+	public KundeValidationException(Collection<ConstraintViolation<Kunde>> pVio) {
+		super("Violations: " + pVio);
 		this.violations = pVio;
 	}
 
-	public Kunde getKunde() {
-		return kunde;
-	}
+	/*
+	 * public Kunde getKunde() { return kunde; }
+	 */
 
 	public Collection<ConstraintViolation<Kunde>> getViolations() {
 		return violations;

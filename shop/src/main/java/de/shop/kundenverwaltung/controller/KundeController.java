@@ -36,11 +36,11 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
 import de.shop.auth.controller.AuthController;
-import de.shop.bestellverwaltung.domain.Bestellung;
 import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.PasswordGroup;
+import de.shop.util.exceptions.InvalidKundeException;
 import de.shop.util.exceptions.EmailExistsException;
 import de.shop.util.exceptions.KundeValidationException;
 import de.shop.util.exceptions.InvalidNachnameException;
@@ -128,7 +128,6 @@ public class KundeController implements Serializable {
 
 	private List<Kunde> kunden = Collections.emptyList();
 	private List<Adresse> adresse;
-	private List<Bestellung> bestellungen;
 
 	private SortOrder vornameSortOrder = SortOrder.unsorted;
 	private String vornameFilter = "";
@@ -163,7 +162,7 @@ public class KundeController implements Serializable {
 
 		try {
 			newKunde = (Kunde) ks.addKunde(newKunde, locale);
-		} catch (KundeValidationException | EmailExistsException e) {
+		} catch (InvalidKundeException | EmailExistsException e) {
 			final String outcome = createKundeErrorMsg(e);
 			return outcome;
 		}
@@ -182,8 +181,8 @@ public class KundeController implements Serializable {
 		if (exceptionClass.equals(EmailExistsException.class)) {
 			messages.error(KUNDENVERWALTUNG, MSG_KEY_CREATE_KUNDE_EMAIL_EXISTS,
 					CLIENT_ID_CREATE_EMAIL);
-		} else if (exceptionClass.equals(KundeValidationException.class)) {
-			final KundeValidationException orig = (KundeValidationException) e;
+		} else if (exceptionClass.equals(InvalidKundeException.class)) {
+			final InvalidKundeException orig = (InvalidKundeException) e;
 			messages.error(orig.getViolations(), null);
 		}
 
@@ -206,8 +205,7 @@ public class KundeController implements Serializable {
 	 * 
 	 * @return URL fuer Anzeige des gefundenen Kunden; sonst null
 	 */
-	// @TransactionAttribute(REQUIRED)
-	@Transactional
+	@TransactionAttribute(REQUIRED)
 	public String findKundeById() {
 
 		/* Kunde laden */
@@ -232,23 +230,6 @@ public class KundeController implements Serializable {
 				kunde.addAdresse(a);
 			}
 		}
-
-		/* Bestellungen nachladen */
-		bestellungen = bs.findBestellungenByKundeId(kunde.getKundeID());
-		if (bestellungen.isEmpty()) {
-			kunde.addBestellung(new Bestellung());
-		}
-
-		else {
-			for (Bestellung b : bestellungen) {
-				b.setKunde(kunde);
-			}
-
-			for (Bestellung b : bestellungen) {
-				kunde.addBestellung(b);
-			}
-		}
-
 		return JSF_VIEW_KUNDE;
 	}
 

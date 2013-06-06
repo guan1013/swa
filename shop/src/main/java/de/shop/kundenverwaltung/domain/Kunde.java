@@ -240,6 +240,7 @@ public class Kunde implements Serializable, Cloneable {
 
 	@Column(length = 256)
 	@Size(max = 256, message = "{kundenverwaltung.kunde.password.length}")
+	//@NotNull(message = "{kundenverwaltung.kunde.password.notNull}")
 	private String password;
 
 	@Transient
