@@ -4,7 +4,6 @@ import static de.shop.util.Constants.JSF_REDIRECT_SUFFIX;
 import static de.shop.util.Messages.MessagesType.KUNDENVERWALTUNG;
 import static javax.ejb.TransactionAttributeType.REQUIRED;
 import static javax.ejb.TransactionAttributeType.SUPPORTS;
-import static javax.persistence.PersistenceContextType.EXTENDED;
 
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
@@ -22,9 +21,7 @@ import javax.enterprise.event.Event;
 import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.xml.bind.DatatypeConverter;
@@ -36,7 +33,6 @@ import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 
 import de.shop.auth.controller.AuthController;
-import de.shop.bestellverwaltung.service.BestellungService;
 import de.shop.kundenverwaltung.domain.Kunde;
 import de.shop.kundenverwaltung.domain.Adresse;
 import de.shop.kundenverwaltung.domain.PasswordGroup;
@@ -91,14 +87,12 @@ public class KundeController implements Serializable {
 
 	private static final String MSG_KEY_SELECT_DELETE_KUNDE_BESTELLUNG = "listKunden.deleteKundeBestellung";
 
-	@PersistenceContext(type = EXTENDED)
-	private transient EntityManager em;
+	/*
+	 * @PersistenceContext(type = EXTENDED) private transient EntityManager em;
+	 */
 
 	@Inject
 	private KundeService ks;
-
-	@Inject
-	private BestellungService bs;
 
 	@Inject
 	private transient HttpServletRequest request;

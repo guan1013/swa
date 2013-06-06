@@ -110,12 +110,9 @@
 			</h:panelGrid>
 
 			<!-- Buttons -->
-			<p id="buttons">
-				<h:commandButton id="button" action="#{kc.updateKunde}"
-					value="#{msgKv['kv.button.submit']}" />
-				#{' '}
-				<h:commandButton type="reset" value="#{msgKv['kv.button.reset']}" />
-			</p>
+			<h:commandButton id="button" action="#{kc.updateKunde}"
+				value="#{msgKv['kv.button.submit']}" />
+			<h:commandButton type="reset" value="#{msgKv['kv.button.reset']}" />
 		</h:form>
 	</ui:define>
 </ui:composition>

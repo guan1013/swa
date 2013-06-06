@@ -105,13 +105,12 @@ public class KundeService implements Serializable {
 
 		validateKunde(pKD, pLocale, Default.class, PasswordGroup.class);
 
-		// Wenn Kunde mit dieser E-Mail Adresse noch nicht existiert, lege ihn
-		// an und schicke eine Bestätigungsnachricht an diesen.
+		// Prüfen ob Email schon existiert
 
 		final Kunde kd = findKundeByMail(FetchType.JUST_KUNDE, pKD.getEmail(),
 				pLocale);
 		if (kd == null) {
-			Set<RolleType> rollen = new HashSet<RolleType>();
+			final Set<RolleType> rollen = new HashSet<RolleType>();
 			rollen.add(RolleType.KUNDE);
 			pKD.setRollen(rollen);
 			salting(pKD);
@@ -126,7 +125,7 @@ public class KundeService implements Serializable {
 
 		// Datenbank synchronisieren
 
-		em.flush();
+		// em.flush();
 
 		return pKD;
 	}
@@ -315,7 +314,7 @@ public class KundeService implements Serializable {
 			return null;
 		}
 
-		Kunde kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
+		final Kunde kd = (Kunde) em.createNamedQuery(Kunde.KUNDE_BY_EMAIL)
 				.setParameter("mail", pUser).getSingleResult();
 
 		return kd;

@@ -71,10 +71,8 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if (JSON_KEY_NACHNAME.equals(k)) {
 				job.add(JSON_KEY_NACHNAME, CONCURRENT_NACHNAME_1);
-			}
-			else if (JSON_KEY_VERSION.equals(k)) {
-			}
-			else {
+			} else if (JSON_KEY_VERSION.equals(k)) {
+			} else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
@@ -96,11 +94,9 @@ public class KundeResourceConcurrencyTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if (JSON_KEY_NACHNAME.equals(k)) {
 				job.add(JSON_KEY_NACHNAME, CONCURRENT_NACHNAME_2);
-			}
-			else if (JSON_KEY_VERSION.equals(k)) {
+			} else if (JSON_KEY_VERSION.equals(k)) {
 
-			}
-			else {
+			} else {
 				job.add(k, jsonObject.get(k));
 			}
 		}

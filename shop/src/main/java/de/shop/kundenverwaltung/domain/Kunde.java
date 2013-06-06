@@ -508,7 +508,8 @@ public class Kunde implements Serializable, Cloneable {
 		if (kundeID == null) {
 			if (other.kundeID != null)
 				return false;
-		} else if (!kundeID.equals(other.kundeID))
+		} 
+		else if (!kundeID.equals(other.kundeID))
 			return false;
 		return true;
 	}
