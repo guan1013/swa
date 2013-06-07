@@ -202,7 +202,7 @@ public class Kunde implements Serializable, Cloneable {
 	 */
 	@Column(name = "Nachname")
 	@NotNull(message = "{kundenverwaltung.kunde.nachname.notNull}")
-	@Size(min = 2, max = 32, message = "{kundenverwaltung.kunde.length}")
+	@Size(min = 2, max = 32, message = "{kundenverwaltung.kunde.nachname.length}")
 	@Pattern(regexp = "[A-ZÄÖÜ][a-zäöüß]+(-[A-ZÄÖÜ][a-zäöüß]+)?", message = "{kundenverwaltung.kunde.nachname.pattern}")
 	private String nachname;
 
