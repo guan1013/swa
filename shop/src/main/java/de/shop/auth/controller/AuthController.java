@@ -71,6 +71,25 @@ public class AuthController implements Serializable {
 		final String path = facesCtx.getViewRoot().getViewId();
 		return path;
 	}
+	
+	@Transactional
+	public String login(String username, String password, Kunde neuerKunde) {
+
+		try {
+			request.login(username, password);
+		}
+		catch (ServletException e) {
+			reset();
+			return null;
+		}
+
+		user = neuerKunde;
+		//kc.setKundeId(user.getKundeID());
+		//kc.loadKundeById();
+		//kc.findKundeById();
+		final String path = facesCtx.getViewRoot().getViewId();
+		return path;
+	}
 
 	/**
 	 * Nachtraegliche Einloggen eines registrierten Kunden mit Benutzername und
