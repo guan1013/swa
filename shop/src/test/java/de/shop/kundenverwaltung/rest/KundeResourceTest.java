@@ -85,7 +85,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 	private static final String PIC = "pic.jpg";
 	private static final String PIC_UPLOAD = "src/test/resources/rest/" + PIC;
 	private static final String PIC_DOWNLOAD = "target/" + PIC;
-	private static final CopyOption[] COPY_OPTIONS = { REPLACE_EXISTING };
+	private static final CopyOption[] COPY_OPTIONS = { 
+		REPLACE_EXISTING };
 
 	private static final String PIC_INVALID_MIMETYPE = "pic.bmp";
 	private static final String PIC_UPLOAD_INVALID_MIMETYPE = "src/test/resources/rest/"
