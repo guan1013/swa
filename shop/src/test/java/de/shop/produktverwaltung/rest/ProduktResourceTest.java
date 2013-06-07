@@ -102,7 +102,7 @@ public class ProduktResourceTest extends AbstractResourceTest {
 	@Ignore
 	public void findAlleProduktdatenByProduktId() {
 
-		// TODO: Test implementieren
+		// TODO Test implementieren
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class ProduktResourceTest extends AbstractResourceTest {
 	@Ignore
 	public void findAlleProduktdatenByNonExistingProduktId() {
 
-		// TODO: Test implementieren
+		// TODO Test implementieren
 
 	}
 
@@ -134,7 +134,7 @@ public class ProduktResourceTest extends AbstractResourceTest {
 				.contentType(APPLICATION_JSON).body(jsonObject.toString())
 				.post(PATH);
 
-		// Then TODO: GGf. Location überprüfen
+		// Then TODO GGf. Location überprüfen
 		assertThat(response.statusCode(), is(HTTP_CREATED));
 	}
 

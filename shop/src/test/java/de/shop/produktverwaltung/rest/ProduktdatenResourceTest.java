@@ -118,7 +118,7 @@ public class ProduktdatenResourceTest extends AbstractResourceTest {
 				.contentType(APPLICATION_JSON).body(jsonObject.toString())
 				.post(PATH);
 
-		// Then TODO: GGf. Location überprüfen
+		// Then TODO GGf. Location überprüfen
 		assertThat(response.statusCode(), is(HTTP_CREATED));
 	}
 
