@@ -55,7 +55,7 @@
 					value="#{msgBv['bestellung.create.backtobasket']}" 
 					rendered="#{not empty bc.warenkorb.positionen}" />	
 					
-				<h:outputText value=" Loggen Sie sich zum Bestellen ein!" rendered="#{empty auth.user}"/>
+				<h:outputText value=" #{msgBv['bestellung.nicht.eingeloggt']}" rendered="#{empty auth.user}"/>
 					
 
 			</rich:panel>
