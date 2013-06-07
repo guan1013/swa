@@ -73,7 +73,7 @@ public class AuthController implements Serializable {
 	}
 	
 	@Transactional
-	public String login(String username, String password) {
+	public String login(String username, String password, Kunde neuerKunde) {
 
 		try {
 			request.login(username, password);
@@ -83,8 +83,7 @@ public class AuthController implements Serializable {
 			return null;
 		}
 
-		user = ks.findKundeByMail(KundeService.FetchType.JUST_KUNDE, username,
-				null);
+		user = neuerKunde;
 		//kc.setKundeId(user.getKundeID());
 		//kc.loadKundeById();
 		//kc.findKundeById();
