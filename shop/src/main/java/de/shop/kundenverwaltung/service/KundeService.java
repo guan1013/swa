@@ -182,7 +182,8 @@ public class KundeService implements Serializable {
 			pic = new File(pBs, filename, pMT);
 			pKD.setPic(pic);
 			em.persist(pic);
-		} else {
+		}
+		else {
 			pic.set(pBs, filename, pMT);
 			em.merge(pic);
 		}
@@ -473,7 +474,8 @@ public class KundeService implements Serializable {
 		Kunde kd;
 		try {
 			kd = findKundeById(pKID, pLocale);
-		} catch (InvalidKundeIdException e) {
+		}
+		catch (InvalidKundeIdException e) {
 			return;
 		}
 		if (kd == null) {

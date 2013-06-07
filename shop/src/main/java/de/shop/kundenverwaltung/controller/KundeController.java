@@ -77,7 +77,7 @@ public class KundeController implements Serializable {
 	private static final String CLIENT_ID_CREATE_EMAIL = "createKundeForm:email";
 	private static final String MSG_KEY_CREATE_KUNDE_EMAIL_EXISTS = "createKunde.emailExists";
 
-	private static final Class<?>[] PASSWORD_GROUP = { PasswordGroup.class };
+	private static final Class<?>[] PASSWORD_GROUP = {PasswordGroup.class };
 
 	private static final String CLIENT_ID_UPDATE_PASSWORD = "updateKundeForm:password";
 	private static final String CLIENT_ID_UPDATE_EMAIL = "updateKundeForm:email";
@@ -154,7 +154,8 @@ public class KundeController implements Serializable {
 
 		try {
 			newKunde = (Kunde) ks.addKunde(newKunde, locale);
-		} catch (InvalidKundeException | EmailExistsException e) {
+		}
+		catch (InvalidKundeException | EmailExistsException e) {
 			final String outcome = createKundeErrorMsg(e);
 			return outcome;
 		}
@@ -173,7 +174,8 @@ public class KundeController implements Serializable {
 		if (exceptionClass.equals(EmailExistsException.class)) {
 			messages.error(KUNDENVERWALTUNG, MSG_KEY_CREATE_KUNDE_EMAIL_EXISTS,
 					CLIENT_ID_CREATE_EMAIL);
-		} else if (exceptionClass.equals(InvalidKundeException.class)) {
+		}
+		else if (exceptionClass.equals(InvalidKundeException.class)) {
 			final InvalidKundeException orig = (InvalidKundeException) e;
 			messages.error(orig.getViolations(), null);
 		}
@@ -225,7 +227,8 @@ public class KundeController implements Serializable {
 		Integer kid;
 		try {
 			kid = Integer.valueOf(idStr);
-		} catch (NumberFormatException e) {
+		}
+		catch (NumberFormatException e) {
 			return;
 		}
 
@@ -251,7 +254,8 @@ public class KundeController implements Serializable {
 		try {
 			kunden = ks.findKundeByNachname(FetchType.WITH_BESTELLUNGEN,
 					nachname, locale);
-		} catch (InvalidNachnameException e) {
+		}
+		catch (InvalidNachnameException e) {
 			final Collection<ConstraintViolation<Kunde>> violations = e
 					.getViolations();
 			messages.error(violations, CLIENT_ID_KUNDEN_NACHNAME);
@@ -301,7 +305,8 @@ public class KundeController implements Serializable {
 		try {
 			kunde = ks.updateKunde(kunde, locale, false);
 			request.setAttribute("adresse", kunde.getAdressen().size());
-		} catch (EmailExistsException | InvalidKundeException
+		}
+		catch (EmailExistsException | InvalidKundeException
 				| OptimisticLockException | ConcurrentDeletedException e) {
 			final String outcome = updateErrorMsg(e);
 			return outcome;
@@ -327,17 +332,20 @@ public class KundeController implements Serializable {
 			final Collection<ConstraintViolation<Kunde>> violations = orig
 					.getViolations();
 			messages.error(violations, CLIENT_ID_UPDATE_PASSWORD);
-		} else if (exceptionClass.equals(EmailExistsException.class)) {
+		}
+		else if (exceptionClass.equals(EmailExistsException.class)) {
 
 			messages.error(KUNDENVERWALTUNG, MSG_KEY_UPDATE_KUNDE_DUPLIKAT,
 					CLIENT_ID_UPDATE_EMAIL);
 
-		} else if (exceptionClass.equals(OptimisticLockException.class)) {
+		}
+		else if (exceptionClass.equals(OptimisticLockException.class)) {
 
 			messages.error(KUNDENVERWALTUNG,
 					MSG_KEY_UPDATE_KUNDE_CONCURRENT_UPDATE, null);
 
-		} else if (exceptionClass.equals(ConcurrentDeletedException.class)) {
+		}
+		else if (exceptionClass.equals(ConcurrentDeletedException.class)) {
 
 			messages.error(KUNDENVERWALTUNG,
 					MSG_KEY_UPDATE_KUNDE_CONCURRENT_DELETE, null);
@@ -349,7 +357,8 @@ public class KundeController implements Serializable {
 	public String delete(Kunde ausgewaehlterKunde) {
 		try {
 			ks.deleteKundeById(ausgewaehlterKunde.getKundeID(), locale);
-		} catch (KundeDeleteBestellungException e) {
+		}
+		catch (KundeDeleteBestellungException e) {
 			messages.error(KUNDENVERWALTUNG,
 					MSG_KEY_SELECT_DELETE_KUNDE_BESTELLUNG, null,
 					e.getKundeId(), e.getAnzahlBestellungen());

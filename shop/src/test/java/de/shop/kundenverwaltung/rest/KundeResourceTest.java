@@ -330,7 +330,8 @@ public class KundeResourceTest extends AbstractResourceTest {
 		for (String k : keys) {
 			if (JSON_KEY_EMAIL.equals(k)) {
 				job.add(JSON_KEY_EMAIL, MAIL_UPDATE);
-			} else {
+			}
+			else {
 				job.add(k, jsonObject.get(k));
 			}
 		}
